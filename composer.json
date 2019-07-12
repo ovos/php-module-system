@@ -1,0 +1,33 @@
+{
+	"name": "ovos/php-module-system",
+	"description": "ovos module",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Marcin Gil",
+			"email": "mg@ovos.at"
+		}
+	],
+  "require" : {
+    "php": ">=7.2.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+	"autoload": {
+		"psr-4": {
+			"Components\\": "components",
+			"Controllers\\": "controllers",
+			"Locales\\": "locales",
+			"Plugins\\": "plugins",
+			"Widgets\\": "widgets",
+			"Models\\": "models",
+			"Stores\\": "stores"
+    }
+	},
+	"scripts": {
+		"php:version":
+		[
+			"php -v"
+		]
+	}
+}
