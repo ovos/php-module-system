@@ -1,0 +1,52 @@
+<?php $messages = $this->messages()->toArray(); ?>
+
+<?php if($this->app->isInterfaceHttp()): ?>
+	
+	<?php if(count($messages)): ?>
+	
+		<?php $iconMapping = [
+			'error' => 'exclamation-circle',
+			'warning' => 'exclamation-circle',
+			'info' => 'info-circle',
+			'success' => 'check-circle',
+		]; ?>
+	
+		<div class="messages">
+			<?php foreach($messages as $message): ?>
+				<?php /** @var \Ovos\View\Helper\Messages\Message $message */ ?>
+				<div class="message message-<?= $message->getType(); ?>">
+					<div class="message-icon icon-<?= $iconMapping[$message->getType()]; ?>"></div>
+					<div class="message-body">
+						<?php if($title = $message->getTitle()): ?>
+							<h3><?= $title; ?></h3>
+						<?php endif; ?>
+						<?php if($description = $message->getDescription()): ?>
+							<p><?= nl2br($description); ?></p>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+
+<?php else: ?>
+
+	<?php
+		$table = new Console_Table();
+		$table->setHeaders(['Messages (' . count($this->messages) . ')', 'Type']);
+	
+		foreach($this->messages()->toArray() as $message)
+		{
+			/** @var \Ovos\View\Helper\Messages\Message $message */
+			$text = [$message->getTitle(), $message->getDescription()];
+			$table->addRow([
+				wordwrap(implode(PHP_EOL . PHP_EOL, $text), 150, PHP_EOL),
+				ucfirst($message->getType()),
+			]);
+			$table->addRow([PHP_EOL]);
+		}
+	
+		echo PHP_EOL . $table->getTable();
+	?>
+
+<?php endif; ?>
