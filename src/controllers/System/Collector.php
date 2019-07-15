@@ -43,8 +43,6 @@ class Collector extends Controller\Cli
 	 */
 	public function index($coloredOutput = false): void
 	{
-		$this->setColoredOutput($coloredOutput);
-		
 		if($this->_collectors !== null)
 		{
 			foreach($this->_collectors as $collector)
@@ -60,6 +58,7 @@ class Collector extends Controller\Cli
 				
 				/** @var Controller $controller */
 				$controller = new $controllerClassNs();
+				$controller->setColoredOutput($coloredOutput);
 				
 				if(method_exists($controller, $collector->action) === false)
 				{
@@ -92,6 +91,8 @@ class Collector extends Controller\Cli
 		$dir = BASE_DIR . 'application' . DIRECTORY_SEPARATOR
 			. 'logs' . DIRECTORY_SEPARATOR;
 		
+		$affected = 0;
+		
 		$iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
 		foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
 		{
@@ -120,17 +121,19 @@ class Collector extends Controller\Cli
 				$unlink = unlink($file->getPathname());
 				if($unlink)
 				{
-					print('Done.');
+					Terminal::output('<green>Done.');
+					$affected++;
 				}
 				else
 				{
-					print('Error.');
+					Terminal::output('<red>Error.');
 				}
 				
 				print(PHP_EOL);
 			}
 		}
 		
+		$this->log('Deleted <blue>%d<reset> files.', $affected);
 		$this->log('<green>Done.');
 	}
 }
