@@ -90,7 +90,7 @@ class Collector extends Controller\Cli
 		$this->log('Collecting <blue>logs<reset>...');
 		
 		$dir = BASE_DIR . 'application' . DIRECTORY_SEPARATOR
-				. 'logs' . DIRECTORY_SEPARATOR;
+			. 'logs' . DIRECTORY_SEPARATOR;
 		
 		$iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
 		foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
@@ -102,17 +102,33 @@ class Collector extends Controller\Cli
 			{
 				continue;
 			}
-
+			
 			if(strpos($file->getBasename(), '.') === 0) // skip hidden files
 			{
 				continue;
 			}
-
-			$basename = $file->getBasename();
 			
-			echo $file->getMTime();
+			if($file->getExtension() !== 'txt')
+			{
+				continue;
+			}
 			
-			echo $basename . PHP_EOL;
+			if($file->getMTime() <= (time() - ($config->days * 24 * 60 * 60)))
+			{
+				printf('Deleting %s... ', $file->getBasename());
+				
+				$unlink = unlink($file->getPathname());
+				if($unlink)
+				{
+					print('Done.');
+				}
+				else
+				{
+					print('Error.');
+				}
+				
+				print(PHP_EOL);
+			}
 		}
 		
 		$this->log('<green>Done.');
