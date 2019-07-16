@@ -8,6 +8,7 @@ use Ovos\ArrayObject;
 use Ovos\Controller;
 use Ovos\Response;
 use Ovos\View;
+use Ovos\Terminal;
 use function Ovos\services;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
