@@ -88,12 +88,12 @@ class Collector extends Controller\Cli
 	{
 		$this->log('Collecting <blue>logs<reset>...');
 		
-		$dir = BASE_DIR . 'application' . DIRECTORY_SEPARATOR
+		$directory = BASE_DIR . 'application' . DIRECTORY_SEPARATOR
 			. 'logs' . DIRECTORY_SEPARATOR;
 		
 		$affected = 0;
 		
-		$iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+		$iterator = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
 		foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
 		{
 			/**
