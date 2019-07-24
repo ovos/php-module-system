@@ -38,20 +38,16 @@ class Tools extends Controller\Cli
 	public function clearCache(): void
 	{
 		Functions::println('Clearing cache ...' . PHP_EOL);
-
-		// flush the cache
-		$memory = services()->memory;
-		if($memory->isEnabled())
+		
+		// clear the apcu via http
+		if($this->clearHttpCache('apcu'))
 		{
-			if($memory->getPool()->clear())
-			{
-				Functions::println('<green>Perishable cache cleared.<reset>', true);
-			}
-			else
-			{
-				Functions::println('<red>Error clearing perishable cache.<reset>', true);
-			}
+			Functions::println('<green>Perishable cache cleared.<reset>', true);
 		}
+		else
+		{
+			Functions::println('<red>Error clearing perishable cache.<reset>', true);
+		}		
 		
 		$persistent = services()->cache;
 		if($persistent->isEnabled() === false)
@@ -71,14 +67,7 @@ class Tools extends Controller\Cli
 		}
 
 		// clear the opcache via http
-		$curl = curl_init();
-		curl_setopt_array($curl, [
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH . 'clear-opcache.php?token=' . $this->getAccessToken()
-		]);
-		$response = curl_exec($curl);
-		curl_close($curl);
-		if($response === '1')
+		if($this->clearHttpCache('apcu'))
 		{
 			Functions::println('<green>Opcache cleared.<reset>', true);
 		}
@@ -88,7 +77,39 @@ class Tools extends Controller\Cli
 			Functions::println('<red>Error clearing opcache. Try again!<reset>');
 		}
 	}
+	
+	/**
+	 * @param string $cache
+	 */
+	public function clearHttpCache($cache) 
+	{
+		// clear the cache via http
+		$curl = curl_init();
+		curl_setopt_array($curl, [
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH . 'clear-' . $cache . '.php?token=' . $this->getAccessToken()
+		]);
+		$response = curl_exec($curl);
+		curl_close($curl);
+		
+		return $response === '1';
+	}
 
+	/**
+	 *  Clears apcu
+	 */
+	public function clearApcu(): bool
+	{
+		// clear apcu, this only has an effect when tool is called via http
+		$memory = services()->memory;
+		if($memory->isEnabled())
+		{
+			return $memory->getPool()->clear();
+		}
+
+		return false;
+	}
+	
 	/**
 	 *  Clears opcache
 	 */
