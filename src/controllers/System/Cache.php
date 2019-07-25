@@ -9,6 +9,7 @@ use Ovos\Functions;
 use Ovos\Exception;
 use Ovos\Password;
 use Ovos\Response;
+use Ovos\Response\Html;
 use Ovos\View;
 use function Ovos\services;
 
@@ -134,6 +135,8 @@ class Cache extends Controller\Cli
 	}
 	
 	/**
+	 * Calls http method
+	 * 
 	 * @param string $method
 	 */
 	public function callHttp($method) 
@@ -153,6 +156,38 @@ class Cache extends Controller\Cli
 		curl_close($curl);
 		
 		return $response === '1';
+	}
+	
+	/**
+	 * Consumes http method call
+	 */
+	public function consumeHttpCall(): void
+	{
+		$response = new Response\Html;
+		
+		// verify token
+		$accessTokenHash = isset($_GET['access_token_hash'])
+			? base64_decode($_GET['access_token_hash'])
+			: null;
+		$accessToken = $this->getAccessToken();
+		
+		if(password_verify($accessToken, $accessTokenHash) === false)
+		{
+			$response->setHttpCode(403);
+			exit;
+		}
+		
+		// get method
+		$method = $_GET['method'] ?? null;
+		if(method_exists($this, $method) === false)
+		{
+			$response->setHttpCode(403);
+			exit;
+		}
+		
+		$response
+			->set((string)$this->{$method}())
+			->send();
 	}
 
 	/**
