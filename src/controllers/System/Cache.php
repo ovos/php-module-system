@@ -12,6 +12,7 @@ use Ovos\Response;
 use Ovos\Response\Html;
 use Ovos\View;
 use function Ovos\services;
+use Throwable;
 
 /**
  * Cache
@@ -141,21 +142,37 @@ class Cache extends Controller\Cli
 	 */
 	public function callHttp($method) 
 	{
-		// clear the method via http
-		$curl = curl_init();
-		curl_setopt_array($curl, [
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH
-				. 'cache-call-http.php'
-				. '?' . http_build_query([
-					'method' => $method,
-					'access_token_hash' => base64_encode($this->getAccessTokenHash()),
-				])
-		]);
-		$response = curl_exec($curl);
-		curl_close($curl);
+		try
+		{
+			// clear the method via http
+			$curl = curl_init();
+			curl_setopt_array($curl, [
+				CURLOPT_TIMEOUT => 10,
+				CURLOPT_CONNECTTIMEOUT => 1,
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH
+					. 'cache-call-http.php'
+					. '?' . http_build_query([
+						'method' => $method,
+						'access_token_hash' => base64_encode($this->getAccessTokenHash()),
+					])
+			]);
+			$response = curl_exec($curl);
+			if(curl_errno($curl))
+			{
+				throw new Exception(curl_error($curl));
+			}
+			curl_close($curl);
+			
+			return $response === '1';
+		}
+		catch(Throwable $throwable)
+		{
+			services()->events->log($throwable);
 		
-		return $response === '1';
+			$message = sprintf("<red>HTTP service not reachable:<reset>\n%s", $throwable->getMessage());
+			Functions::println($message, true);
+		}
 	}
 	
 	/**
