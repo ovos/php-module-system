@@ -33,7 +33,7 @@ class Tools extends Controller\Cli
 			$string = $this->readLine();
 		}
 		
-		$config = $this->_app->getConfig()->system->encryption;
+		$config = $this->_app->getConfig()->encryption;
 		$encryptor = new Encryptor($config->key, $config->method);
 		$encrypted = $encryptor->encrypt($string);
 		
@@ -51,7 +51,7 @@ class Tools extends Controller\Cli
 			$string = $this->readLine();
 		}
 		
-		$config = $this->_app->getConfig()->system->encryption;
+		$config = $this->_app->getConfig()->encryption;
 		$encryptor = new Encryptor($config->key);
 		$decrypted = $encryptor->decrypt($string);
 		
