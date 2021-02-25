@@ -11,7 +11,6 @@ use Ovos\Test\Runner;
 use Ovos\Dir;
 use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
-use Console_Table;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -48,55 +47,12 @@ class Tests extends Controller\Cli
 	 */
 	public function run(): Response
 	{
-		$response = new Response\Html;
+		$response = new Response\Cli;
 		
-		$tests = [];
+		$tests = $this->getTests();
 		$countPassed = 0;
 		$countFailed = 0;
 		
-		foreach($this->_paths as $path)
-		{
-			$path = Dir::preProcess($path);
-			if(is_dir(BASE_DIR . $path) === false)
-			{
-				continue;
-			}
-			
-			$pathLength = strlen(BASE_DIR . $path);
-			$iterator = new RecursiveDirectoryIterator(BASE_DIR . $path, FilesystemIterator::SKIP_DOTS);
-			foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
-			{
-				/**
-				* @var SplFileInfo $file
-				*/
-				if($file->isDir())
-				{
-					continue;
-				}
-				
-				// hidden files, eg. ".gitkeep"
-				if($file->getBasename()[0] === '.')
-				{
-					continue;
-				}
-				
-				// include the test, composer is always excluding /tests from psr-4 autoloader
-				include_once($file->getPathname());
-				
-				$relativePath = substr($file->getPath(), $pathLength);
-				$filename = $file->getBasename('.php');
-				
-				$className = 'Tests' . $relativePath . '\\' . $filename;
-				$class = new ReflectionClass($className);
-				$methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
-				
-				foreach($methods as $method)
-				{
-					$tests[] = new Runner($class, $method);
-				}
-			}			
-		}
-
 		foreach($tests as $test)
 		{
 			/**
@@ -139,6 +95,59 @@ class Tests extends Controller\Cli
 		$response->append(PHP_EOL . $table->getTable());
 
 		return $response;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getTests(): array
+	{
+		$tests = [];
+	
+		foreach($this->_paths as $path)
+		{
+			$path = Dir::preProcess($path);
+			if(is_dir(BASE_DIR . $path) === false)
+			{
+				continue;
+			}
+			
+			$pathLength = strlen(BASE_DIR . $path);
+			$iterator = new RecursiveDirectoryIterator(BASE_DIR . $path, FilesystemIterator::SKIP_DOTS);
+			foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
+			{
+				/**
+				* @var SplFileInfo $file
+				*/
+				if($file->isDir())
+				{
+					continue;
+				}
+				
+				// hidden files, eg. ".gitkeep"
+				if($file->getBasename()[0] === '.')
+				{
+					continue;
+				}
+				
+				// include the test, composer is always excluding /tests from psr-4 autoloader
+				include_once($file->getPathname());
+				
+				$relativePath = substr($file->getPath(), $pathLength);
+				$filename = $file->getBasename('.php');
+				
+				$className = 'Tests' . $relativePath . '\\' . $filename;
+				$class = new ReflectionClass($className);
+				$methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+				
+				foreach($methods as $method)
+				{
+					$tests[] = new Runner($class, $method);
+				}
+			}			
+		}
+		
+		return $tests;
 	}
 
 	/**
