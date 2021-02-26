@@ -28,6 +28,11 @@ use function strlen;
 class Tests extends Controller\Cli
 {
 	/**
+	 * @var string
+	 */
+	public const TEST_EXT = 'php';
+
+	/**
 	 * @var ArrayObject
 	 */
 	protected ArrayObject $_paths;
@@ -102,41 +107,38 @@ class Tests extends Controller\Cli
 	 */
 	public function getTests(): array
 	{
-		$tests = [];
+		$tests = [];	
 	
 		foreach($this->_paths as $path)
 		{
-			$path = Dir::preProcess($path);
-			if(is_dir(BASE_DIR . $path) === false)
+			$path = Dir::preProcess($path, true);
+			if(is_dir($path = BASE_DIR . $path) === false)
 			{
 				continue;
 			}
 			
-			$pathLength = strlen(BASE_DIR . $path);
-			$iterator = new RecursiveDirectoryIterator(BASE_DIR . $path, FilesystemIterator::SKIP_DOTS);
-			foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
+			$pathLength = strlen($path);
+			$files = Dir::getFiles($path, function($file)
 			{
 				/**
 				* @var SplFileInfo $file
 				*/
-				if($file->isDir())
+				// filter out non .php files
+				if($file->getExtension() !== self::TEST_EXT)
 				{
-					continue;
+					return null;
 				}
 				
-				// hidden files, eg. ".gitkeep"
-				if($file->getBasename()[0] === '.')
-				{
-					continue;
-				}
-				
+				return $file->getBasename('.' . self::TEST_EXT);
+			});
+			
+			foreach($files as $basename => $file)
+			{
 				// include the test, composer is always excluding /tests from psr-4 autoloader
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
-				$filename = $file->getBasename('.php');
-				
-				$className = 'Tests' . $relativePath . '\\' . $filename;
+				$className = 'Tests' . $relativePath . '\\' . $basename;
 				$class = new ReflectionClass($className);
 				$methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
 				

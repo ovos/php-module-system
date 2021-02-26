@@ -10,6 +10,7 @@ use Ovos\Migration\Runner;
 use Ovos\Dir;
 use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
+use Ovos\Migration;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -29,7 +30,7 @@ class Migrations extends Controller\Cli
 	/**
 	 * @var string
 	 */
-	public const MIGRATION_EXT = '.php';
+	public const MIGRATION_EXT = 'php';
 
 	/**
 	 * @var ArrayObject
@@ -62,7 +63,7 @@ class Migrations extends Controller\Cli
 			/**
 			 * @var Runner $migration
 			 */
-			$migration->run();
+			$migration->run(Migration::DIRECTION_UP);
 		}
 
 		return $response;
@@ -85,7 +86,7 @@ class Migrations extends Controller\Cli
 			/**
 			 * @var Runner $migration
 			 */
-			//$migration->rollback();
+			$migration->run(Migration::DIRECTION_DOWN);
 		}
 
 		return $response;
@@ -100,47 +101,39 @@ class Migrations extends Controller\Cli
 	
 		foreach($this->_paths as $path)
 		{
-			$path = Dir::preProcess($path);
-			if(is_dir(BASE_DIR . $path) === false)
+			$path = Dir::preProcess($path, true);
+			if(is_dir($path = BASE_DIR . $path) === false)
 			{
 				continue;
 			}
 			
-			$pathLength = strlen(BASE_DIR . $path);
-			$iterator = new RecursiveDirectoryIterator(BASE_DIR . $path, FilesystemIterator::SKIP_DOTS);
-			foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
+			$pathLength = strlen($path);
+			$files = Dir::getFiles($path, function($file)
 			{
 				/**
 				* @var SplFileInfo $file
 				*/
-				if($file->isDir())
+				// filter out non .php files
+				if($file->getExtension() !== self::MIGRATION_EXT)
 				{
-					continue;
+					return null;
 				}
 				
-				// hidden files, eg. ".gitkeep"
-				if($file->getBasename()[0] === '.')
-				{
-					continue;
-				}
-				
-				// not a migration file
-				if('.' . $file->getExtension() !== self::MIGRATION_EXT)
-				{
-					continue;
-				}
-				
+				return $file->getBasename('.' . self::MIGRATION_EXT);
+			});
+			
+			foreach($files as $basename => $file)
+			{
 				// include the migration, because filename is not psr-4 compatible
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
-				$filename = $file->getBasename(self::MIGRATION_EXT);
-				[$id, $filename] = explode('_', $filename);
+				[$id, $filename] = explode('_', $basename);
 				
 				$className = 'Migrations' . $relativePath . '\\' . $filename;
 				$class = new ReflectionClass($className);
 		
-				$migrations[] = new Runner($class, $id);
+				$migrations[] = new Runner($class, (int)$id);
 			}			
 		}
 		
