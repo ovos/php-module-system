@@ -6,6 +6,7 @@ namespace Controllers\System;
 use Ovos\Controller;
 use Ovos\Exception;
 use Ovos\Exception\NotFoundException;
+use Ovos\Exception\NotFoundException\FileNotFoundException;
 use Ovos\Response;
 use Ovos\View;
 use function Ovos\services;
@@ -56,6 +57,11 @@ class Events extends Controller
 		{
 			$view->title = $this->_('Page not found.');
 			$response->setHttpCode(404);
+			
+			if($event instanceof FileNotFoundException)
+			{
+				$view->title = $this->_('File not found.');
+			}
 		}
 		else
 		{

@@ -158,12 +158,6 @@ class Cache extends Controller\Cli
 					])
 			]);
 			
-			echo SYSTEM_HOST . SYSTEM_PATH
-					. 'cache-call-http.php'
-					. '?' . http_build_query([
-						'method' => $method,
-						'access_token_hash' => base64_encode($this->getAccessTokenHash()),
-					]); die;
 			$response = curl_exec($curl);
 			if(curl_errno($curl))
 			{
