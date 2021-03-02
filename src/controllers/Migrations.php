@@ -17,6 +17,8 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 use ReflectionClass;
 use ReflectionMethod;
+use Stores\Migrations as Store;
+use Models\Migration as Model;
 use function strlen;
 
 /**
@@ -57,8 +59,13 @@ class Migrations extends Controller\Cli
 	{
 		$response = new Response\Cli;
 
+		$store = new Store;
+		$records = $store->getAll();
+		var_dump($records);
+		// no table === false
+			
 		$migrations = $this->getMigrations();
-		foreach($migrations as $migration)
+		foreach($migrations as $id => $migration)
 		{
 			/**
 			 * @var Runner $migration
@@ -81,7 +88,7 @@ class Migrations extends Controller\Cli
 		$response = new Response\Cli;
 
 		$migrations = $this->getMigrations();
-		foreach($migrations as $migration)
+		foreach($migrations as $id => $migration)
 		{
 			/**
 			 * @var Runner $migration
@@ -133,9 +140,11 @@ class Migrations extends Controller\Cli
 				$className = 'Migrations' . $relativePath . '\\' . $filename;
 				$class = new ReflectionClass($className);
 		
-				$migrations[] = new Runner($class, (int)$id);
+				$migrations[$id] = new Runner($class, (int)$id);
 			}			
 		}
+		
+		ksort($migrations);
 		
 		return $migrations;
 	}
