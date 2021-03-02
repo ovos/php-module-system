@@ -5,6 +5,7 @@ namespace Controllers;
 
 use Ovos\Controller;
 use Ovos\ArrayObject;
+use Ovos\Pdo\Expression;
 use Ovos\Response;
 use Ovos\Migration\Runner;
 use Ovos\Dir;
@@ -19,6 +20,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use Stores\Migrations as Store;
 use Models\Migration as Model;
+use Throwable;
 use function strlen;
 
 /**
@@ -51,26 +53,53 @@ class Migrations extends Controller\Cli
 	/**
 	 * Runs migrations
 	 * 
-	 * @param int $amount
+	 * @param ?int $amount
 	 * 
 	 * @return Response
 	 */
-	public function run(int $amount = 1): Response
+	public function run(?int $amount = null): Response
 	{
 		$response = new Response\Cli;
 
 		$store = new Store;
 		$records = $store->getAll();
-		var_dump($records);
-		// no table === false
-			
 		$migrations = $this->getMigrations();
+		$counter = 0;
+		
 		foreach($migrations as $id => $migration)
 		{
+			if(isset($records[$id])
+				&& $records[$id]->migrated_at !== null)
+			{
+				continue;
+			}
+			
+			if($amount !== null && $counter >= $amount)
+			{
+				break;
+			}
+	
 			/**
 			 * @var Runner $migration
 			 */
 			$migration->run(Migration::DIRECTION_UP);
+			
+			if(isset($records[$id])) // rolled back
+			{
+				$record = $records[$id];
+				$record->migrated_at = new Expression('NOW()');
+				$record->save();
+			}
+			else
+			{
+				$record = new Model;
+				$record->id = $id;
+				$record->name = $migration->__toString();
+				$record->migrated_at = new Expression('NOW()');
+				$record->insert();
+			}
+			
+			$counter++;
 		}
 
 		return $response;
@@ -79,11 +108,11 @@ class Migrations extends Controller\Cli
 	/**
 	 * Rolls back migrations
 	 * 
-	 * @param int $amount
+	 * @param ?int $amount
 	 * 
 	 * @return Response
 	 */
-	public function rollback(int $amount = 1): Response
+	public function rollback(?int $amount = null): Response
 	{
 		$response = new Response\Cli;
 

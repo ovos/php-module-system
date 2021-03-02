@@ -5,6 +5,7 @@ namespace Stores;
 use Ovos\Store\Mysql;
 use Models\Migration;
 use PDO;
+use PDOException;
 
 /**
  * Migrations
@@ -27,7 +28,7 @@ class Migrations extends Mysql
 	 *
 	 * @return Migration[]|false
 	 */
-	public function getAll($select = '*', $options = []): array|false
+	public function getAll($select = 'id, migrations.*', $options = []): array|false
 	{
 		$query = $this->query()
 			->select($select)
@@ -38,11 +39,17 @@ class Migrations extends Mysql
 			$sql->orderBy($options['order']);
 		}
 		
-		$query = $this->prepareQuery($query);
-		$query->execute();
+		try
+		{
+			$query = $this->prepareQuery($query);
+		}
+		catch (PDOException $exception)
+		{
+			return []; // case when migrations table is not yet in db
+		}
 		
-		$result = $query->fetchAll(PDO::FETCH_OBJ | PDO::FETCH_GROUP, Migration::class);
-
-		return $result ? $result : []; // case when migrations table is not yet in db and fetch returns false
+		$query->execute();
+		$result = $query->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_GROUP , Migration::class); // group by ID
+		return array_map(fn($row) => reset($row), $result);	
 	}
 }
