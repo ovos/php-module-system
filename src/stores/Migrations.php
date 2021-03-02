@@ -29,18 +29,20 @@ class Migrations extends Mysql
 	 */
 	public function getAll($select = '*', $options = []): array|false
 	{
-		$sql = $this->query()
+		$query = $this->query()
 			->select($select)
-			->from(self::TABLE);
+			->from(self::getTable());
 
 		if(isset($options['order']))
 		{
 			$sql->orderBy($options['order']);
 		}
 		
-		$query = $this->source()->prepare($sql->getSQL());
+		$query = $this->prepareQuery($query);
 		$query->execute();
+		
+		$result = $query->fetchAll(PDO::FETCH_OBJ | PDO::FETCH_GROUP, Migration::class);
 
-		return $query->fetchObject(Migration::class);
+		return $result ? $result : []; // case when migrations table is not yet in db and fetch returns false
 	}
 }
