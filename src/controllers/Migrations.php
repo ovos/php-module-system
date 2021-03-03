@@ -9,6 +9,7 @@ use Ovos\Pdo\Expression;
 use Ovos\Response;
 use Ovos\Migration\Runner;
 use Ovos\Dir;
+use Ovos\Terminal;
 use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
 use Ovos\Migration;
@@ -31,6 +32,8 @@ use function strlen;
  */
 class Migrations extends Controller\Cli
 {
+	use Controller\Traits\Cli;
+	
 	/**
 	 * @var string
 	 */
@@ -46,6 +49,7 @@ class Migrations extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
+		$this->setColoredOutput(true);
 		
 		$this->_paths = $this->_app->getConfig()->system->migrations;
 	}
@@ -64,7 +68,7 @@ class Migrations extends Controller\Cli
 		$store = new Store;
 		$records = $store->getAll();
 		$migrations = $this->getMigrations();
-		$counter = 0;
+		$migrated = [];
 		
 		foreach($migrations as $id => $migration)
 		{
@@ -74,25 +78,33 @@ class Migrations extends Controller\Cli
 				continue;
 			}
 			
-			if($amount !== null && $counter >= $amount)
+			if($amount !== null && count($migrated) >= $amount)
 			{
 				break;
 			}
-	
+			
+			Terminal::output(sprintf(
+				'<green>Migrating <white>%s<reset>... ',
+				$migration->__toString())
+			, true);
+			
 			/**
 			 * @var Runner $migration
 			 */
 			$migration->run(Migration::DIRECTION_UP);
 			
 			$record = isset($records[$id])
-				? $records[$id]
-				: new Model(['id' => $id]); // rolledback or new
+				? $records[$id] // rolledback
+				: new Model; // new
+			$record->id = $id;
 			$record->name = $migration->__toString();
 			$record->migrated_at = new Expression('NOW()');
 			$record->rolledback_at = null;
 			$record->save();
 			
-			$counter++;
+			Terminal::output('done.' . PHP_EOL);
+			
+			$migrated[$id] = $migration;
 		}
 
 		return $response;
@@ -112,7 +124,7 @@ class Migrations extends Controller\Cli
 		$store = new Store;
 		$records = $store->getAll();
 		$migrations = $this->getMigrations(reverse: true);
-		$counter = 0;
+		$migrated = [];
 		
 		foreach($migrations as $id => $migration)
 		{
@@ -127,10 +139,15 @@ class Migrations extends Controller\Cli
 				continue;
 			}
 					
-			if($amount !== null && $counter >= $amount)
+			if($amount !== null && count($migrated) >= $amount)
 			{
 				break;
 			}
+			
+			Terminal::output(sprintf(
+				'<red>Rolling back <white>%s<reset>... ',
+				$migration->__toString())
+			, true);
 			
 			/**
 			 * @var Runner $migration
@@ -141,7 +158,9 @@ class Migrations extends Controller\Cli
 			$record->rolledback_at = new Expression('NOW()');
 			$record->save();
 			
-			$counter++;
+			Terminal::output('done.' . PHP_EOL);			
+			
+			$migrated[$id] = $migration;
 		}
 
 		return $response;
