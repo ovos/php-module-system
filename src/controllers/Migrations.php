@@ -106,6 +106,8 @@ class Migrations extends Controller\Cli
 			
 			$migrated[$id] = $migration;
 		}
+		
+		$this->responseSummary($response, $migrated);
 
 		return $response;
 	}
@@ -162,8 +164,36 @@ class Migrations extends Controller\Cli
 			
 			$migrated[$id] = $migration;
 		}
+		
+		$this->responseSummary($response, $migrated);
 
 		return $response;
+	}
+	
+	/**
+	 * @param Response\Cli $response
+	 * @param array $migrated
+	 */
+	public function responseSummary(Response\Cli $response, array $migrated): void
+	{
+		$table = new Table;
+		$table->hasMarkup(true);
+		$table->setHeaders(['Migration ('. count($migrated) .')', 'ID', 'Time', 'Memory']);
+			
+		foreach($migrated as $id => $migratedRunner)
+		{
+			/**
+			 * @var Runner $migratedRunner
+			 */
+			$table->addRow([
+				$migratedRunner->__toString(),
+				$id,
+				$migratedRunner->measurement->getTotalTime(),
+				$migratedRunner->measurement->getTotalMemory(),
+			]);
+		}
+	
+		$response->append(PHP_EOL . $table->getTable());
 	}
 
 	/**
