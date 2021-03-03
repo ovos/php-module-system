@@ -28,11 +28,14 @@ class Migrations extends Mysql
 	 *
 	 * @return Migration[]|false
 	 */
-	public function getAll($select = 'id, migrations.*', $options = []): array|false
+	public function getAll(
+		$select = 'id, ' . self::TABLE . '.*',
+		$options = []
+	): array|false // group by ID
 	{
 		$query = $this->query()
 			->select($select)
-			->from(self::getTable());
+			->from(self::TABLE);
 
 		if(isset($options['order']))
 		{
@@ -49,7 +52,6 @@ class Migrations extends Mysql
 		}
 		
 		$query->execute();
-		$result = $query->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_GROUP , Migration::class); // group by ID
-		return array_map(fn($row) => reset($row), $result);	
+		return $this->fetchGrouped($query, Migration::class); // group by first column
 	}
 }

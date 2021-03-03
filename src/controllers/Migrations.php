@@ -84,20 +84,13 @@ class Migrations extends Controller\Cli
 			 */
 			$migration->run(Migration::DIRECTION_UP);
 			
-			if(isset($records[$id])) // rolled back
-			{
-				$record = $records[$id];
-				$record->migrated_at = new Expression('NOW()');
-				$record->save();
-			}
-			else
-			{
-				$record = new Model;
-				$record->id = $id;
-				$record->name = $migration->__toString();
-				$record->migrated_at = new Expression('NOW()');
-				$record->insert();
-			}
+			$record = isset($records[$id])
+				? $records[$id]
+				: new Model(['id' => $id]); // rolledback or new
+			$record->name = $migration->__toString();
+			$record->migrated_at = new Expression('NOW()');
+			$record->rolledback_at = null;
+			$record->save();
 			
 			$counter++;
 		}
@@ -116,22 +109,50 @@ class Migrations extends Controller\Cli
 	{
 		$response = new Response\Cli;
 
-		$migrations = $this->getMigrations();
+		$store = new Store;
+		$records = $store->getAll();
+		$migrations = $this->getMigrations(reverse: true);
+		$counter = 0;
+		
 		foreach($migrations as $id => $migration)
 		{
+			if(!isset($records[$id]))
+			{
+				continue;
+			}
+			
+			$record = $records[$id];
+			if($record->migrated_at === null)
+			{
+				continue;
+			}
+					
+			if($amount !== null && $counter >= $amount)
+			{
+				break;
+			}
+			
 			/**
 			 * @var Runner $migration
 			 */
 			$migration->run(Migration::DIRECTION_DOWN);
+			
+			$record->migrated_at = null;
+			$record->rolledback_at = new Expression('NOW()');
+			$record->save();
+			
+			$counter++;
 		}
 
 		return $response;
 	}
 
 	/**
+	 * @param bool $reverse
+	 * 
 	 * @return array
 	 */
-	public function getMigrations(): array
+	public function getMigrations(bool $reverse = false): array
 	{
 		$migrations = [];	
 	
@@ -173,7 +194,14 @@ class Migrations extends Controller\Cli
 			}			
 		}
 		
-		ksort($migrations);
+		if($reverse)
+		{
+			krsort($migrations);
+		}
+		else
+		{
+			ksort($migrations);
+		}
 		
 		return $migrations;
 	}
