@@ -178,7 +178,7 @@ class Migrations extends Controller\Cli
 	{
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Migration ('. count($migrated) .')', 'ID', 'Time', 'Memory']);
+		$table->setHeaders(['Migration (' . count($migrated) . ')', 'ID', 'Time', 'Memory']);
 			
 		foreach($migrated as $id => $migratedRunner)
 		{

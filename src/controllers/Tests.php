@@ -7,6 +7,7 @@ use Ovos\Controller;
 use Ovos\Response;
 use Ovos\Size;
 use Ovos\ArrayObject;
+use Ovos\Terminal;
 use Ovos\Test\Runner;
 use Ovos\Dir;
 use Ovos\Terminal\Formatter;
@@ -17,6 +18,7 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 use ReflectionClass;
 use ReflectionMethod;
+use Throwable;
 use function strlen;
 
 /**
@@ -63,15 +65,27 @@ class Tests extends Controller\Cli
 		
 		foreach($tests as $test)
 		{
-			/**
-			 * @var Runner $test
-			 */
-			$test->run() ? $countPassed++ : $countFailed++;
+			try
+			{
+				/**
+				 * @var Runner $test
+				 */
+				$test->run() ? $countPassed++ : $countFailed++;
+			}
+			catch(Throwable $throwable)
+			{
+				Terminal::output(sprintf(
+					'Test <white>%s<reset> has <red>failed<reset>...' . PHP_EOL,
+					$test->__toString())
+				, true);
+				
+				throw $throwable;
+			}
 		}
 		
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Test ('. count($tests) .')', 'Time', 'Memory', 'Result']);
+		$table->setHeaders(['Test (' . count($tests) . ')', 'Time', 'Memory', 'Result']);
 			
 		foreach($tests as $test)
 		{
