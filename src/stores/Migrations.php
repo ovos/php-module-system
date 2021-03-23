@@ -39,7 +39,7 @@ class Migrations extends Mysql
 
 		if(isset($options['order']))
 		{
-			$sql->orderBy($options['order']);
+			$query->orderBy(...$options['order']);
 		}
 		
 		try

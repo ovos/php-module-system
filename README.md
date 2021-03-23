@@ -35,7 +35,9 @@ invokes all configured (in config) collectors
 * `php cli.php tests run`  
 runs tests  
 #### Migrations
+* `php cli.php migrations status`  
+displays summary of migrations 
 * `php cli.php migrations run :amount`  
-runs migrations  
+runs migrations
 * `php cli.php migrations rollback :amount`  
 rolls back migrations  
