@@ -38,7 +38,7 @@ class Collector extends Controller\Cli
 	/**
 	 * @param bool $coloredOutput
 	 */
-	public function index($coloredOutput = false): void
+	public function index(bool $coloredOutput = false): void
 	{
 		if($this->_collectors !== null)
 		{
