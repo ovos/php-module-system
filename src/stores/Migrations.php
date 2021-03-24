@@ -10,7 +10,7 @@ use PDOException;
 /**
  * Migrations
  *
- * @package Models
+ * @package Stores
  * @author Marcin Gil <mg@ovos.at>
  */
 class Migrations extends Mysql
