@@ -6,13 +6,9 @@ namespace Controllers\System;
 use FilesystemIterator;
 use Ovos\ArrayObject;
 use Ovos\Controller;
-use Ovos\Response;
-use Ovos\View;
 use Ovos\Terminal;
-use function Ovos\services;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use ReflectionClass;
 use SplFileInfo;
 
 /**
@@ -26,9 +22,9 @@ class Collector extends Controller\Cli
 	use Controller\Traits\Cli;
 
 	/**
-	 * @var ArrayObject
+	 * @var null|ArrayObject
 	 */
-	protected $_collectors;
+	protected null|ArrayObject $_collectors = null;
 
 	/**
 	 */
@@ -59,7 +55,7 @@ class Collector extends Controller\Cli
 				
 				/** @var Controller $controller */
 				$controller = new $controllerClassNs();
-				$controller->setColoredOutput($coloredOutput);
+				$controller->setColoredOutput($coloredOutput); // trait method
 				
 				if(method_exists($controller, $collector->action) === false)
 				{
@@ -105,7 +101,7 @@ class Collector extends Controller\Cli
 				continue;
 			}
 			
-			if(strpos($file->getBasename(), '.') === 0) // skip hidden files
+			if(str_starts_with($file->getBasename(), '.')) // skip hidden files
 			{
 				continue;
 			}

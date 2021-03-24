@@ -10,18 +10,12 @@ use Ovos\Response;
 use Ovos\Migration\Runner;
 use Ovos\Dir;
 use Ovos\Terminal;
-use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
 use Ovos\Migration;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use SplFileInfo;
 use ReflectionClass;
-use ReflectionMethod;
 use Stores\Migrations as Store;
 use Models\Migration as Model;
-use Throwable;
 use function strlen;
 
 /**
