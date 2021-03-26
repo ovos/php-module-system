@@ -139,7 +139,7 @@ class Migrations extends Controller\Cli
 	 * 
 	 * @return Response
 	 */
-	public function rollback(?int $amount = null): Response
+	public function rollback(?int $amount = 1): Response
 	{
 		$response = new Response\Cli;
 
