@@ -42,8 +42,7 @@ class Tests extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setColoredOutput(true);
-				
+		
 		$this->_paths = $this->_app->getConfig()->system->tests;
 	}
 	/**

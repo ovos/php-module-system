@@ -26,12 +26,12 @@ class Migrations extends Mysql
 	 * @param string $select
 	 * @param array $options
 	 *
-	 * @return false|Migration[]
+	 * @return Migration[]
 	 */
 	public function getAll(
-		$select = 'id, ' . self::TABLE . '.*',
-		$options = []
-	): false|array // group by ID
+		string $select = 'id, ' . self::TABLE . '.*',
+		array $options = []
+	): array // group by ID
 	{
 		$query = $this->query()
 			->select($select)
