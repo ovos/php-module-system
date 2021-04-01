@@ -32,8 +32,9 @@ displays free space on server
 * `php cli.php system collector`  
 invokes all configured (in config) collectors
 #### Tests
-* `php cli.php tests run`  
-runs tests  
+* `php cli.php tests run [:class] [:method]`  
+runs tests
+:class and :method params narrow pool of tests to run  
 #### Migrations
 * `php cli.php migrations status`  
 displays summary of migrations 

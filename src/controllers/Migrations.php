@@ -265,26 +265,22 @@ class Migrations extends Controller\Cli
 			}
 			
 			$pathLength = strlen($path);
-			$files = Dir::getFiles($path, function($file)
+			$files = Dir::getFiles($path, skipCallback: function($file)
 			{
 				/**
 				* @var SplFileInfo $file
 				*/
 				// filter out non .php files
-				if($file->getExtension() !== self::MIGRATION_EXT)
-				{
-					return null;
-				}
-				
-				return $file->getBasename('.' . self::MIGRATION_EXT);
+				return $file->getExtension() !== self::MIGRATION_EXT;
 			});
 			
-			foreach($files as $basename => $file)
+			foreach($files as $file)
 			{
 				// include the migration, because filename is not psr-4 compatible
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$basename = $file->getBasename('.' . self::MIGRATION_EXT);
 				[$id, $filename] = explode('_', $basename);
 				
 				$className = 'Migrations' . $relativePath . '\\' . $filename;
