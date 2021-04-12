@@ -31,6 +31,7 @@ class Collector extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
+		$this->setColoredOutput(true);
 		
 		$this->_collectors = $this->_app->getConfig()->system->collectors;
 	}
@@ -53,9 +54,9 @@ class Collector extends Controller\Cli
 					continue;		
 				}
 				
-				/** @var Controller $controller */
+				/** @var Controller\Cli $controller */
 				$controller = new $controllerClassNs();
-				$controller->setColoredOutput($coloredOutput); // trait method
+				$controller->setColoredOutput($coloredOutput);
 				
 				if(method_exists($controller, $collector->action) === false)
 				{
@@ -90,8 +91,11 @@ class Collector extends Controller\Cli
 		
 		$affected = 0;
 		
-		$iterator = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
-		foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
+		$directoryIterator = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
+		/**
+		 * @var RecursiveDirectoryIterator $iterator
+		 */
+		foreach($iterator = new RecursiveIteratorIterator($directoryIterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
 		{
 			/**
 			 * @var SplFileInfo $file
@@ -118,12 +122,12 @@ class Collector extends Controller\Cli
 				$unlink = unlink($file->getPathname());
 				if($unlink)
 				{
-					Terminal::output('<green>Done.');
+					Terminal::output('<green>Done.', $this->getColoredOutput());
 					$affected++;
 				}
 				else
 				{
-					Terminal::output('<red>Error.');
+					Terminal::output('<red>Error.', $this->getColoredOutput());
 				}
 				
 				print(PHP_EOL);
