@@ -1,5 +1,6 @@
+<?php use Ovos\Controller\Cli; ?>
 <?php use Ovos\Strings; ?>
-<?php use Ovos\Terminal\Formatter; ?>
+<?php use Ovos\Terminal; ?>
 
 <?php $this->title()->set($this->title ? $this->title : $this->_('Oops. An error has occurred :-(')); ?>
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
@@ -26,6 +27,9 @@
 
 <?php else: ?>
 <?php /* CLI output */ ?>
+<?php $coloredOutput = $this->controllerInstance instanceof Cli
+	&& $this->controllerInstance->getColoredOutput(); ?>
+
 <?php if($title = $this->title()->get()): ?>
 <?= str_pad(Strings::wrap($title, ' '), 50, '-', STR_PAD_BOTH) . PHP_EOL . PHP_EOL; ?>
 <?php endif; ?>
@@ -34,8 +38,8 @@
 <?php foreach($this->events as $event): ?>
 <?php if($event instanceof \Ovos\Error): ?><?php $eventName = $event->getName(); ?><?php else: ?><?php $eventName = get_class($event); ?><?php endif; ?>
 <?php $eventName = str_pad(Strings::wrap($eventName, ' '), 50, '-', STR_PAD_BOTH); ?>
-<?= Formatter::handleMarkup('<red>' . $eventName . '<reset>') . PHP_EOL; ?>
-<?= Formatter::handleMarkup('<white>' . $event->__toString() . '<reset>') . PHP_EOL . PHP_EOL; ?>
+<?= Terminal::output('<red>' . $eventName . '<reset>', $coloredOutput) . PHP_EOL; ?>
+<?= Terminal::output('<white>' . $event->__toString() . '<reset>', $coloredOutput) . PHP_EOL . PHP_EOL; ?>
 <?php endforeach; ?>
 <?php endif; ?>
 <?php if($this->content): ?>
