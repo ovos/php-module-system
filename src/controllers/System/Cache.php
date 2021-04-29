@@ -10,6 +10,20 @@ use Ovos\Password;
 use Ovos\Response;
 use function Ovos\services;
 use Throwable;
+use function function_exists;
+use function opcache_reset;
+use function method_exists;
+use function base64_encode;
+use function base64_decode;
+use function date;
+use function md5;
+use function curl_init;
+use function curl_setopt_array;
+use function curl_exec;
+use function curl_errno;
+use function curl_error;
+use function curl_close;
+use function http_build_query;
 
 /**
  * Cache
@@ -104,7 +118,7 @@ class Cache extends Controller\Cli
 	 */
 	public function clearOpCache(): void
 	{
-		if(\function_exists('opcache_reset') === false)
+		if(function_exists('opcache_reset') === false)
 		{
 			Functions::println('<purple>OPcache is not active.<reset>', true);
 		}
@@ -184,6 +198,11 @@ class Cache extends Controller\Cli
 		$accessTokenHash = isset($_GET['access_token_hash'])
 			? base64_decode($_GET['access_token_hash'])
 			: null;
+		if($accessToken === null)	
+		{
+			$response->setHttpCode(403);
+			exit;
+		}
 		$accessToken = $this->getAccessToken();
 		
 		if(password_verify($accessToken, $accessTokenHash) === false)
