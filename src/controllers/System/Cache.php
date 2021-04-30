@@ -198,7 +198,7 @@ class Cache extends Controller\Cli
 		$accessTokenHash = isset($_GET['access_token_hash'])
 			? base64_decode($_GET['access_token_hash'])
 			: null;
-		if($accessToken === null)	
+		if($accessTokenHash === null)	
 		{
 			$response->setHttpCode(403);
 			exit;
