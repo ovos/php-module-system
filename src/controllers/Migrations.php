@@ -281,10 +281,11 @@ class Migrations extends Controller\Cli
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::MIGRATION_EXT);
 				[$id, $filename] = explode('_', $basename);
 				
-				$className = 'Migrations' . $relativePath . '\\' . $filename;
+				$className = 'Migrations' . $namespace . '\\' . $filename;
 				$class = new ReflectionClass($className);
 		
 				$migrations[$id] = new Runner($class, (int)$id);

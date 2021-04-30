@@ -165,8 +165,9 @@ class Tests extends Controller\Cli
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::TEST_EXT);
-				$className = 'Tests' . $relativePath . '\\' . $basename;
+				$className = 'Tests' . $namespace . '\\' . $basename;
 				$class = new ReflectionClass($className);
 				$methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
 				
