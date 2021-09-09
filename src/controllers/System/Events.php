@@ -49,8 +49,10 @@ class Events extends Controller
 			$view->content = $output;
 		}
 
-		$response = new Response\Html;
-
+		$response = $this->_app->getResponse(); // reuse the object
+		// because of possible settings affecting output
+		$response->setIsSent(false);
+		
 		// fetch last event
 		$event = end($events);
 		if($event instanceof NotFoundException)

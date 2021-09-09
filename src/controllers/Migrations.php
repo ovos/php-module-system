@@ -26,8 +26,6 @@ use function strlen;
  */
 class Migrations extends Controller\Cli
 {
-	use Controller\Traits\Cli;
-	
 	/**
 	 * @var string
 	 */
@@ -43,7 +41,6 @@ class Migrations extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setColoredOutput(true);
 		
 		$this->_paths = $this->_app->getConfig()->system->migrations;
 	}

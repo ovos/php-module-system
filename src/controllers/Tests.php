@@ -25,8 +25,6 @@ use function strlen;
  */
 class Tests extends Controller\Cli
 {
-	use Controller\Traits\Cli;
-
 	/**
 	 * @var string
 	 */
@@ -42,7 +40,6 @@ class Tests extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setColoredOutput(true);
 		
 		$this->_paths = $this->_app->getConfig()->system->tests;
 	}
