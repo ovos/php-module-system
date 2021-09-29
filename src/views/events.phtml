@@ -6,23 +6,31 @@
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
 
 	<?php /* HTTP output */ ?>
-	<?php $this->elements()->main->addClass('events'); ?>
+	<?php $this->elements()->main->addClass('main-events'); ?>
 
 	<section class="events">
-		<?php if($title = $this->title()->get()): ?>
-			<h1><?= $title; ?></h1>
-		<?php endif; ?>
-		
-		<?php if($this->events): ?>
-			<?php foreach($this->events as $event): ?>
-				<h2><?php if($event instanceof \Ovos\Error): ?><?= $event->getName(); ?><?php else: ?><?= get_class($event); ?><?php endif; ?></h2>
-				<pre><?= $event->__toString(); ?></pre>
-			<?php endforeach; ?>
-		<?php endif; ?>
-		<?php if($this->content): ?>
-			<h2>Output</h2>
-			<pre id="output"><?= $this->escape($this->content); ?></pre>
-		<?php endif; ?>	
+		<div class="events-title">
+			<?php if($title = $this->title()->get()): ?>
+				<h1><?= $title; ?></h1>
+			<?php endif; ?>
+		</div>
+		<div class="events-buttons buttons">
+			<a href="<?= SYSTEM_PATH; ?>" class="button">
+				<?= $this->_('Back to startpage'); ?>
+			</a>
+		</div>
+		<div class="events-debug">
+			<?php if($this->events): ?>
+				<?php foreach($this->events as $event): ?>
+					<h2><?php if($event instanceof \Ovos\Error): ?><?= $event->getName(); ?><?php else: ?><?= get_class($event); ?><?php endif; ?></h2>
+					<pre><?= $event->__toString(); ?></pre>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<?php if($this->content): ?>
+				<h2>Output</h2>
+				<pre id="output"><?= $this->escape($this->content); ?></pre>
+			<?php endif; ?>
+		</div>
 	</section>
 
 <?php else: ?>
