@@ -5,6 +5,7 @@ namespace Controllers\System;
 
 use Ovos\Controller;
 use Ovos\Functions;
+use Ovos\Response\Json;
 use Ovos\Service\Session;
 use function Ovos\services;
 
@@ -17,6 +18,15 @@ use function Ovos\services;
 class Sessions extends Controller\Cli
 {
 	use Controller\Traits\Cli;
+
+	/**
+	 * Allows to access specified CLI methods via HTTP
+	 *
+	 * @var array
+	 */
+	protected array $_httpActions = [
+		'keep-alive',
+	];
 
 	/**
 	 * Clears sessions
@@ -33,6 +43,14 @@ class Sessions extends Controller\Cli
 		else
 		{
 			Functions::println('<red>Error clearing sessions.<reset>', true);
-		}	
+		}
+	}
+	
+	/**
+	 * Keep-alive
+	 */
+	public function keepAlive(): Json
+	{
+		return new Json;
 	}
 }
