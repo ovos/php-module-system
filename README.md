@@ -33,8 +33,8 @@ displays free space on server
 invokes all configured (in config) collectors
 #### Tests
 * `php cli.php tests run [:class] [:method]`  
-runs tests
-:class and :method params narrow pool of tests to run  
+runs tests, :class and :method params narrow pool of tests to run, for example:  
+`php cli.php tests run Router parametersNamedSkipOptional`
 #### Migrations
 * `php cli.php migrations status`  
 displays summary of migrations 

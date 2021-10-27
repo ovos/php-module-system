@@ -71,7 +71,8 @@ class Tests extends Controller\Cli
 			{
 				continue;
 			}
-			if($method && $test->method !== $method)
+			
+			if($method && $test->method->name !== $method)
 			{
 				continue;
 			}
