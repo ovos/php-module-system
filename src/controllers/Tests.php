@@ -171,6 +171,11 @@ class Tests extends Controller\Cli
 				
 				foreach($methods as $method)
 				{
+					if($method->isConstructor() || $method->isDestructor())
+					{
+						continue;
+					}
+					
 					$tests[] = new Runner($class, $method);
 				}
 			}			
