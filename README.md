@@ -8,15 +8,23 @@ https://github.com/ovos/php-module-system
 * PHP 8.0
 
 #### Installation
+1. Add to your .ssh/config
+```
+Host ovos.php-module-system
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/ovos.php-module-system
+```
+2. Add to composer.json
 ```
 "repositories": [
 {
   "type": "vcs",
   "url": "git@github.com:ovos/php-module-system.git"
-} 
+}
 ],
 ```
-
+3.
 ```
 git require ovos/php-module-system
 ```
