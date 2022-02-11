@@ -31,7 +31,7 @@ class User extends Plugin
 	/**
 	 * @return null|Model
 	 */
-	public function user(): ?Model
+	public function user(): null|Model
 	{
 		return services()->auth->getUser();
 	}
