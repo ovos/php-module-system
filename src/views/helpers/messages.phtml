@@ -21,7 +21,11 @@
 							<h3><?= $title; ?></h3>
 						<?php endif; ?>
 						<?php if($description = $message->getDescription()): ?>
-							<p><?= nl2br($description); ?></p>
+							<?php if($message->isRaw()): ?>
+								<?= $description; ?>
+							<?php else: ?>
+								<p><?= nl2br($description); ?></p>
+							<?php endif; ?>
 						<?php endif; ?>
 					</div>
 				</div>
