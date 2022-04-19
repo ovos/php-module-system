@@ -5,6 +5,7 @@ namespace Plugins;
 
 use Ovos\Controller\Plugin;
 use Ovos\Dir;
+use Ovos\Translator;
 
 /**
  * Vendor
@@ -49,7 +50,7 @@ class Vendor extends Plugin
 		{
 			if($module->translations && $module->vendor)
 			{
-				$this->getController()->addTranslationPath
+				Translator::addTranslationsPath
 				(
 					BASE_DIR
 					. $module->path . DIRECTORY_SEPARATOR 
