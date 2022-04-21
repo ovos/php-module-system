@@ -5,6 +5,7 @@ namespace Plugins;
 
 use Ovos\Controller\Plugin;
 use Ovos\Locales as BaseLocales;
+use Ovos\Translator;
 
 /**
  * Locales
@@ -40,12 +41,16 @@ class Locales extends Plugin
 			$locale->setLocked($locale->isLockedForRequest($this->_request));
 		}
 		
-		// if current locale is locked, use default instead
-		// this ensures that a locale which is locked is never rendered = user does not see missing translations
+		// set translator locale to request locale
 		$locale = $this->_request->getLocale();
+		Translator::setDefaultLocale($locale);
+		
+		// if current locale is locked, use default instead for the translator
+		// this ensures that a locale which is locked is never rendered = user does not see a missing translations
+		// do not change the request locale, so that the choice of user is maintained even when translation for this controller is locked
 		if($locale->isLocked())
 		{
-			$this->_request->setLocale(BaseLocales::getDefault());
+			Translator::setDefaultLocale(BaseLocales::getDefault());
 		}
 	}
 }
