@@ -43,14 +43,14 @@ class Locales extends Plugin
 		
 		// set translator locale to request locale
 		$locale = $this->_request->getLocale();
-		Translator::setDefaultLocale($locale);
+		Translator::setCurrentLocale($locale);
 		
 		// if current locale is locked, use default instead for the translator
 		// this ensures that a locale which is locked is never rendered = user does not see a missing translations
 		// do not change the request locale, so that the choice of user is maintained even when translation for this controller is locked
 		if($locale->isLocked())
 		{
-			Translator::setDefaultLocale(BaseLocales::getDefault());
+			Translator::setCurrentLocale(BaseLocales::getDefault());
 		}
 	}
 }
