@@ -86,11 +86,13 @@ class Cache extends Controller\Cli
 	public function clearPerishableHttp(): bool
 	{
 		// clear apcu, this only has an effect when tool is called via http
-		return services()->memory->getPool()->clear();
+		return services()->memory->getStore()->clear();
 	}	
 	
 	/**
 	 * Clear persistent
+	 * 
+	 * @return void
 	 */
 	public function clearPersistent(): void
 	{
@@ -102,7 +104,7 @@ class Cache extends Controller\Cli
 		else
 		{
 			// clear common pool
-			if(($pool = $persistent->getPool()) && $pool->clear())
+			if(($pool = $persistent->getStore()) && $pool->clear())
 			{
 				Functions::println('<green>Persistent cache cleared.<reset>', true);
 			}
@@ -115,6 +117,8 @@ class Cache extends Controller\Cli
 	
 	/**
 	 * Clear OPcache
+	 * 
+	 * @return void
 	 */
 	public function clearOpCache(): void
 	{
@@ -131,7 +135,6 @@ class Cache extends Controller\Cli
 			}
 			else
 			{
-				
 				Functions::println('<red>Error clearing OPcache. Try again!<reset>');
 			}
 		}	
@@ -139,6 +142,8 @@ class Cache extends Controller\Cli
 	
 	/**
 	 * Clear OPcache (has to be called via http) 
+	 * 
+	 * @return bool
 	 */
 	public function clearOpCacheHttp(): bool
 	{
@@ -150,8 +155,10 @@ class Cache extends Controller\Cli
 	 * Calls http method
 	 * 
 	 * @param string $method
+	 * 
+	 * @return bool
 	 */
-	public function callHttp($method) 
+	public function callHttp(string $method): bool
 	{
 		try
 		{
@@ -185,6 +192,8 @@ class Cache extends Controller\Cli
 			$message = sprintf("<red>HTTP service not reachable:<reset>\n%s", $throwable->getMessage());
 			Functions::println($message, true);
 		}
+		
+		return false;
 	}
 	
 	/**
