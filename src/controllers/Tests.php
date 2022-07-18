@@ -92,8 +92,6 @@ class Tests extends Controller\Cli
 					$test->__toString())
 				, true);
 				
-				fwrite(STDERR, sprintf('Test %s has failed...', $test->__toString()) . PHP_EOL);
-				
 				throw $throwable;
 			}
 		}
