@@ -8,6 +8,7 @@ use Ovos\Functions;
 use Ovos\Exception;
 use Ovos\Password;
 use Ovos\Response;
+use Ovos\Stream;
 use function Ovos\services;
 use Throwable;
 use function function_exists;
@@ -163,11 +164,30 @@ class Cache extends Controller\Cli
 		try
 		{
 			// clear the method via http
+			$request = new Stream\Request(SYSTEM_HOST . SYSTEM_PATH
+				. 'cache-call-http.php'
+				. '?' . http_build_query([
+					'method' => $method,
+					'access_token_hash' => base64_encode($this->getAccessTokenHash()),
+				])
+			, [
+				'http' => [
+					'timeout' => 10,
+				],
+				'ssl' => [
+					'verify_peer' => false, // for dev certificates
+					'verify_peer_name' => false, // for dev certificates
+				],
+			]);
+			
+			/*
 			$curl = curl_init();
 			curl_setopt_array($curl, [
 				CURLOPT_TIMEOUT => 10,
 				CURLOPT_CONNECTTIMEOUT => 1,
-				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYHOST => false, // for dev certificates
+				CURLOPT_SSL_VERIFYPEER => false, // for dev certificates
 				CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH
 					. 'cache-call-http.php'
 					. '?' . http_build_query([
@@ -182,8 +202,9 @@ class Cache extends Controller\Cli
 				throw new Exception(curl_error($curl));
 			}
 			curl_close($curl);
+			*/
 			
-			return $response === '1';
+			return $request->invoke()->getResponse() === '1';
 		}
 		catch(Throwable $throwable)
 		{
