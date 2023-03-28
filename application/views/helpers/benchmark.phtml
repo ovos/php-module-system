@@ -1,0 +1,45 @@
+<?php use Ovos\Console\Table; ?>
+<?php use Ovos\Measurement; ?>
+
+<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+
+	<?= $this->render('helpers/debug.phtml'); ?>
+	
+	<table class="debug debug-benchmark">
+		<tr>
+			<th>Marker (<?= count($this->measurements); ?>)</th>
+			<th>Time</th>
+			<th>Memory</th>
+		</tr>
+		<?php foreach($this->measurements as $marker => $measurement): ?>
+			<?php /** @var Measurement $measurement */ ?>
+			<tr>
+				<td><?= wordwrap($marker, 100, PHP_EOL); ?></td>
+				<td><?= $measurement->getTotalTime(); ?></td>
+				<td><?= $measurement->getTotalMemory(); ?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+	<a class="debug" target="_blank" href="tools/clear-cache">Clear cache</a>
+	
+<?php else: ?>
+
+	<?php
+		$table = new Table;
+		$table->setHeaders(['Requests (' . count($this->measurements) . ')', 'Time', 'Memory']);
+	
+		foreach($this->measurements as $marker => $measurement)
+		{
+			/** @var Measurement $measurement */
+			$table->addRow([
+				wordwrap($marker, 150, PHP_EOL),
+				$measurement->getTotalTime(),
+				$measurement->getTotalMemory(),
+			]);
+			$table->addRow([PHP_EOL]);
+		}
+	
+		echo PHP_EOL . $table->getTable();
+	?>
+	
+<?php endif; ?>

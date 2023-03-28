@@ -1,0 +1,39 @@
+<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+
+	<?= $this->render('helpers/debug.phtml'); ?>
+	
+	<table class="debug debug-queries">
+		<tr>
+			<th>Queries (<?= count($this->queries); ?>)</th>
+			<th>Time</th>
+			<th>Memory</th>
+		</tr>
+		<?php foreach($this->queries as $query): ?>
+			<tr>
+				<td><?= wordwrap($query->sql, 100, PHP_EOL); ?></td>
+				<td><?= $query->time; ?></td>
+				<td><?= $query->memory; ?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+	
+<?php else: ?>
+
+	<?php
+		$table = new Console_Table();
+		$table->setHeaders(['Queries (' . count($this->queries) . ')', 'Time', 'Memory']);
+	
+		foreach($this->queries as $query)
+		{
+			$table->addRow([
+				wordwrap($query->sql, 150, PHP_EOL),
+				$query->time,
+				$query->memory
+			]);
+			$table->addRow([PHP_EOL]);
+		}
+	
+		echo PHP_EOL . $table->getTable();
+	?>
+	
+<?php endif; ?>
