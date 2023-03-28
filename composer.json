@@ -15,13 +15,13 @@
   "prefer-stable": true,
 	"autoload": {
 		"psr-4": {
-			"Components\\": "src/components",
-			"Controllers\\": "src/controllers",
-			"Locales\\": "src/locales",
-			"Plugins\\": "src/plugins",
-			"Widgets\\": "src/widgets",
-			"Models\\": "src/models",
-			"Stores\\": "src/stores"
+			"Components\\": "application/components",
+			"Controllers\\": "application/controllers",
+			"Locales\\": "application/locales",
+			"Plugins\\": "application/plugins",
+			"Widgets\\": "application/widgets",
+			"Models\\": "application/models",
+			"Stores\\": "application/stores"
     }
 	},
 	"scripts": {
