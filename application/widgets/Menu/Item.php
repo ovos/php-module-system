@@ -98,7 +98,7 @@ class Item
 	{
 		if($url instanceof Url)
 		{
-			$this->_url = $url;
+			$this->_url = $url->setRelative(true);
 			
 			return $this;
 		}
