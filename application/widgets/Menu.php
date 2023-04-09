@@ -85,7 +85,7 @@ class Menu extends Widget
 	{
 		foreach($this->_items as $item)
 		{
-			if($item->getUrl() === $this->_url)
+			if(str_starts_with($this->_url, $item->getUrl()))
 			{
 				$item->setActive(true);
 			}
