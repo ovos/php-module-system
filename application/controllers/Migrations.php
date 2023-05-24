@@ -223,7 +223,7 @@ class Migrations extends Controller\Cli
 	protected function _summary(Response\Cli $response): void
 	{
 		$store = new Store;
-		$records = $store->getAll(options: ['order' => ['id', 'DESC']]);
+		$records = $store->getAll(options: ['order' => ['id DESC']]);
 		
 		$table = new Table;
 		$table->hasMarkup(true);
