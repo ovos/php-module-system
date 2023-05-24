@@ -48,7 +48,7 @@ class Tests extends Controller\Cli
 	 * Runs tests
 	 * Specify class or method to narrow the pool
 	 * 
-	 * @param ?string $class
+	 * @param ?string $class (can be also used to specify the class::method as string)
 	 * @param ?string $method
 	 * 
 	 * @return Response
@@ -61,22 +61,36 @@ class Tests extends Controller\Cli
 		$ran = [];
 		$passed = 0;
 		$failed = 0;
+		// class::method mode
+		$classMethodMode = $class !== null && str_contains($class, '::');
+		$classMode = $class !== null;
 		
 		foreach($tests as $test)
 		{
 			/**
-			 * @var Runner $test
-			 */
-			if($class && $test->method->class !== 'Tests\\' . $class)
+			* @var Runner $test
+			*/
+			if($classMethodMode)
 			{
-				continue;
+				if($test->__toString() !== $class)
+				{
+					continue;
+				}
+			}
+			else if($classMode)
+			{
+				if($test->method->class !== $class)
+				{
+					continue;
+				}
 			}
 			
+			// it's possible to filter only by the method too
 			if($method && $test->method->name !== $method)
 			{
 				continue;
 			}
-			
+				
 			try
 			{
 				/**
@@ -176,7 +190,10 @@ class Tests extends Controller\Cli
 				
 				foreach($methods as $method)
 				{
-					if($method->isConstructor() || $method->isDestructor())
+					if($method->isConstructor()
+						|| $method->isDestructor()
+						|| $method->getName() === 'cleanUp' // our custom method to clean up things after the test was finished
+					)
 					{
 						continue;
 					}
