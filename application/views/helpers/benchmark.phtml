@@ -5,21 +5,24 @@
 
 	<?= $this->render('helpers/debug.phtml'); ?>
 	
-	<table class="debug debug-benchmark">
-		<tr>
-			<th>Marker (<?= count($this->measurements); ?>)</th>
-			<th>Time</th>
-			<th>Memory</th>
-		</tr>
+	<div class="debug-table debug-benchmark">
+		
+		<div class="row">
+			<div class="cell header auto">Marker (<?= count($this->measurements); ?>)</div>
+			<div class="cell header">Time</div>
+			<div class="cell header">Memory</div>
+		</div>
+		
 		<?php foreach($this->measurements as $marker => $measurement): ?>
 			<?php /** @var Measurement $measurement */ ?>
-			<tr>
-				<td><?= wordwrap($marker, 100, PHP_EOL); ?></td>
-				<td><?= $measurement->getTotalTime(); ?></td>
-				<td><?= $measurement->getTotalMemory(); ?></td>
-			</tr>
+			
+			<div class="row">	
+				<div class="cell auto"><?= $marker; ?></div>
+				<div class="cell"><?= $measurement->getTotalTime(); ?></div>
+				<div class="cell"><?= $measurement->getTotalMemory(); ?></div>
+			</div>
 		<?php endforeach; ?>
-	</table>
+	</div>
 	
 	<div class="debug debug-tools">
 		<a class="debug-tool clear-cache" target="_blank" href="tools/clear-cache">Clear cache</a>
