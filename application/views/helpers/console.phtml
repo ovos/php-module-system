@@ -10,7 +10,7 @@
 
 		<?php foreach($this->messages as $message): ?>
 			<div class="row">
-				<div class="cell"><?= var_representation($message->message); ?></div>
+				<div class="cell"><?= is_string($message->message) ? $message->message : print_r($message->message, true); ?></div>
 				<div class="cell"><?= $message->time; ?></div>
 				<div class="cell"><?= $message->memory; ?></div>
 			</div>
