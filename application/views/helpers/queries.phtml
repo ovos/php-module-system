@@ -1,17 +1,20 @@
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
 
+	<?php /*
 	<?= $this->render('helpers/debug.phtml'); ?>
+	*/ ?>
 	
 	<div class="debug-table debug-queries">
+		
 		<div class="row">
-			<div class="cell header auto">Queries (<?= count($this->queries); ?>)</div>
+			<div class="cell header">Queries (<?= count($this->queries); ?>)</div>
 			<div class="cell header">Time</div>
 			<div class="cell header">Memory</div>
 		</div>
 
 		<?php foreach($this->queries as $query): ?>
 			<div class="row">
-				<div class="cell auto"><?= $query->sql; ?></div>
+				<div class="cell"><?= $query->sql; ?></div>
 				<div class="cell"><?= $query->time; ?></div>
 				<div class="cell"><?= $query->memory; ?></div>
 			</div>

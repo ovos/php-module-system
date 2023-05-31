@@ -1,0 +1,39 @@
+<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+	
+	<div class="debug-table debug-console">
+		
+		<div class="row">
+			<div class="cell header">Messages (<?= count($this->messages); ?>)</div>
+			<div class="cell header">Time</div>
+			<div class="cell header">Memory</div>
+		</div>
+
+		<?php foreach($this->messages as $message): ?>
+			<div class="row">
+				<div class="cell"><?= var_representation($message->message); ?></div>
+				<div class="cell"><?= $message->time; ?></div>
+				<div class="cell"><?= $message->memory; ?></div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	
+<?php else: ?>
+
+	<?php
+		$table = new Console_Table();
+		$table->setHeaders(['Messages (last ' . count($this->messages) . ')', 'Time', 'Memory']);
+	
+		foreach($this->messages as $message)
+		{
+			$table->addRow([
+				wordwrap($message->message, 150, PHP_EOL),
+				$message->time,
+				$message->memory
+			]);
+			$table->addRow([PHP_EOL]);
+		}
+	
+		echo PHP_EOL . $table->getTable();
+	?>
+	
+<?php endif; ?>
