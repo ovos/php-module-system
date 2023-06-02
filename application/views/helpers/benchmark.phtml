@@ -16,7 +16,7 @@
 		<?php foreach($this->measurements as $marker => $measurement): ?>
 			<?php /** @var Measurement $measurement */ ?>
 			
-			<div class="row">	
+			<div class="row">
 				<div class="cell auto"><?= $marker; ?></div>
 				<div class="cell"><?= $measurement->getTotalTime(); ?></div>
 				<div class="cell"><?= $measurement->getTotalMemory(); ?></div>
