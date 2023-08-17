@@ -41,6 +41,10 @@ class Migrations extends Mysql
 		{
 			$query->orderBy(...$options['order']);
 		}
+		if(isset($options['limit']))
+		{
+			$query->limit($options['limit']);
+		}
 		
 		try
 		{
