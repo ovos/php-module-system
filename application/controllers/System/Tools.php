@@ -23,9 +23,9 @@ class Tools extends Controller\Cli
 	use Controller\Traits\Cli;
 	
 	/**
-	 * @param string $string (optional)
+	 * @param ?string $string (optional)
 	 */
-	public function encrypt(string $string = null): void
+	public function encrypt(?string $string = null): void
 	{
 		if($string === null)
 		{
@@ -41,9 +41,9 @@ class Tools extends Controller\Cli
 	}
 	
 	/**
-	 * @param string $string (optional)
+	 * @param ?string $string (optional)
 	 */
-	public function decrypt(string $string = null): void
+	public function decrypt(?string $string = null): void
 	{
 		if($string === null)
 		{

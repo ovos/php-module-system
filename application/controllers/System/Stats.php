@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Controllers\System;
 
 use Ovos\Controller;
+use Ovos\Plugins\Layout;
 use Ovos\Response;
 use Ovos\Size;
 
@@ -18,7 +19,7 @@ class Stats extends Controller\Cli
 	/**
 	 * @var array
 	 */
-	protected $_httpActions = [
+	protected array $_httpActions = [
 		'free-space',
 	];
 
@@ -32,6 +33,11 @@ class Stats extends Controller\Cli
 	 */
 	public function freeSpace(bool $formatSize = true, bool $eol = true): Response
 	{
+		if($this->hasPlugin(Layout::SYMBOL))
+		{
+			$this->removePlugin(Layout::SYMBOL);
+		}
+	
 		$response = new Response\Html;
 		
 		$freeSpace = disk_free_space('.');
