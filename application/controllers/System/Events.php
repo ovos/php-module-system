@@ -31,7 +31,7 @@ class Events extends Controller
 			$auth->authorizeActions(['index']);
 		}
 	}
-
+	
 	/**
 	 * Index
 	 *

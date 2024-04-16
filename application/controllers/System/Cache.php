@@ -104,8 +104,9 @@ class Cache extends Controller\Cli
 		}
 		else
 		{
-			// clear common pool
-			if(($pool = $persistent->getStore()) && $pool->clear())
+			if(($store = $persistent->getStore())
+				&& $store->clear() !== false
+			)
 			{
 				Functions::println('<green>Persistent cache cleared.<reset>', true);
 			}
@@ -163,22 +164,26 @@ class Cache extends Controller\Cli
 	{
 		try
 		{
-			// clear the method via http
-			$request = new Stream\Request(SYSTEM_HOST . SYSTEM_PATH
+			$callUrl = SYSTEM_HOST . SYSTEM_PATH
 				. 'cache-call-http.php'
 				. '?' . http_build_query([
 					'method' => $method,
 					'access_token_hash' => base64_encode($this->getAccessTokenHash()),
-				])
-			, [
-				'http' => [
-					'timeout' => 10,
-				],
-				'ssl' => [
-					'verify_peer' => false, // for dev certificates
-					'verify_peer_name' => false, // for dev certificates
-				],
-			]);
+				]);
+							
+			// clear the method via http
+			$request = new Stream\Request(
+				$callUrl,
+				[
+					'http' => [
+						'timeout' => 10,
+					],
+					'ssl' => [
+						'verify_peer' => false, // for dev certificates
+						'verify_peer_name' => false, // for dev certificates
+					],
+				]
+			);
 			
 			/*
 			$curl = curl_init();

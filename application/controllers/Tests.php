@@ -4,17 +4,22 @@ declare(strict_types=1);
 namespace Controllers;
 
 use Ovos\Controller;
+use Ovos\Exception\DisabledException;
 use Ovos\Response;
 use Ovos\ArrayObject;
 use Ovos\Terminal;
+use Ovos\Test;
+use Ovos\Test\Internal;
 use Ovos\Test\Runner;
 use Ovos\Dir;
 use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
+use Ovos\View;
 use SplFileInfo;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
+use function Ovos\services;
 use function strlen;
 
 /**
@@ -29,7 +34,12 @@ class Tests extends Controller\Cli
 	 * @var string
 	 */
 	public const TEST_EXT = 'php';
-
+	
+	/**
+	 * @var string
+	 */
+	public const METHOD_ATTRIBUTE_INTERNAL = Internal::class;
+	
 	/**
 	 * @var ArrayObject
 	 */
@@ -57,36 +67,37 @@ class Tests extends Controller\Cli
 	{
 		$response = new Response\Cli;
 		
-		$tests = $this->getTests();
+		$runners = $this->getTestRunners();
 		$ran = [];
-		$passed = 0;
-		$failed = 0;
+		$passed = [];
+		$failed = [];
+		$skipped = [];
 		// class::method mode
 		$classMethodMode = $class !== null && str_contains($class, '::');
 		$classMode = $class !== null;
 		
-		foreach($tests as $test)
+		foreach($runners as $runner)
 		{
 			/**
-			* @var Runner $test
+			* @var Runner $runner
 			*/
 			if($classMethodMode)
 			{
-				if($test->__toString() !== $class)
+				if($runner->__toString() !== $class)
 				{
 					continue;
 				}
 			}
 			else if($classMode)
 			{
-				if($test->method->class !== $class)
+				if($runner->method->class !== $class)
 				{
 					continue;
 				}
 			}
 			
 			// it's possible to filter only by the method too
-			if($method && $test->method->name !== $method)
+			if($method && $runner->method->name !== $method)
 			{
 				continue;
 			}
@@ -94,36 +105,39 @@ class Tests extends Controller\Cli
 			try
 			{
 				/**
-				 * @var Runner $test
+				 * @var Runner $runner
 				 */
-				$test->run() ? $passed++ : $failed++;
-				$ran[] = $test;
+				$result = match($runner->run())
+				{
+					Test::RESULT_PASSED => $passed[] = $runner,
+					Test::RESULT_FAILED => $failed[] = $runner,
+					Test::RESULT_SKIPPED => $skipped[] = $runner,
+				};
+				
+				$ran[] = $runner;
 			}
 			catch(Throwable $throwable)
 			{
-				Terminal::output(sprintf(
-					'Test <white>%s<reset> has <red>failed<reset>...' . PHP_EOL,
-					$test->__toString())
-				, true);
-				
-				throw $throwable;
+				$ran[] = $runner;
+				$failed[] = $runner;
 			}
 		}
 		
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Test (' . count($ran) . ')', 'Time', 'Memory', 'Result']);
+		$table->setHeaders(['Test (' . count($ran) . ')', 'Time', 'Memory', 'Result', 'Reason']);
 			
-		foreach($ran as $test)
+		foreach($ran as $runner)
 		{
 			/**
-			 * @var Runner $test
+			 * @var Runner $runner
 			 */
 			$table->addRow([
-				$test->__toString(),
-				$test->measurement->getTotalTime(),
-				$test->measurement->getTotalMemory(),
-				$this->_formatResult($test->result), 
+				$runner->__toString(),
+				$runner->measurement->getTotalTime(),
+				$runner->measurement->getTotalMemory(),
+				$this->_formatResult($runner->test->result),
+				$runner->test->reason,
 			]);
 			//$table->addRow([PHP_EOL]);
 		}
@@ -133,30 +147,49 @@ class Tests extends Controller\Cli
 		$table = new Table;
 		$table->hasMarkup(true);
 		$table->setHeaders(['Tests',
-			Formatter::handleMarkup('<green>Passed<reset>'),
-			Formatter::handleMarkup('<red>Failed<reset>')
+			$this->_formatResult(Test::RESULT_PASSED),
+			$this->_formatResult(Test::RESULT_FAILED),
+			$this->_formatResult(Test::RESULT_SKIPPED),
 		]);
 		$table->addRow([
 			count($ran),
-			$passed,
-			$failed,
+			count($passed),
+			count($failed),
+			count($skipped),
 		]);
-		$response->append(PHP_EOL . $table->getTable());
+		$response->append(PHP_EOL . $table->getTable()
+			. PHP_EOL . PHP_EOL);
+		$response->send(); // flush before we display errors
 		
-		if($failed)
+		foreach($failed as $runner)
+		{
+			Terminal::output(sprintf(
+				'Test <white>%s<reset> has <red>failed<reset>...',
+				$runner->__toString())
+			, true);
+			
+			if($runner->test->throwable === null)
+			{
+				continue;
+			}
+			
+			$this->_displayThrowable($throwable);
+		}
+		
+		if(count($failed))
 		{
 			exit(1); // exit with error status
-		}
-
+		}		
+		
 		return $response;
 	}
 	
 	/**
 	 * @return array
 	 */
-	public function getTests(): array
+	public function getTestRunners(): array
 	{
-		$tests = [];	
+		$runners = [];	
 	
 		foreach($this->_paths as $path)
 		{
@@ -192,27 +225,54 @@ class Tests extends Controller\Cli
 				{
 					if($method->isConstructor()
 						|| $method->isDestructor()
-						|| $method->getName() === 'cleanUp' // our custom method to clean up things after the test was finished
 					)
 					{
 						continue;
 					}
 					
-					$tests[] = new Runner($class, $method);
+					$methodAttributes = $method->getAttributes();
+					$methodAttributesArray = array_map(fn($attribute) => $attribute->getName(), $methodAttributes);
+					if(in_array(self::METHOD_ATTRIBUTE_INTERNAL, $methodAttributesArray, true))
+					{
+						continue;
+					}
+					
+					$runners[] = new Runner($class, $method);
 				}
 			}			
 		}
 		
-		return $tests;
+		return $runners;
 	}
 
 	/**
-	 * @param bool $result
+	 * @param int $result
 	 *
 	 * @return string
 	 */
-	protected function _formatResult(bool $result): string
+	protected function _formatResult(int $result): string
 	{
-		return Formatter::handleMarkup($result ? '<green>Pass<reset>' : '<red>Fail<reset>');
+		$markup = match($result)
+		{
+			Test::RESULT_PASSED		=> '<green>Passed<reset>',
+			Test::RESULT_FAILED		=> '<red>Failed<reset>',
+			Test::RESULT_SKIPPED	=> '<blue>Skipped<reset>',
+		};
+		
+		return Formatter::handleMarkup($markup);
 	}
+	
+	/**
+	 * @param Throwable $throwable
+	 *
+	 * @return void
+	 */
+	public function _displayThrowable(Throwable $throwable): void
+	{
+		$view = new View('events.phtml');
+		$view->renderTitle = false;
+		$view->events = [$throwable];
+		
+		echo $view->render(), PHP_EOL;		
+	}	
 }
