@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Plugins;
 
+use Ovos\Client;
 use Ovos\Controller\Plugin;
 use Ovos\Response;
 
@@ -35,6 +36,18 @@ class HttpAuth extends Plugin
 		if(($config = $this->_app->getConfig()->http_auth) === null)
 		{
 			return;
+		}
+		
+		// allow clients listed in the whitelist
+		if($config->whitelist !== null)
+		{
+			$clientIp = Client::getIp();
+			$whitelist = $config->whitelist->getArrayCopy();
+			
+			if(in_array($clientIp, $whitelist))
+			{
+				return;
+			}
 		}
 		
 		if($config->enabled === false || empty($config->username))
