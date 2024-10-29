@@ -44,7 +44,7 @@ class HttpAuth extends Plugin
 			$clientIp = Client::getIp();
 			$whitelist = $config->whitelist->getArrayCopy();
 			
-			if(in_array($clientIp, $whitelist))
+			if(in_array($clientIp, $whitelist, true))
 			{
 				return;
 			}
