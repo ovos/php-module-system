@@ -7,6 +7,8 @@ use Ovos\Client;
 use Ovos\Controller\Plugin;
 use Ovos\Response;
 
+use function in_array;
+
 /**
  * HttpAuth
  *
@@ -62,7 +64,7 @@ class HttpAuth extends Plugin
 		{
 			return;
 		}
-	
+		
 		$response = (new Response\Html)
 			->setHeader('WWW-Authenticate', sprintf('Basic realm="%s"', $config->realm))
 			->setHttpCode(401);

@@ -4,7 +4,6 @@ namespace Models;
 
 use Ovos\Model\Mysql;
 use Ovos\Model\Mysql\Template\Timestamps;
-use Ovos\Pdo\Expression;
 use Stores\Migrations;
 
 /**
@@ -28,7 +27,7 @@ class Migration extends Mysql
 	 * @var ?string
 	 */
 	protected ?string $_autoIncrementKey = null;
-
+	
 	/**
 	 * @return string
 	 */

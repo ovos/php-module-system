@@ -5,6 +5,7 @@ namespace Plugins;
 
 use Ovos\Controller\Plugin;
 use Models\User as Model;
+
 use function Ovos\services;
 
 /**
@@ -19,7 +20,7 @@ class User extends Plugin
 	 * @var string
 	 */
 	public const SYMBOL = 'user';
-
+	
 	/**
 	 * @return string
 	 */
@@ -29,9 +30,9 @@ class User extends Plugin
 	}
 	
 	/**
-	 * @return null|Model
+	 * @return ?Model
 	 */
-	public function user(): null|Model
+	public function user(): ?Model
 	{
 		return services()->auth->getUser();
 	}

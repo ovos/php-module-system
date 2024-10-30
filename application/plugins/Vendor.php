@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Plugins;
 
 use Ovos\Controller\Plugin;
-use Ovos\Dir;
 use Ovos\Translator;
 
 /**
@@ -19,7 +18,7 @@ class Vendor extends Plugin
 	 * @var string
 	 */
 	public const SYMBOL = 'vendor';
-
+	
 	/**
 	 * @return string
 	 */
@@ -27,19 +26,19 @@ class Vendor extends Plugin
 	{
 		return self::SYMBOL;
 	}
-
+	
 	/**
 	 * @return void
 	 */
 	public function __construct()
 	{
 		parent::__construct();
-
+		
 		if(($vendor = $this->_app->getConfig()->vendor) === null)
 		{
 			return;
 		}
-			
+		
 		$modules = $this->_app->getConfig()->system->modules;
 		if($modules === null)
 		{

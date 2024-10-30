@@ -8,6 +8,8 @@ use Ovos\Plugins\Layout;
 use Ovos\Response;
 use Ovos\Size;
 
+use function disk_free_space;
+
 /**
  * Stats
  *
@@ -22,7 +24,7 @@ class Stats extends Controller\Cli
 	protected array $_httpActions = [
 		'free-space',
 	];
-
+	
 	/**
 	 * Returns amount of free space
 	 *
@@ -37,7 +39,7 @@ class Stats extends Controller\Cli
 		{
 			$this->removePlugin(Layout::SYMBOL);
 		}
-	
+		
 		$response = new Response\Html;
 		
 		$freeSpace = disk_free_space('.');

@@ -5,12 +5,12 @@ namespace Controllers\System;
 
 use Ovos\Controller;
 use Ovos\Functions;
-use Ovos\Exception;
 use Ovos\Password;
 use Ovos\Response;
 use Ovos\Stream;
-use function Ovos\services;
 use Throwable;
+
+use function Ovos\services;
 use function function_exists;
 use function opcache_reset;
 use function method_exists;
@@ -18,13 +18,8 @@ use function base64_encode;
 use function base64_decode;
 use function date;
 use function md5;
-use function curl_init;
-use function curl_setopt_array;
-use function curl_exec;
-use function curl_errno;
-use function curl_error;
-use function curl_close;
 use function http_build_query;
+use function sprintf;
 
 /**
  * Cache
@@ -35,7 +30,7 @@ use function http_build_query;
 class Cache extends Controller\Cli
 {
 	use Controller\Traits\Cli;
-
+	
 	/**
 	 */
 	public function __construct()
@@ -45,7 +40,7 @@ class Cache extends Controller\Cli
 		// override
 		$this->_app->getConfig()->system->profilers->append->http = false;
 	}
-
+	
 	/**
 	 * Clears cache
 	 */
@@ -77,8 +72,8 @@ class Cache extends Controller\Cli
 			else
 			{
 				Functions::println('<red>Error clearing perishable cache.<reset>', true);
-			}	
-		}	
+			}
+		}
 	}
 	
 	/**
@@ -88,7 +83,7 @@ class Cache extends Controller\Cli
 	{
 		// clear apcu, this only has an effect when tool is called via http
 		return services()->memory->getStore()->clear();
-	}	
+	}
 	
 	/**
 	 * Clear persistent
@@ -139,7 +134,7 @@ class Cache extends Controller\Cli
 			{
 				Functions::println('<red>Error clearing OPcache. Try again!<reset>');
 			}
-		}	
+		}
 	}
 	
 	/**
@@ -214,7 +209,7 @@ class Cache extends Controller\Cli
 		catch(Throwable $throwable)
 		{
 			services()->events->log($throwable);
-		
+			
 			$message = sprintf("<red>HTTP service not reachable:<reset>\n%s", $throwable->getMessage());
 			Functions::println($message, true);
 		}

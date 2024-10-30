@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Controllers;
 
 use Ovos\Controller;
-use Ovos\Exception\DisabledException;
 use Ovos\Response;
 use Ovos\ArrayObject;
 use Ovos\Terminal;
@@ -19,8 +18,12 @@ use SplFileInfo;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
+
 use function Ovos\services;
 use function strlen;
+use function is_dir;
+use function substr;
+use function array_map;
 
 /**
  * Tests
@@ -101,7 +104,7 @@ class Tests extends Controller\Cli
 			{
 				continue;
 			}
-				
+			
 			try
 			{
 				/**
@@ -126,7 +129,7 @@ class Tests extends Controller\Cli
 		$table = new Table;
 		$table->hasMarkup(true);
 		$table->setHeaders(['Test (' . count($ran) . ')', 'Time', 'Memory', 'Result', 'Reason']);
-			
+		
 		foreach($ran as $runner)
 		{
 			/**
@@ -141,7 +144,7 @@ class Tests extends Controller\Cli
 			]);
 			//$table->addRow([PHP_EOL]);
 		}
-	
+		
 		$response->append(PHP_EOL . $table->getTable());
 		
 		$table = new Table;
@@ -179,7 +182,7 @@ class Tests extends Controller\Cli
 		if(count($failed))
 		{
 			exit(1); // exit with error status
-		}		
+		}
 		
 		return $response;
 	}
@@ -189,8 +192,8 @@ class Tests extends Controller\Cli
 	 */
 	public function getTestRunners(): array
 	{
-		$runners = [];	
-	
+		$runners = [];
+		
 		foreach($this->_paths as $path)
 		{
 			$path = Dir::preProcess($path, true);
@@ -239,7 +242,7 @@ class Tests extends Controller\Cli
 					
 					$runners[] = new Runner($class, $method);
 				}
-			}			
+			}
 		}
 		
 		return $runners;
@@ -273,6 +276,6 @@ class Tests extends Controller\Cli
 		$view->renderTitle = false;
 		$view->events = [$throwable];
 		
-		echo $view->render(), PHP_EOL;		
-	}	
+		echo $view->render(), PHP_EOL;
+	}
 }

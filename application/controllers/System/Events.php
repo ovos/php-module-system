@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace Controllers\System;
 
 use Ovos\Controller;
-use Ovos\Exception;
 use Ovos\Exception\NotFoundException;
 use Ovos\Exception\NotFoundException\FileNotFoundException;
 use Ovos\Response;
 use Ovos\View;
+
 use function Ovos\services;
+use function ob_clean;
+use function ob_get_length;
+use function end;
 
 /**
  * Events
@@ -24,7 +27,7 @@ class Events extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-
+		
 		// these actions should be available to unauthorized users
 		if($auth = $this->auth())
 		{
@@ -48,7 +51,7 @@ class Events extends Controller
 			$view->events = services()->events;
 			$view->content = $output;
 		}
-
+		
 		$response = $this->_app->getResponse(); // reuse the object
 		// because of possible settings affecting output
 		$response->setIsSent(false);
