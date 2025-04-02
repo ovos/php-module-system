@@ -132,6 +132,11 @@ class Tests extends Controller\Cli
 		
 		foreach($ran as $runner)
 		{
+			if($runner->test === null)
+			{
+				continue;
+			}
+			
 			/**
 			 * @var Runner $runner
 			 */
@@ -170,6 +175,11 @@ class Tests extends Controller\Cli
 				'Test <white>%s<reset> has <red>failed<reset>...',
 				$runner->__toString())
 			, true);
+			
+			if($runner->test === null)
+			{
+				continue;
+			}	
 			
 			if($runner->test->throwable === null)
 			{
