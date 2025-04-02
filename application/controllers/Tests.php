@@ -173,13 +173,13 @@ class Tests extends Controller\Cli
 		{
 			Terminal::output(sprintf(
 				'Test <white>%s<reset> has <red>failed<reset>...',
-				$runner->__toString())
+				$runner->__toString()) . PHP_EOL
 			, true);
 			
 			if($runner->test === null)
 			{
 				continue;
-			}	
+			}
 			
 			if($runner->test->throwable === null)
 			{
