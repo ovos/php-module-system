@@ -165,19 +165,35 @@ class Cache extends Controller\Cli
 					'method' => $method,
 					'access_token_hash' => base64_encode($this->getAccessTokenHash()),
 				]);
-							
+			
+			$contextOptions = [
+				'http' => [
+					'timeout' => 10,
+					'header' => [],
+				],
+				'ssl' => [
+					'verify_peer' => false, // for dev certificates
+					'verify_peer_name' => false, // for dev certificates
+				],
+			];
+			
+			// HTTP Auth from config
+			if(($httpAuth = $this->_app->getConfig()->http_auth)
+				&& $httpAuth->enabled)
+			{
+				$auth = base64_encode(sprintf('{%s}:{%s}',
+					$httpAuth->username,
+					$httpAuth->password,
+				));
+				
+				$contextOptions['http']['header'][] =
+					'Authorization: Basic ' . $auth;
+			}
+			
 			// clear the method via http
 			$request = new Stream\Request(
 				$callUrl,
-				[
-					'http' => [
-						'timeout' => 10,
-					],
-					'ssl' => [
-						'verify_peer' => false, // for dev certificates
-						'verify_peer_name' => false, // for dev certificates
-					],
-				]
+				$contextOptions,
 			);
 			
 			/*
