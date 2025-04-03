@@ -46,7 +46,7 @@ class Collector extends Controller\Cli
 		{
 			foreach($this->_collectors as $collector)
 			{
-				$controllerClassNs = 'Controllers\\' . $collector->controller;
+				$controllerClassNs = Controller::NAMESPACE . $collector->controller;
 				if(class_exists($controllerClassNs) === false)
 				{
 					$this->log('<red>Controller "%s" not found.',

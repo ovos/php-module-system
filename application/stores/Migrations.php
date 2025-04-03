@@ -17,9 +17,9 @@ class Migrations extends Mysql
 	/**
 	 * Primary table name
 	 *
-	 * @var string
+	 * @var ?string
 	 */
-	public const TABLE = 'migrations';
+	public const ?string TABLE = 'migrations';
 	
 	/**
 	 * @param string $select

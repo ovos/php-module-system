@@ -19,7 +19,7 @@ class User extends Plugin
 	/**
 	 * @var string
 	 */
-	public const SYMBOL = 'user';
+	public const string SYMBOL = 'user';
 	
 	/**
 	 * @return string

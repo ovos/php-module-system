@@ -18,7 +18,7 @@ class Locales extends Plugin
 	/**
 	 * @var string
 	 */
-	public const SYMBOL = 'locales';
+	public const string SYMBOL = 'locales';
 	
 	/**
 	 * @return string
@@ -27,7 +27,7 @@ class Locales extends Plugin
 	{
 		return self::SYMBOL;
 	}
-
+	
 	/**
 	 * @return void
 	 */
