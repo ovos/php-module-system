@@ -20,7 +20,7 @@ class HttpAuth extends Plugin
 	/**
 	 * @var string
 	 */
-	public const SYMBOL = 'http_auth';
+	public const string SYMBOL = 'http_auth';
 	
 	/**
 	 * @return string

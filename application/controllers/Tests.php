@@ -36,12 +36,12 @@ class Tests extends Controller\Cli
 	/**
 	 * @var string
 	 */
-	public const TEST_EXT = 'php';
+	public const string TEST_EXT = 'php';
 	
 	/**
 	 * @var string
 	 */
-	public const METHOD_ATTRIBUTE_INTERNAL = Internal::class;
+	public const string METHOD_ATTRIBUTE_INTERNAL = Internal::class;
 	
 	/**
 	 * @var ArrayObject
