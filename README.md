@@ -5,7 +5,7 @@ https://github.com/ovos/php-module-system
 
 ### Requirements
 
-* PHP 8.0
+* PHP 8.3
 
 #### Installation
 1. Add to your .ssh/config
