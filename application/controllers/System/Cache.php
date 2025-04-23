@@ -157,6 +157,12 @@ class Cache extends Controller\Cli
 	 */
 	public function callHttp(string $method): bool
 	{
+		// CLI application, no need to call HTTP
+		if(SYSTEM_HOST === null)
+		{
+			return true;
+		}
+		
 		try
 		{
 			$callUrl = SYSTEM_HOST . SYSTEM_PATH
