@@ -1,0 +1,2307 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2025-06-11 22:24+0200\n"
+"PO-Revision-Date: 2025-06-11 22:24+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: translate;translatePlural:1,2;_n:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: views/_includes\n"
+
+#: controllers/System/Events.php:65
+msgid "Not found."
+msgstr "Nicht gefunden."
+
+#: controllers/System/Events.php:70
+msgid "Page not found."
+msgstr "Seite nicht gefunden."
+
+#: controllers/System/Events.php:74
+msgid "File not found."
+msgstr "Datei nicht gefunden."
+
+#: controllers/System/Events.php:79
+msgid "Forbidden."
+msgstr "Verboten."
+
+#: translations/phrases.php:3
+msgid "System"
+msgstr "System"
+
+#: views/events.phtml:5
+msgid "Oops. An error has occurred :-("
+msgstr "Hoppla. Ein Fehler ist aufgetreten :-("
+
+#: views/events.phtml:21
+msgid "Back to startpage"
+msgstr "Zurück zur Startseite "
+
+#~ msgid "Please login as admin to access this page."
+#~ msgstr "Bitte melden Sie sich als Administrator an, um auf diese Seite zuzugreifen."
+
+#~ msgid "Admin"
+#~ msgstr "Administrator"
+
+#~ msgid "The year of birth must be between 1901 and {0}"
+#~ msgstr "Das Geburtsjahr muss zwischen 1901 und {0} liegen"
+
+#~ msgid "male"
+#~ msgstr "männlich"
+
+#~ msgid "female"
+#~ msgstr "weiblich"
+
+#~ msgid "diverse"
+#~ msgstr "divers"
+
+#~ msgid "not specified"
+#~ msgstr "keine Angabe"
+
+#~ msgid "Information obtained about operation"
+#~ msgstr "Informationen über Betrieb eingeholt"
+
+#~ msgid "Company contacted (application sent)"
+#~ msgstr "Betrieb kontaktiert (Bewerbung geschickt)"
+
+#~ msgid "Still no feedback"
+#~ msgstr "Noch keine Rückmeldung"
+
+#~ msgid "Confirmed"
+#~ msgstr "Bestätigt"
+
+#~ msgid "Rejected"
+#~ msgstr "Abgelehnt"
+
+#~ msgid "Professional practical days completed"
+#~ msgstr "Berufspraktische Tage abgeschlossen"
+
+#~ msgid "Registration (if required)"
+#~ msgstr "Anmeldung (falls erforderlich)"
+
+#~ msgid "Event attended"
+#~ msgstr "Veranstaltung besucht"
+
+#~ msgid "Companies"
+#~ msgstr "Betriebe"
+
+#~ msgid "Events"
+#~ msgstr "Veranstaltungen"
+
+#~ msgid "in the next 4 weeks"
+#~ msgstr "in den nächsten 4 Wochen"
+
+#~ msgid "in the next 3 months"
+#~ msgstr "in den nächsten 3 Monaten"
+
+#~ msgid "in the next 6 months"
+#~ msgstr " in den nächsten 6 Monaten"
+
+#~ msgid "in the next 12 months"
+#~ msgstr "in den nächsten 12 Monaten"
+
+#~ msgid "E-mail"
+#~ msgstr "E-Mail"
+
+#~ msgid "Password"
+#~ msgstr "Passwort"
+
+#~ msgid "New password"
+#~ msgstr "Neues Passwort"
+
+#~ msgid "Confirm new password"
+#~ msgstr "Neues Passwort bestätigen"
+
+#~ msgid "Acceptance of privacy policy is required."
+#~ msgstr "Akzeptanz der Datenschutzerklärung ist erforderlich."
+
+#~ msgid "New e-mail"
+#~ msgstr "Neue E-Mail"
+
+#~ msgid "A confirmation e-mail has been dispatched."
+#~ msgstr "Eine Bestätigungs E-Mail wurde verschickt."
+
+#~ msgid "Registration error."
+#~ msgstr "Fehler bei der Registrierung."
+
+#~ msgid "Authentication error."
+#~ msgstr "Authentifizierungsfehler."
+
+#~ msgid "Invalid password."
+#~ msgstr "Ungültiges Passwort."
+
+#~ msgid "Password changed successfully."
+#~ msgstr "Passwort erfolgreich geändert."
+
+#~ msgid "This e-mail is already in use."
+#~ msgstr "Diese E-Mail ist bereits in Gebrauch."
+
+#~ msgid "The e-mail address is confirmed."
+#~ msgstr "Die E-Mail Adresse wurde bestätigt."
+
+#~ msgid "You may use it to log in."
+#~ msgstr "Sie können sich nun damit anmelden."
+
+#~ msgid "The confirmation code is invalid."
+#~ msgstr "Der Bestätigungscode ist ungültig."
+
+#~ msgid "You are now logged in."
+#~ msgstr "Sie sind nun angemeldet."
+
+#~ msgid "The e-mail was not found."
+#~ msgstr "Die E-Mail wurde nicht gefunden."
+
+#~ msgid "A link to reset form has been sent."
+#~ msgstr "Die E-Mail mit dem Link wurde Ihnen zugesandt."
+
+#~ msgid "You may now log in with your new password."
+#~ msgstr "Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
+
+#~ msgid "Confirm your e-mail address"
+#~ msgstr "Bestätigen Sie Ihre E-Mail Adresse"
+
+#~ msgid "TITLE"
+#~ msgstr "Berufsorientierung To Go"
+
+#~ msgid "Set new password"
+#~ msgstr "Neues Passwort festlegen"
+
+#~ msgid "Invalid username."
+#~ msgstr "Ungültiger Benutzername."
+
+#~ msgid "Please check your e-mail account and click the confirmation link."
+#~ msgstr "Bitte prüfen Sie Ihr E-Mail-Konto und klicken Sie auf den Bestätigungslink."
+
+#~ msgid "Please try again later."
+#~ msgstr "Bitte versuche es später erneut."
+
+#~ msgid "\"{0}\" cannot be empty."
+#~ msgstr "\"{0}\" darf nicht leer sein."
+
+#~ msgid "\"{0}\" is not a valid e-mail address."
+#~ msgstr "\"{0}\" ist keine gültige E-Mail-Adresse."
+
+#~ msgid "Password is not strong enough."
+#~ msgstr "Das Passwort ist nicht stark genug."
+
+#~ msgid "\"{0}\" should be the same as \"{1}\"."
+#~ msgstr "\"{0}\" sollte dasselbe sein wie \"{1}\"."
+
+#~ msgid "\"{0}\" is not a valid date."
+#~ msgstr "\"{0}\" ist kein gültiges Datum."
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Legal notice"
+#~ msgstr "Impressum"
+
+#~ msgid "Privacy policy"
+#~ msgstr "Datenschutz"
+
+#~ msgid "LABEL_STEP_1"
+#~ msgstr "Erkunden"
+
+#~ msgid "LABEL_STEP_2"
+#~ msgstr "Auswählen"
+
+#~ msgid "LABEL_STEP_3"
+#~ msgstr "Durchstarten"
+
+#~ msgid "Children"
+#~ msgstr "Kinder"
+
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#~ msgid "Add child"
+#~ msgstr "Kind hinzufügen"
+
+#~ msgid "Delete child profile"
+#~ msgstr "Kindprofil löschen"
+
+#~ msgid "Do you really want to delete this child profile? Deleting cannot be undone, the child's progress will be lost!"
+#~ msgstr "Möchtest du wirklich dieses Kindprofil löschen? Das Löschen kann nicht rückgängig gemacht werden, der Fortschritt des Kindes geht dadurch verloren!"
+
+#~ msgid "Yes, delete now!"
+#~ msgstr "Ja, jetzt löschen!"
+
+#~ msgid "No, keep child profile"
+#~ msgstr "Nein, Kindprofil behalten"
+
+#~ msgid "Close"
+#~ msgstr "Schließen"
+
+#~ msgid "Year of birth"
+#~ msgstr "Geburtsjahr"
+
+#~ msgid "optional"
+#~ msgstr "optional"
+
+#~ msgid "Gender indication"
+#~ msgstr "Angabe zum Geschlecht"
+
+#~ msgid "Areas"
+#~ msgstr "Bereiche"
+
+#~ msgid "Delete child"
+#~ msgstr "Kindprofil löschen"
+
+#~ msgid "Explore"
+#~ msgstr "Erkunden"
+
+#~ msgid "show more"
+#~ msgstr "mehr anzeigen"
+
+#~ msgid "show less"
+#~ msgstr "weniger anzeigen"
+
+#~ msgid "edit"
+#~ msgstr "bearbeiten"
+
+#~ msgid "Select (show suitable jobs)"
+#~ msgstr "Auswählen (passende Jobs anzeigen)"
+
+#~ msgid "UPDATE_BROWSER"
+#~ msgstr "Bitte stellen Sie sicher, dass Sie die neueste Version Ihres Browsers verwenden."
+
+#~ msgid "What strengths does your child have?"
+#~ msgstr "Welche Stärken hat Ihr Kind?"
+
+#~ msgid "Select at least <strong>one</strong> competence."
+#~ msgstr "Wählen Sie <strong>mindestens eine</strong> Kompetenz aus."
+
+#~ msgid "Confirm selection"
+#~ msgstr "Auswahl bestätigen"
+
+#~ msgid "What is your child interested in?"
+#~ msgstr "Was interessiert Ihr Kind?"
+
+#~ msgid "Select at least <strong>one</strong> interest."
+#~ msgstr "Wählen Sie <strong>mindestens ein</strong> Interesse aus."
+
+#~ msgid "Which profession categories are eligible?"
+#~ msgstr "Welche Berufsgruppen kommen in Frage?"
+
+#~ msgid "Select at least <strong>one</strong> profession category."
+#~ msgstr "Wählen Sie <strong>mindestens eine </strong> Berufsgruppe aus."
+
+#~ msgid "Overall progress"
+#~ msgstr "Gesamtfortschritt"
+
+#~ msgid "Specify interests"
+#~ msgstr "Interessen angeben"
+
+#~ msgid "Specify profession categories"
+#~ msgstr "Berufsgruppen angeben"
+
+#~ msgid "Specify competencies"
+#~ msgstr "Kompetenzen angeben"
+
+#~ msgid "Competences"
+#~ msgstr "Kompetenzen"
+
+#~ msgid "Add competences"
+#~ msgstr "Kompetenzen hinzufügen"
+
+#~ msgid "Interests"
+#~ msgstr "Interessen"
+
+#~ msgid "Add interests"
+#~ msgstr "Interessen hinzufügen"
+
+#~ msgid "Profession categories"
+#~ msgstr "Berufsgruppen"
+
+#~ msgid "Add profession categories"
+#~ msgstr "Berufsgruppen hinzufügen"
+
+#~ msgid "Get Started"
+#~ msgstr "Durchstarten"
+
+#~ msgid "Select professions"
+#~ msgstr "Berufe auswählen"
+
+#~ msgid "To-Do's"
+#~ msgstr "To-Do’s"
+
+#~ msgid "Archive"
+#~ msgstr "Archiv"
+
+#~ msgid "Delete To-Do"
+#~ msgstr "To-Do löschen"
+
+#~ msgid "Do you really want to delete this To-Do? The deletion cannot be undone, the progress will be lost!"
+#~ msgstr "Möchtest du wirklich dieses To-Do löschen? Das Löschen kann nicht rückgängig gemacht werden und der Fortschritt geht verloren!"
+
+#~ msgid "No"
+#~ msgstr "Nein"
+
+#~ msgid "Archive To-Do"
+#~ msgstr "Archiv To-Do"
+
+#~ msgid "You have completed this To-Do! It is now in the archive."
+#~ msgstr "Sie haben diese To-Do erledigt! Sie befindet sich jetzt im Archiv."
+
+#~ msgid "Okay"
+#~ msgstr "Okay"
+
+#~ msgid "Zip code or city..."
+#~ msgstr "PLZ oder Ort..."
+
+#~ msgid "Next Steps"
+#~ msgstr "Nächste Schritte"
+
+#~ msgid "Explore training opportunities"
+#~ msgstr "Ausbildungsmöglichkeiten erkunden:"
+
+#~ msgid "Checklist"
+#~ msgstr "Checkliste"
+
+#~ msgid "Feedback"
+#~ msgstr "Rückmeldung"
+
+#~ msgid "External website"
+#~ msgstr "Externe Website"
+
+#~ msgid "View map"
+#~ msgstr "Karte ansehen"
+
+#~ msgid "Checkliste"
+#~ msgstr "Checkliste"
+
+#~ msgid "To the calendar"
+#~ msgstr "Zum Kalender"
+
+#~ msgid "Remove To-Do"
+#~ msgstr "To-Do löschen"
+
+#~ msgid "The information on the companies is updated annually in February."
+#~ msgstr "Die Infos zu den Betrieben werden jährlich im Februar aktualisiert."
+
+#~ msgid "NO_RESULTS_LARGE_TEXT"
+#~ msgstr "Keine Betriebe oder Veranstaltungen gefunden."
+
+#~ msgid "NO_RESULTS_SMALL_TEXT"
+#~ msgstr "Wähle zusätzliche Berufe oder ändere die Filterkriterien für mehr Ergebnisse."
+
+#~ msgid "Filter by pinned professions"
+#~ msgstr "Filtern nach angepinnten Berufen"
+
+#~ msgid "Search"
+#~ msgstr "Suchen"
+
+#~ msgid "or"
+#~ msgstr "oder"
+
+#~ msgid "Determine location"
+#~ msgstr "Position bestimmen"
+
+#~ msgid "Position: no position selected"
+#~ msgstr "Position: keine Position gewählt"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"
+
+#~ msgid "ACTION_ARCHIVE"
+#~ msgstr "Archivieren"
+
+#~ msgid "Chamber of Labour Young Consulting Hotline"
+#~ msgstr "AK Young Beratungshotline"
+
+#~ msgid "If you have any legal questions about apprenticeships, apprenticeship income, apprenticeship contracts or working time for young people, please contact:"
+#~ msgstr "Bei rechtlichen Fragen zur Lehre, zum Lehrlingseinkommen, Lehrvertrag oder zu Arbeitszeit bei Jugendlichen wenden Sie sich bitte an:"
+
+#~ msgid "Consulting by phone"
+#~ msgstr "Telefonische Beratung"
+
+#~ msgid "Mon - Thu: 8.00 am - 4.00 pm"
+#~ msgstr "Mo - Do: 8 - 16 Uhr"
+
+#~ msgid "Fri: 8.00 am - 2.00 pm"
+#~ msgstr "Fr: 8 - 14 Uhr"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "Contact form"
+#~ msgstr "Kontaktformular"
+
+#~ msgid "Chamber of Labour Educational Guidance and Counselling"
+#~ msgstr "AK Bildungsberatung"
+
+#~ msgid "If you have any questions about grants and subsidies during training, further education or studies, please contact:"
+#~ msgstr "Bei Fragen zu Förderungen und Beihilfen während der Ausbildung, weiterführenden Schulen oder zum Studium wenden Sie sich bitte an:"
+
+#~ msgid "video counselling also possible!"
+#~ msgstr "auch Videoberatung möglich!"
+
+#~ msgid "Taster hotline – Lower Austrian Economic Chamber"
+#~ msgstr "Schnupperhotline – Wirtschaftskammer NÖ"
+
+#~ msgid "If you have any questions about the taster apprenticeship and work experience days, please contact:"
+#~ msgstr "Bei Fragen zur Schnupperlehre und berufspraktischen Tagen, wenden Sie sich bitte an:"
+
+#~ msgid "Mon - Thu: 7.30 am - 4.00 pm"
+#~ msgstr "Mo - Do: 07:30 – 16 Uhr"
+
+#~ msgid "Fri: 7.30 am - 1.00 pm"
+#~ msgstr "Fr: 07:30 – 13 Uhr"
+
+#~ msgid "Further information"
+#~ msgstr "Weitere Infos"
+
+#~ msgid "Taster apprenticeship - Work experience days - WKO.at"
+#~ msgstr "Schnupperlehre - Berufspraktische Tage - WKO.at"
+
+#~ msgid "person"
+#~ msgid_plural "people"
+#~ msgstr[0] "osoba"
+#~ msgstr[1] "osoby"
+
+#~ msgid "Legal notice and disclosure according to Art. 25 Media Act"
+#~ msgstr "Impressum und Offenlegung nach § 25 Mediengesetz"
+
+#~ msgid "Career Orientation To Go"
+#~ msgstr "Berufsorientierung To Go"
+
+#~ msgid "\"Career Orientation To Go\" is a joint project of the social partners Lower Austrian Chamber of Labour and the Lower Austrian Economic Chamber."
+#~ msgstr "„Berufsorientierung To Go“ ist ein Gemeinschaftsprojekt der Sozialpartner Arbeiterkammer NÖ und Wirtschaftskammer NÖ."
+
+#~ msgid "Lower Austrian Chamber of Labour contact person"
+#~ msgstr "Ansprechperson AKNÖ"
+
+#~ msgid "Lower Austrian Economic Chamber contact person"
+#~ msgstr "Ansprechperson WKNÖ"
+
+#~ msgid "Lower Austrian Economic Chamber"
+#~ msgstr "Wirtschaftskammer NÖ"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Authorised representatives bodies"
+#~ msgstr "Vertretungsbefugte Organe"
+
+#~ msgid "President"
+#~ msgstr "Präsident"
+
+#~ msgid "Competent supervisory authority"
+#~ msgstr "Zuständige Aufsichtsbehörde"
+
+#~ msgid "Federal Ministry for Digital and Economic Affairs"
+#~ msgstr "BMDW"
+
+#~ msgid "Applicable legislation"
+#~ msgstr "Anwendbare Rechtsvorschriften"
+
+#~ msgid "Economic Chamber Act"
+#~ msgstr "Wirtschaftskammergesetz (WKG)"
+
+#~ msgid "Scope of activity"
+#~ msgstr "Tätigkeitsbereich"
+
+#~ msgid "The Lower Austrian Economic Chamber is active in the three strategic business areas of interest representation, service and education. The area of career orientation plays a major role in this."
+#~ msgstr "Die Wirtschaftskammer NÖ ist in den drei strategischen Geschäftsfeldern Interessenvertretung, Service und Bildung tätig. Dabei nimmt der Bereich Berufsorientierung einen großen Stellenwert ein."
+
+#~ msgid "Direction of the website (\"Editorial policy\")"
+#~ msgstr "Richtung der Website (\"Blattlinie\")"
+
+#~ msgid "The website is a tool for parents to support them in the career orientation process of their child / children."
+#~ msgstr "Die Website ist eine Hilfestellung für Eltern, sie im Rahmen des BO-Prozesses ihres Kindes / ihrer Kinder zu unterstützen."
+
+#~ msgid "Technical implementation of the website"
+#~ msgstr "Technische Umsetzung der Website"
+
+#~ msgid "Notes and disclaimer"
+#~ msgstr "Hinweise und Haftungsausschluss"
+
+#~ msgid "NOTES_AND_DISCLAIMER"
+#~ msgstr ""
+#~ "Die Website ist ein Gemeinschaftsprojekt der Arbeiterkammer NÖ und der Wirtschaftskammer NÖ.\n"
+#~ "Im Hinblick auf die technischen Eigenschaften des Internets kann keine Gewähr für die Authentizität, Richtigkeit und Vollständigkeit der im Internet zur Verfügung gestellten Informationen übernommen werden. Es wird auch keine Gewähr für die Verfügbarkeit oder den Betrieb der gegenständlichen Homepage und ihrer Inhalte übernommen.\n"
+#~ "Jede Haftung für unmittelbare, mittelbare oder sonstige Schäden, unabhängig von deren Ursachen, die aus der Benutzung oder Nichtverfügbarkeit der Daten und Informationen dieser Homepage erwachsen, wird, soweit rechtlich zulässig, ausgeschlossen.\n"
+#~ "Der Inhalt dieser Homepage ist urheberrechtlich geschützt. Die Informationen sind nur für die persönliche Verwendung bestimmt. Jede weitergehende Nutzung, insbesondere die Speicherung in Datenbanken, Vervielfältigung und jede Form von gewerblicher Nutzung sowie die Weitergabe an Dritte - auch in Teilen oder in überarbeiteter Form - ohne Zustimmung der jeweiligen Organisation ist untersagt.\n"
+#~ "Hyperlinks auf diese Website sind willkommen. Jede Einbindung einzelner Seiten unseres Angebotes in fremde Frames ist zu unterlassen.\n"
+#~ "Soweit im Content personenbezogene Bezeichnungen nur in männlicher Form angeführt sind, beziehen sie sich auf Frauen und Männer in gleicher Weise."
+
+#~ msgid "Privacy Policy of the Lower Austrian Economic Chamber"
+#~ msgstr "Datenschutzrichtlinie der WKNÖ"
+
+#~ msgid "Privacy Policy of the Lower Austrian Chamber of Labour"
+#~ msgstr "Datenschutzrichtlinie der AKNÖ"
+
+#~ msgid "Get started right away!"
+#~ msgstr "Gleich loslegen!"
+
+#~ msgid "Play video"
+#~ msgstr "Video abspielen"
+
+#~ msgid "WHAT_IS_HEADER"
+#~ msgstr "Was ist Berufsorientierung To Go?"
+
+#~ msgid "WHAT_IS_DESCRIPTION"
+#~ msgstr "In 3 Schritten die richtige Entscheidung treffen: “Berufsorientierung To Go” ist eine Plattform die Eltern, Erziehungsberechtigten und Ausbildungsberater*innen hilft, Kinder und junge Erwachsene bei der Suche nach dem Traumberuf zu unterstützen."
+
+#~ msgid "EXPLORE_LABEL"
+#~ msgstr "1. Erkunden"
+
+#~ msgid "EXPLORE_DESCRIPTION"
+#~ msgstr "In der Phase „Erkunden“ wird aus einer Liste von Interessen und Kompetenzen, ergänzt um einen zusätzlichen Filter für Berufsgruppen, gemeinsam mit dem Kind ein individuelles Interessen- und Kompetenzprofil erstellt."
+
+#~ msgid "SELECT_LABEL"
+#~ msgstr "2. Auswählen"
+
+#~ msgid "SELECT_DESCRIPTION"
+#~ msgstr "In der Phase “Auswählen” geht es um das Finden passender Berufsbilder, die auf die Stärken und Wünsche des Kindes zugeschnitten sind. Anforderungen und Aufgaben zu den jeweiligen Berufen konkretisieren das Suchergebnis."
+
+#~ msgid "GETSTARTED_LABEL"
+#~ msgstr "3. Durchstarten"
+
+#~ msgid "GETSTARTED_DESCRIPTION"
+#~ msgstr "Jetzt geht es richtig los. Individuelle Angebote wie Informationen über Veranstaltungen, Betriebe und Bewerbungsmodalitäten runden das Suchergebnis Ihres Kindes ab und helfen bei der Planung der weiteren Vorgehensweise."
+
+#~ msgid "Data protection"
+#~ msgstr "Datenschutzerklärung"
+
+#~ msgid "General information"
+#~ msgstr "Allgemeine Hinweise"
+
+#~ msgid "GENERAL_INFORMATION"
+#~ msgstr "Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgeführten Datenschutzerklärung."
+
+#~ msgid "Data collection on our website"
+#~ msgstr "Datenerfassung auf unserer Website"
+
+#~ msgid "DATA_COLLECTION"
+#~ msgstr "Der Schutz Ihrer persönlichen Daten ist uns ein besonderes Anliegen. Wir verarbeiten Ihre Daten daher ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TKG 2003). In diesen Datenschutzinformationen informieren wir Sie über die wichtigsten Aspekte der Datenverarbeitung im Rahmen unserer Website."
+
+#~ msgid "DATA_COLLECTION_2"
+#~ msgstr "Beim Besuch unserer Webseite wird Ihre IP-Adresse, Beginn und Ende der Sitzung für die Dauer dieser Sitzung erfasst. Dies ist technisch bedingt und stellt damit ein berechtigtes Interesse iSv Art 6 Abs 1 lit f DSGVO dar. Soweit im Folgenden nichts anderes geregelt wird, werden diese Daten von uns nicht weiterverarbeitet."
+
+#~ msgid "Cookies, localStorage and indexedDB"
+#~ msgstr "Cookies, localStorage und indexedDB"
+
+#~ msgid "COOKIES"
+#~ msgstr "Unsere Website verwendet so genannte Cookies sowie den localStorage und die indexedDB ihres Browsers. Dabei handelt es sich um Technologien, die mit Hilfe des Browsers auf Ihrem Endgerät Informationen speichern können. Sie richten keinen Schaden an."
+
+#~ msgid "COOKIES_2"
+#~ msgstr "Wir nutzen diese Technologien, unser Angebot nutzerfreundlich zu gestalten. Einige dieser Informationen bleiben auf Ihrem Endgerät gespeichert, bis Sie diese löschen. Sie ermöglichen es uns, Ihren Browser beim nächsten Besuch wiederzuerkennen."
+
+#~ msgid "COOKIES_3"
+#~ msgstr "Wenn Sie dies nicht wünschen, so können Sie Ihren Browser so einrichten, dass er Sie über das Setzen von Cookies informiert und Sie dies nur im Einzelfall erlauben."
+
+#~ msgid "COOKIES_4"
+#~ msgstr "Bei der Deaktivierung von Cookies sowie des localStorage und der indexedDB kann die Funktionalität unserer Website eingeschränkt sein."
+
+#~ msgid "Contacting us"
+#~ msgstr "Kontakt mit uns"
+
+#~ msgid "CONTACTING_US"
+#~ msgstr "Wenn Sie per Formular auf der Website oder per E-Mail Kontakt mit uns aufnehmen, werden Ihre angegebenen Daten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen sechs Monate bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter."
+
+#~ msgid "Analytical tools and tools of third-party providers"
+#~ msgstr "Analyse-Tools und Tools von Drittanbietern"
+
+#~ msgid "ANALYTICAL_TOOLS"
+#~ msgstr "Beim Besuch unserer Website kann Ihr Surf-Verhalten statistisch ausgewertet werden. Das geschieht vor allem mit Cookies und mit sogenannten Analyseprogrammen. Die Analyse Ihres Surf-Verhaltens erfolgt in der Regel anonym; das Surf-Verhalten kann nicht zu Ihnen zurückverfolgt werden. Sie können dieser Analyse widersprechen oder sie durch die Nichtbenutzung bestimmter Tools verhindern."
+
+#~ msgid "Data security"
+#~ msgstr "Datensicherheit"
+
+#~ msgid "DATA_SECURITY"
+#~ msgstr "Wir setzen technische und organisatorische Sicherheitsmaßnahmen ein, um Ihre durch uns verwalteten Daten gegen zufällige oder vorsätzliche Manipulationen, Verlust, Zerstörung oder gegen den Zugriff unberechtigter Personen zu schützen. Unsere Sicherheitsmaßnahmen werden laufend verbessert. Datenverarbeitung sowie Datenübermittlung werden mit dem SSL Verfahren (Secure Socket Layer) durchgeführt."
+
+#~ msgid "Your rights"
+#~ msgstr "Ihre Rechte"
+
+#~ msgid "YOUR_RIGHTS"
+#~ msgstr "Ihnen stehen bezüglich Ihrer bei uns gespeicherten Daten grundsätzlich die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit, Widerruf und Widerspruch zu. Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden. Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu."
+
+#~ msgid "Copyright / Disclaimer"
+#~ msgstr "Copyright / Haftungsausschluss"
+
+#~ msgid "COPYRIGHT_DISCLAIMER"
+#~ msgstr "Im Hinblick auf die technischen Eigenschaften des Internet kann keine Gewähr für die Authentizität, Richtigkeit und Vollständigkeit der im Internet zur Verfügung gestellten Informationen übernommen werden. Es wird auch keine Gewähr für die Verfügbarkeit oder den Betrieb der gegenständlichen Website und ihrer Inhalte übernommen. Jede Haftung für unmittelbare, mittelbare oder sonstige Schäden, unabhängig von deren Ursachen, die aus der Benutzung oder Nichtverfügbarkeit der Daten und Informationen dieser Website erwachsen, wird, soweit rechtlich zulässig, ausgeschlossen. Der Inhalt dieser Website ist urheberrechtlich geschützt. Die Informationen sind nur für die persönliche Verwendung bestimmt. Jede weitergehende Nutzung insbesondere die Speicherung in Datenbanken, Vervielfältigung und jede Form von gewerblicher Nutzung sowie die Weitergabe an Dritte – auch in Teilen oder in überarbeiteter Form – ohne Zustimmung des Websiteinhabers ist untersagt.s"
+
+#~ msgid "Who is responsible for data collection on this website?"
+#~ msgstr "Wer ist verantwortlich für die Datenerfassung auf dieser Website?"
+
+#~ msgid "WHO_IS_RESPONSIBLE"
+#~ msgstr "Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen."
+
+#~ msgid "WHO_IS_RESPONSIBLE_2 {0} {1}"
+#~ msgstr "Weitere Informationen zum Datenschutz finden Sie außerdem auf den Webseiten der Wirtschaftskammer Niederösterreich ({0}) und der Arbeiterkammer Niederösterreich ({1})."
+
+#~ msgid "Please enable JavaScript in your browser to use this website without problems."
+#~ msgstr "Bitte aktivieren Sie JavaScript in Ihrem Browser, um diese Website ohne Probleme nutzen zu können."
+
+#~ msgid "DESCRIPTION"
+#~ msgstr "Gemeinsam den Bildungsweg finden, der zu Ihrem Kind passt!"
+
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#~ msgid "First"
+#~ msgstr "Zuerst"
+
+#~ msgid "Previous"
+#~ msgstr "Zurück"
+
+#~ msgid "Showing {0} to {1} out of {2}"
+#~ msgstr "Anzeigen von {0} bis {1} von {2}"
+
+#~ msgid "Next"
+#~ msgstr "Weiter"
+
+#~ msgid "Last"
+#~ msgstr "Zuletzt"
+
+#~ msgid "Select"
+#~ msgstr "Auswählen"
+
+#~ msgid "Edit child profile"
+#~ msgstr "Kindprofil bearbeiten"
+
+#~ msgid "Child profile"
+#~ msgstr "Kindprofil"
+
+#~ msgid "More"
+#~ msgstr "Mehr"
+
+#~ msgid "Get started (search suitable events and companies)"
+#~ msgstr "Durchstarten (passende Betriebe und Veranstaltungen suchen)"
+
+#~ msgid "Profession category"
+#~ msgstr "Berufsgruppe"
+
+#~ msgid "Job description"
+#~ msgstr "Berufsbeschreibung"
+
+#~ msgid "The following interests are beneficial here"
+#~ msgstr "Folgende Interessen sind hier von Vorteil"
+
+#~ msgid "The following competences will help your child at work"
+#~ msgstr "Folgende Kompetenzen helfen Ihrem Kind im Beruf"
+
+#~ msgid "SECTION_WORK_RESOURCES"
+#~ msgstr "Arbeitsmittel"
+
+#~ msgid "SECTION_MODULE_STRUCTURE"
+#~ msgstr "Module & Kombination"
+
+#~ msgid "SECTION_WORK_ENVIRONMENT"
+#~ msgstr "Arbeitsumfeld / Arbeitsorte"
+
+#~ msgid "SECTION_ACTIVITIES"
+#~ msgstr "Die wichtigsten Tätigkeiten auf einen Blick"
+
+#~ msgid "SECTION_INSTITUTIONS"
+#~ msgstr "Beschäftigungsmöglichkeiten"
+
+#~ msgid "Back to all professions"
+#~ msgstr "Zurück zu allen Berufen"
+
+#~ msgid "Recommended professions"
+#~ msgstr "Empfohlene Berufe"
+
+#~ msgid "* Results are sorted by matching the competence profile"
+#~ msgstr "* Ergebnisse sind nach Übereinstimmung mit dem Kompetenzprofil sortiert."
+
+#~ msgid "Teaching professions"
+#~ msgstr "Lehrberufe"
+
+#~ msgid "Other professions"
+#~ msgstr "Andere Berufe"
+
+#~ msgid "No professions found for <strong>\"{0}\"</strong>"
+#~ msgstr "Keine Berufe für <strong>\"{0}\"</strong> gefunden"
+
+#~ msgid "No professions found"
+#~ msgstr "Keine Berufe gefunden"
+
+#~ msgid "Show more professions"
+#~ msgstr "Mehr Berufe anzeigen"
+
+#~ msgid "Pinned Professions"
+#~ msgstr "Gepinnte Berufe"
+
+#~ msgid "LABEL_SEARCH"
+#~ msgstr "Mit der Suchfunktion finden Sie Berufe einfach und schnell, von Aerobic-Trainer*in bis Zellstofftechniker*in. Sie können auch nach Berufsvorschlägen aus dem Talente Check Ihres Kindes suchen."
+
+#~ msgid "Search professions"
+#~ msgstr "Berufe durchsuchen"
+
+#~ msgid "Notes"
+#~ msgstr "Notizen"
+
+#~ msgid "Open Notepad"
+#~ msgstr "Notizblock öffnen"
+
+#~ msgid "Notepad"
+#~ msgstr "Notizblock"
+
+#~ msgid "Bold"
+#~ msgstr "Fett"
+
+#~ msgid "Italic"
+#~ msgstr "Kursiv"
+
+#~ msgid "Underline"
+#~ msgstr "Unterstrichen"
+
+#~ msgid "Indent"
+#~ msgstr "Einrücken"
+
+#~ msgid "Outdent"
+#~ msgstr "Ausrücken"
+
+#~ msgid "Unordered list"
+#~ msgstr "Unsortierte Liste"
+
+#~ msgid "Ordered list"
+#~ msgstr "Sortierte Liste"
+
+#~ msgid "Undo"
+#~ msgstr "Rückgängig"
+
+#~ msgid "Redo"
+#~ msgstr "Wiederholen"
+
+#~ msgid "Save & close"
+#~ msgstr "Speichern & schließen"
+
+#~ msgid "Documents"
+#~ msgstr "Dokumente"
+
+#~ msgid "Links"
+#~ msgstr "Links"
+
+#~ msgid "Login"
+#~ msgstr "Login"
+
+#~ msgid "Password forgotten?"
+#~ msgstr "Passwort vergessen?"
+
+#~ msgid "Keep me logged in"
+#~ msgstr "Angemeldet bleiben "
+
+#~ msgid "Log in"
+#~ msgstr "Einloggen"
+
+#~ msgid "No account yet? Click here to"
+#~ msgstr "Noch keinen Account? Hier geht es zur"
+
+#~ msgid "ACTION_REGISTER"
+#~ msgstr "Registrierung"
+
+#~ msgid "Thank you for registering. Please confirm your email address:"
+#~ msgstr "Vielen Dank für Ihre Registrierung. Bitte bestätigen Sie Ihre E-Mail Adresse:"
+
+#~ msgid "Best regards"
+#~ msgstr "Mit freundlichen Grüßen"
+
+#~ msgid "Please click on the link below to set your new password:"
+#~ msgstr "Bitte klicken Sie auf den unten stehenden Link, um Ihr neues Passwort festzulegen:"
+
+#~ msgid "at least 8 characters"
+#~ msgstr "mindestens 8 Zeichen"
+
+#~ msgid "at least 1 capital letter"
+#~ msgstr "mindestens 1 Großbuchstabe"
+
+#~ msgid "at least 1 digit"
+#~ msgstr "mindestens 1 Ziffer"
+
+#~ msgid "Toggle password visibility"
+#~ msgstr "Sichtbarkeit des Passworts umschalten"
+
+#~ msgid "Password reset"
+#~ msgstr "Passwort zurücksetzen"
+
+#~ msgid "Send reset link"
+#~ msgstr "Zurücksetzen-Link senden "
+
+#~ msgid "A link to reset form will be sent to you."
+#~ msgstr "Ein Link zum Zurücksetzen des Formulars wird Ihnen zugesandt."
+
+#~ msgid "BACK_TO_LOGIN"
+#~ msgstr "Hier geht es zum"
+
+#~ msgid "ACTION_LOGIN"
+#~ msgstr "Login"
+
+#~ msgid "This e-mail address is already in use."
+#~ msgstr "Diese E-Mail-Adresse ist bereits in Gebrauch."
+
+#~ msgid "Registration"
+#~ msgstr "Registrierung"
+
+#~ msgid "LABEL_PRIVACY_POLICY"
+#~ msgstr "Datenschutzerklärung"
+
+#~ msgid "Accept {0}"
+#~ msgstr "{0} akzeptieren"
+
+#~ msgid "Register"
+#~ msgstr "Registrieren"
+
+#~ msgid "Already registered? Click here to"
+#~ msgstr "Bereits registriert? Hier geht es zum"
+
+#~ msgid "Settings"
+#~ msgstr "Einstellungen"
+
+#~ msgid "Change e-mail address"
+#~ msgstr "E-Mail Adresse ändern"
+
+#~ msgid "Do you want to change the e-mail address?"
+#~ msgstr "Möchten Sie die E-Mail Adresse ändern?"
+
+#~ msgid "Change password"
+#~ msgstr "Passwort ändern"
+
+#~ msgid "Do you want to change the password?"
+#~ msgstr "Möchten Sie das Passwort ändern?"
+
+#~ msgid "Delete user account"
+#~ msgstr "Be­nut­zer­kon­to lö­schen"
+
+#~ msgid "Do you want to delete the user account?"
+#~ msgstr "Möchten Sie das Benutzerkonto löschen?"
+
+#~ msgid "Do you really want to delete your account? The deletion cannot be undone, all your data will be lost!"
+#~ msgstr "Möchtest du wirklich dein Benutzerkonto löschen? Das Löschen kann nicht rückgängig gemacht werden, alle deine Daten gehen dadurch verloren!"
+
+#~ msgid "No, keep my account"
+#~ msgstr "Nein, mein Benutzerkonto behalten"
+
+#~ msgid "All changes on this page require entering the current password:"
+#~ msgstr "Alle Änderungen auf dieser Seite erfordern die Eingabe des aktuellen Passworts:"
+
+#~ msgid "Confirm password"
+#~ msgstr "Passwort bestätigen"
+
+#~ msgid "Logged in as:"
+#~ msgstr "Angemeldet als:"
+
+#~ msgid "Guest"
+#~ msgstr "Gast"
+
+#~ msgid "Log out"
+#~ msgstr "Abmelden"
+
+#~ msgid "WELCOME_INTRO"
+#~ msgstr "Vorbereitung zur&nbsp;theoretischen Führerscheinprüfung"
+
+#~ msgid "WELCOME_DESCRIPTION"
+#~ msgstr "Hier können die Fragen durch eine simulierte Prüfung geübt werden."
+
+#~ msgid "New preliminary examination"
+#~ msgstr "Neue Vorprüfung"
+
+#~ msgid "Account"
+#~ msgstr "Konto"
+
+#~ msgid "Overview"
+#~ msgstr "Überblick"
+
+#~ msgid "Logout"
+#~ msgstr "Abmelden"
+
+#~ msgid "Edit properties"
+#~ msgstr "Eigenschaften bearbeiten"
+
+#~ msgid "Get started"
+#~ msgstr "Durchstarten"
+
+#~ msgid "GO_TO_LOGIN"
+#~ msgstr "Hier geht es zum"
+
+#~ msgid "Click here to"
+#~ msgstr "Hier geht es zur"
+
+#~ msgid "Archivieren"
+#~ msgstr "Archivieren"
+
+#, fuzzy
+#~| msgid "GENERAL_INFORMATION"
+#~ msgid "GENDER_INFORMATION"
+#~ msgstr "Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgeführten Datenschutzerklärung."
+
+#~ msgid ""
+#~ "Die Website ist ein Gemeinschaftsprojekt der Arbeiterkammer NÖ und der Wirtschaftskammer NÖ.\n"
+#~ "\t\t\tIm Hinblick auf die technischen Eigenschaften des Internets kann keine Gewähr für die Authentizität, Richtigkeit und Vollständigkeit der im Internet zur Verfügung gestellten Informationen übernommen werden. Es wird auch keine Gewähr für die Verfügbarkeit oder den Betrieb der gegenständlichen Homepage und ihrer Inhalte übernommen.\n"
+#~ "\t\t\tJede Haftung für unmittelbare, mittelbare oder sonstige Schäden, unabhängig von deren Ursachen, die aus der Benutzung oder Nichtverfügbarkeit der Daten und Informationen dieser Homepage erwachsen, wird, soweit rechtlich zulässig, ausgeschlossen.\n"
+#~ "\t\t\tDer Inhalt dieser Homepage ist urheberrechtlich geschützt. Die Informationen sind nur für die persönliche Verwendung bestimmt. Jede weitergehende Nutzung, insbesondere die Speicherung in Datenbanken, Vervielfältigung und jede Form von gewerblicher Nutzung sowie die Weitergabe an Dritte - auch in Teilen oder in überarbeiteter Form - ohne Zustimmung der jeweiligen Organisation ist untersagt.\n"
+#~ "\t\t\tHyperlinks auf diese Website sind willkommen. Jede Einbindung einzelner Seiten unseres Angebotes in fremde Frames ist zu unterlassen.\n"
+#~ "\t\t\tSoweit im Content personenbezogene Bezeichnungen nur in männlicher Form angeführt sind, beziehen sie sich auf Frauen und Männer in gleicher Weise."
+#~ msgstr ""
+#~ "Web sitesi, Aşağı Avusturya Çalışma Odası ve Aşağı Avusturya Ticaret Odası'nın ortak projesidir.\n"
+#~ "İnternetin teknik özellikleri ile ilgili olarak, İnternet'te sunulan bilgilerin gerçekliği, doğruluğu ve eksiksizliği konusunda hiçbir garanti verilemez. Buna ek olarak söz konusu web sitesinin ve içeriğinin kullanılabilirliği veya uygulanması için hiçbir garanti verilmemektedir.\n"
+#~ "Bu İnternet sitesindeki verilerin ve bilgilerin kullanımından veya mevcut olmamasından kaynaklanan, sebepleri ne olursa olsun, doğrudan, dolaylı veya diğer türden zararlar için yasal olarak izin verildiği ölçüde sorumluluk kabul edilmez.\n"
+#~ "Bu İnternet sitesinin içeriği telif hakları ile korunmaktadır. Bilgiler sadece kişisel kullanım içindir. İlgili organizasyonun izni olmadan, özellikle veri tabanlarında depolama, çoğaltma ve herhangi bir ticari kullanım şeklinin yanı sıra üçüncü taraflara kısmen veya revize edilmiş biçimde ifşa olmak üzere başka her türden kullanım yasaktır.\n"
+#~ "Bu siteye verilecek link bağlantıları kabul edilir. Teklifimizin münferit sayfalarının harici çerçevelere entegrasyonu yasaktır.\n"
+#~ "Kişisel adlandırmalar içerikte sadece erkek şeklinde verilmiştir ancak kadın ve erkekleri aynı şekilde ifade etmektedir."
+
+#~ msgid "Email"
+#~ msgstr "E-Mail"
+
+#~ msgid "Imprint"
+#~ msgstr "Impressum"
+
+#~ msgid "Privacy"
+#~ msgstr "Datenschutz"
+
+#~ msgid "The e-mail address is confirmed. You may log in."
+#~ msgstr "Die E-Mail Adresse wird bestätigt. Sie können sich anmelden."
+
+#~ msgid "Toggle"
+#~ msgstr "Umschalten"
+
+#~ msgid "Data"
+#~ msgstr "Daten"
+
+#~ msgid "MODULE_LABEL_GW"
+#~ msgstr "<strong>Modul GW</strong> (Grundwissen&nbsp;für&nbsp;A,&nbsp;B,&nbsp;F)"
+
+#~ msgid "MODULE_LABEL_A"
+#~ msgstr "<strong>Modul A</strong> (+&nbsp;A1,&nbsp;A2)"
+
+#~ msgid "MODULE_LABEL_AM"
+#~ msgstr "<strong>Modul AM</strong> (Moped&nbsp;&&nbsp;Microcar)"
+
+#~ msgid "MODULE_LABEL_B"
+#~ msgstr "<strong>Modul B</strong> (+&nbsp;BL17)"
+
+#~ msgid "MODULE_LABEL_BE"
+#~ msgstr "<strong>Modul BE </strong> (für&nbsp;B)"
+
+#~ msgid "MODULE_LABEL_C"
+#~ msgstr "<strong>Modul C</strong> (+&nbsp;C1)"
+
+#~ msgid "MODULE_LABEL_D"
+#~ msgstr "<strong>Modul D</strong> (+&nbsp;D1)"
+
+#~ msgid "MODULE_LABEL_E"
+#~ msgstr "<strong>Modul E</strong> (+&nbsp;BE,&nbsp;C1E,&nbsp;CE,&nbsp;D1E,&nbsp;DE)"
+
+#~ msgid "MODULE_LABEL_F"
+#~ msgstr "<strong>Modul F</strong> (Traktor)"
+
+#~ msgid "RESULT_LABEL_GW"
+#~ msgstr "Grundwissen"
+
+#~ msgid "RESULT_LABEL_A"
+#~ msgstr "A - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_AM"
+#~ msgstr "AM - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_B"
+#~ msgstr "B - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_BE"
+#~ msgstr "BE - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_C"
+#~ msgstr "C - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_D"
+#~ msgstr "D - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_E"
+#~ msgstr "E - Klassenspezifisch"
+
+#~ msgid "RESULT_LABEL_F"
+#~ msgstr "F - Klassenspezifisch"
+
+#~ msgid "GETSTARTED_BADGE"
+#~ msgstr "Demnächst verfügbar"
+
+#~ msgid "Work resources"
+#~ msgstr "Arbeitsmittel"
+
+#~ msgid "Module structure"
+#~ msgstr "Module & Kombination"
+
+#~ msgid "Work environment"
+#~ msgstr "Arbeitsumfeld"
+
+#~ msgid "Activities"
+#~ msgstr "Die wichtigsten Tätigkeiten auf einen Blick"
+
+#~ msgid "Institutions"
+#~ msgstr "Institutionen"
+
+#~ msgid "Apprenticeship"
+#~ msgstr "Lehrzeit"
+
+#~ msgid "Work areas"
+#~ msgstr "Arbeitsbereiche"
+
+#~ msgid "Education"
+#~ msgstr "Ausbildung"
+
+#~ msgid "Further education"
+#~ msgstr "Weiterbildung"
+
+#~ msgid "Requirements"
+#~ msgstr "Anforderungen"
+
+#~ msgid "Alternatives"
+#~ msgstr "Alternativen"
+
+#~ msgid "Apprenticeship and Matura"
+#~ msgstr "Lehre und Matura"
+
+#~ msgid "Independence"
+#~ msgstr "Selbständigkeit"
+
+#~ msgid "Fields of work"
+#~ msgstr "Arbeitsfelder"
+
+#~ msgid "Job categories"
+#~ msgstr "Berufsgruppen"
+
+#~ msgid "Educational paths"
+#~ msgstr "Bildungswege"
+
+#~ msgid "Please verify that the browser is updated to the latest version."
+#~ msgstr "Vergewissern Sie sich, dass der Browser auf die neueste Version aktualisiert ist."
+
+#~ msgid "Select competences"
+#~ msgstr "Kompetenzen hinzufügen"
+
+#~ msgid "Select interests"
+#~ msgstr "Interessen hinzufügen"
+
+#~ msgid "Select profession categories"
+#~ msgstr "Berufsgruppen hinzufügen"
+
+#~ msgid "Please select"
+#~ msgstr "Bitte auswählen"
+
+#~ msgid "Available time"
+#~ msgstr "Verfügbare Zeit"
+
+#~ msgid "minute"
+#~ msgstr "Minute"
+
+#~ msgid "minutes"
+#~ msgstr "Minuten"
+
+#~ msgid "second"
+#~ msgstr "Sekunde"
+
+#~ msgid "seconds"
+#~ msgstr "Sekunden"
+
+#~ msgid "Additional question"
+#~ msgstr "Zusatzfrage"
+
+#~ msgid "Question"
+#~ msgstr "Frage"
+
+#~ msgid "QUESTION_NAME_CLOZE"
+#~ msgstr "Wähle die richtigen Ergänzungen in dem Lückentext aus."
+
+#~ msgid "Skip"
+#~ msgstr "Überspringen"
+
+#~ msgid "Abort"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Saving"
+#~ msgstr "Speichern"
+
+#~ msgid "Abort the preliminary test?"
+#~ msgstr "Vorprüfung abbrechen?"
+
+#~ msgid "If you cancel, no result is displayed and the progress is lost."
+#~ msgstr "Bei Abbruch wird kein Ergebnis angezeigt und der Fortschritt geht verloren."
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No, continue the preliminary test"
+#~ msgstr "Nein, Vorprüfung fortsetzen"
+
+#~ msgid "New assessment"
+#~ msgstr "Neue Vorprüfung"
+
+#~ msgid "ASSESSMENT_DESCRIPTION"
+#~ msgstr "Module für die simulierte Prüfung auswählen (Mehrfachselektion möglich)."
+
+#~ msgid "Exam modules (driving license classes):"
+#~ msgstr "Prüfungsmodule (Führerscheinklassen):"
+
+#~ msgid "MODULE_LABEL_"
+#~ msgstr "MODULE_LABEL_"
+
+#~ msgid "Time limit"
+#~ msgstr "Zeitlimit"
+
+#~ msgid "min"
+#~ msgstr "Min"
+
+#~ msgid "Start the assessment"
+#~ msgstr "Vorprüfung starten"
+
+#~ msgid "Result of the exam "
+#~ msgstr "Ergebnis der Prüfung"
+
+#~ msgid "RESULT_LABEL_"
+#~ msgstr "RESULT_LABEL_"
+
+#~ msgid "Exam"
+#~ msgstr "Prüfung"
+
+#~ msgid "Needed time"
+#~ msgstr "Benötigte Zeit"
+
+#~ msgid "Time's up."
+#~ msgstr "Zeit abgelaufen."
+
+#~ msgid "RESULT_LABEL_PASS"
+#~ msgstr "Glückwunsch! Vorprüfung bestanden!"
+
+#~ msgid "RESULT_LABEL_FAILURE"
+#~ msgstr "Vorprüfung leider NICHT bestanden!"
+
+#~ msgid "Passed from {0} %"
+#~ msgstr "Bestanden ab {0} %"
+
+#~ msgid "Points"
+#~ msgstr "Punkte"
+
+#~ msgid "from"
+#~ msgstr "von"
+
+#~ msgid "Practice some more"
+#~ msgstr "Noch weiter üben"
+
+#~ msgid "View incorrectly answered questions"
+#~ msgstr "Falsch beantwortete Fragen ansehen"
+
+#~ msgid "Review mode"
+#~ msgstr "Review Modus"
+
+#~ msgid "Back to the result"
+#~ msgstr "Zurück zum Ergebnis"
+
+#~ msgid "Explore now"
+#~ msgstr "Jetzt erkunden"
+
+#~ msgid "LABEL_STEP_"
+#~ msgstr "LABEL_STEP_"
+
+#~ msgid "Please try again."
+#~ msgstr "Bitte versuche es erneut."
+
+#~ msgid "Please pick one of these options."
+#~ msgstr "Bitte wählen Sie eine dieser Optionen."
+
+#~ msgid "Please select at least one module."
+#~ msgstr "Bitte wählen Sie mindestens ein Modul aus."
+
+#~ msgid "MISSING"
+#~ msgstr "MISSING"
+
+#~ msgid "Simulator"
+#~ msgstr "Prüfungssimulator"
+
+#~ msgid "Specify occupational groups"
+#~ msgstr "Berufsgruppen angeben"
+
+#, fuzzy
+#~| msgid "DESCRIPTION"
+#~ msgid "DESCRIPTION_EXPLORE"
+#~ msgstr "Endlich den Bildungsweg finden, der zu Ihrem Kind passt!"
+
+#, fuzzy
+#~| msgid "DESCRIPTION"
+#~ msgid "DESCRIPTION_SELECT"
+#~ msgstr "Endlich den Bildungsweg finden, der zu Ihrem Kind passt!"
+
+#, fuzzy
+#~| msgid "DESCRIPTION"
+#~ msgid "DESCRIPTION_GETSTARTED"
+#~ msgstr "Endlich den Bildungsweg finden, der zu Ihrem Kind passt!"
+
+#~ msgid "Login with FAST"
+#~ msgstr "Anmeldung mit FAST"
+
+#~ msgid "Congratulation! You have passed the preliminary examination!"
+#~ msgstr "Glückwunsch! Sie haben die Vorprüfung bestanden!"
+
+#~ msgid "Unfortunately, you did NOT pass the preliminary examination!"
+#~ msgstr "Sie haben die Vorprüfung leider NICHT bestanden!"
+
+#~ msgid "I already have a driver's license:"
+#~ msgstr "Ich besitze bereits einen Führerschein:"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "sec"
+#~ msgstr "Sek"
+
+#~ msgid "MODULES_DESCRIPTION"
+#~ msgstr "Wählen Sie die Führerscheinmodule für die Sie eine Prüfung simulieren möchten."
+
+#~ msgid "MODULE_LABEL_gw"
+#~ msgstr "Grundwissen"
+
+#~ msgid "MODULE_LABEL_b"
+#~ msgstr "B (+ BL17)"
+
+#~ msgid "MODULE_LABEL_c"
+#~ msgstr "C (+ C1)"
+
+#~ msgid "MODULE_LABEL_d"
+#~ msgstr "D (+ D1)"
+
+#~ msgid "MODULE_LABEL_e"
+#~ msgstr "E (+ C1E, CE, D1E, DE)"
+
+#~ msgid "MODULE_LABEL_f"
+#~ msgstr "F (Traktor)"
+
+#~ msgid "Batch file"
+#~ msgstr "Batch-Datei"
+
+#~ msgid "Input file"
+#~ msgstr "Eingabedatei"
+
+#~ msgid "Batches"
+#~ msgstr "Batches"
+
+#~ msgid "Convert"
+#~ msgstr "Konvertieren"
+
+#~ msgid "MAINTENANCE_HEADER"
+#~ msgstr "Wartungsarbeiten: 18. Mai von 00.00 bis 8.00 Uhr"
+
+#~ msgid "MAINTENANCE_MESSAGE"
+#~ msgstr "Wir erweitern und verbessern unser Angebot für Sie! Aufgrund von Wartungsarbeiten steht Ihnen deshalb am Montag, 18. Mai zwischen 00.00 und 8.00 Uhr der Kontomanager nicht zur Verfügung. Aufladung und Tarifaktivierung sind in dieser Zeit nicht möglich. Die Nutzung Ihres Tarifs (Telefonie, SMS, Daten) ist davon nicht betroffen. Bei Fragen helfen wir Ihnen unter +43 665 65 0 65 oder <a href=\"mailto:info@eety.at\">info@eety.at</a> gerne weiter."
+
+#~ msgid "Please select a file ({0}):"
+#~ msgstr "Bitte wählen Sie eine Datei ({0}):"
+
+#~ msgid "Imported batches"
+#~ msgstr "Importierte Batches"
+
+#~ msgid "Import new"
+#~ msgstr "Neu importieren"
+
+#~ msgid "Newer"
+#~ msgstr "Neuer"
+
+#~ msgid "Older"
+#~ msgstr "Ältere"
+
+#~ msgid "Vendor"
+#~ msgstr "Anbieter"
+
+#~ msgid "Customer"
+#~ msgstr "Kunde"
+
+#~ msgid "Quantity"
+#~ msgstr "Anzahl"
+
+#~ msgid "Simcards"
+#~ msgstr "Simkarten"
+
+#~ msgid "Activated"
+#~ msgstr "Aktiviert"
+
+#~ msgid "Imported"
+#~ msgstr "Importiert"
+
+#~ msgid "You are about to delete this batch permanently. Are you sure?"
+#~ msgstr "Sie sind dabei, diesen Batch endgültig zu löschen. Sind Sie sicher?"
+
+#~ msgid "Could not remove batch (error)."
+#~ msgstr "Konnte Batch nicht entfernen (Fehler)."
+
+#~ msgid "Import"
+#~ msgstr "Importieren"
+
+#~ msgid "Please select a file ({0})."
+#~ msgstr "Bitte wählen Sie eine Datei ({0})."
+
+#~ msgid "Submit"
+#~ msgstr "Einreichen"
+
+#~ msgid "Input for type: {0}"
+#~ msgstr "Eingabe für Typ: {0}"
+
+#~ msgid "Article Number Operator"
+#~ msgstr "Artikelnummer Operator"
+
+#~ msgid "Order Number"
+#~ msgstr "Bestellnummer"
+
+#~ msgid "Serial-File No."
+#~ msgstr "Seriennummer"
+
+#~ msgid "Download"
+#~ msgstr "Herunterladen"
+
+#~ msgid "Type"
+#~ msgstr "Art"
+
+#~ msgid "Authentication required"
+#~ msgstr "Authentifizierung erforderlich"
+
+#~ msgid "Username"
+#~ msgstr "Benutzername"
+
+#~ msgid "Credit card"
+#~ msgstr "Kreditkarte"
+
+#~ msgid "Bank transfer"
+#~ msgstr "Sofortueberweisung"
+
+#~ msgid "Academic title"
+#~ msgstr "Akademischer Titel"
+
+#~ msgid "no title"
+#~ msgstr "kein Titel"
+
+#~ msgid "Year"
+#~ msgstr "Jahr"
+
+#~ msgid "Month"
+#~ msgstr "Monat"
+
+#~ msgid "Day"
+#~ msgstr "Tag"
+
+#, php-format
+#~ msgid "\"%s\" is not a valid email address."
+#~ msgstr "\"%s\" ist keine gültige E-Mail-Adresse."
+
+#~ msgid "Identity document type"
+#~ msgstr "Identitätsdokumenttyp"
+
+#~ msgid "ID card"
+#~ msgstr "Personalausweis"
+
+#~ msgid "Passport"
+#~ msgstr "Reisepass"
+
+#~ msgid "Convention travel document"
+#~ msgstr "Konventionsreisepass"
+
+#~ msgid "Identity card"
+#~ msgstr "Identitätsausweis"
+
+#~ msgid "Alien's passport"
+#~ msgstr "Fremdenpass"
+
+#~ msgid "Procedure card (§ 50 AsylG)"
+#~ msgstr "Verfahrenskarte (§ 50 AsylG)"
+
+#~ msgid "Temporary stay permit card"
+#~ msgstr "Aufenthaltsberechtigungskarte"
+
+#~ msgid "Card for persons entitled to asylum (§ 151a)"
+#~ msgstr "Karte Ayslberechtigte (§ 51a)"
+
+#~ msgid "Card of person entitled to subsidiary protection"
+#~ msgstr "Karte subsidiär Schutzberechtigte"
+
+#~ msgid "Card for tolerated persons (§ 46a)"
+#~ msgstr "Karte für Geduldete (§ 46a)"
+
+#~ msgid "Identity document number"
+#~ msgstr "Nummer des Identitätsdokuments"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Unique ID"
+#~ msgstr "Unique ID"
+
+#~ msgid "LABEL_AGREEMENT"
+#~ msgstr "Ich gebe hiermit der eety – Marke der Hutchison Drei Austria GmbH die Vollmacht meine Rufnummer zu portieren."
+
+#~ msgid "LABEL_AGREEMENT_ID"
+#~ msgstr "Ich gebe hiermit der eety – Marke der Hutchison Drei Austria GmbH die Vollmacht die NÜV-Information meiner Rufnummer bei meinem bisherigen Betreiben einzuholen."
+
+#~ msgid "I am a contract customer"
+#~ msgstr "Ich bin Vertragskunde"
+
+#~ msgid "I am a pre-paid customer"
+#~ msgstr "Ich bin Wertkartenkunde"
+
+#~ msgid "I am a private customer"
+#~ msgstr "Ich bin Privatkunde"
+
+#~ msgid "I am a business customer"
+#~ msgstr "Ich bin Businesskunde"
+
+#~ msgid "Ms"
+#~ msgstr "Frau"
+
+#~ msgid "Mr"
+#~ msgstr "Herr"
+
+#~ msgid "ZIP"
+#~ msgstr "PLZ"
+
+#~ msgid "City"
+#~ msgstr "Ort"
+
+#~ msgid "Street"
+#~ msgstr "Straße"
+
+#~ msgid "PUK of your old SIM card"
+#~ msgstr "PUK Ihrer alten SIM Karte"
+
+#~ msgid "NUEV_YES"
+#~ msgstr "Ja, ich habe eine NÜV-Information"
+
+#~ msgid "NUEV_NO"
+#~ msgstr "Nein, ich habe keine NÜV-Information"
+
+#~ msgid "File"
+#~ msgstr "Datei"
+
+#~ msgid "Your password"
+#~ msgstr "Ihr Passwort"
+
+#~ msgid "Current password"
+#~ msgstr "Bestehendes Passwort"
+
+#~ msgid "Phone number"
+#~ msgstr "Rufnummer"
+
+#~ msgid "Your phone number"
+#~ msgstr "Ihre Rufnummer"
+
+#~ msgid "Unfortunately, online charging is currently not possible."
+#~ msgstr "Leider ist das online Aufladen derzeitig nicht möglich."
+
+#~ msgid "Invalid mobile number."
+#~ msgstr "Ungültige Rufnummer."
+
+#~ msgid "An error has occurred."
+#~ msgstr "Ein Fehler ist aufgetreten."
+
+#~ msgid "The voucher you entered is invalid."
+#~ msgstr "Die eingegebene Ladebon-Nummer ist ungültig. "
+
+#~ msgid "Please try again or contact the support hotline 65065."
+#~ msgstr "Bitte versuchen Sie es erneut oder wenden Sie sich an die Service-Hotline unter 65065."
+
+#~ msgid "The voucher you entered has already been redeemed."
+#~ msgstr "Der Ladebon wurde bereits eingelöst. "
+
+#~ msgid "Please contact the service hotline 65065."
+#~ msgstr "Bitte wenden Sie sich an unsere Service-Hotline unter 65065."
+
+#~ msgid "The voucher was redeemed successfully."
+#~ msgstr "Der Ladebon wurde erfolgreich eingelöst."
+
+#~ msgid "Please try again or contact our support."
+#~ msgstr "Bitte versuchen Sie es erneut oder wenden Sie sich an unseren Support."
+
+#~ msgid "Automatic top-up"
+#~ msgstr "Automatisch aufladen"
+
+#~ msgid "deactivated"
+#~ msgstr "deaktiviert"
+
+#~ msgid "The telephone number cannot be empty."
+#~ msgstr "Die Telefonnummer darf nicht leer sein."
+
+#~ msgid "The voucher number cannot be empty."
+#~ msgstr "Die Ladebon-Nummer darf nicht leer sein."
+
+#~ msgid "The telephone numbers are different."
+#~ msgstr "Die Telefonnummern sind unterschiedlich."
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Cost"
+#~ msgstr "Kosten"
+
+#~ msgid "ICL"
+#~ msgstr "EGN"
+
+#~ msgid "Number"
+#~ msgstr "Nummer"
+
+#~ msgid "Personal data"
+#~ msgstr "Persönliche Daten"
+
+#~ msgid "Service is currently unavailable. Please try again later."
+#~ msgstr "Service ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut."
+
+#~ msgid "Some of the fields have been filled in."
+#~ msgstr "Einige Felder wurden bereits ausgefüllt."
+
+#~ msgid "Please check all values."
+#~ msgstr "Bitte überprüfen Sie alle Werte."
+
+#~ msgid "You must be at least {0} years old to be able to register."
+#~ msgstr "Bitte beachten Sie, dass sie mindestens {0} Jahre alt sein müssen um sich registrieren zu können."
+
+#~ msgid "ID and Unique ID do not match."
+#~ msgstr "ID und Unique ID stimmen nicht überein."
+
+#~ msgid "Success!"
+#~ msgstr "Erfolg!"
+
+#~ msgid "CUSTOMER_BUSINESS"
+#~ msgstr "Als Businesskunde brauchen Sie für die Online-Rufnummernübertragung eine NÜV-Information von Ihrem bisherigen Betreiber. Bei Fragen wenden sich bitte an unsere eety Hotline unter +43 665 65 0 65."
+
+#~ msgid "CREDIT_NO"
+#~ msgstr "Bitte laden Sie 10 Euro Guthaben auf die Wertkarte Ihres bisherigen Betreibers. Das sind jene Kosten, die bei Ihrem alten Betreiber für die Rufnummernübertragung anfallen. Sobald das Guthaben aufgeladen ist, können Sie die Rufnummernmitnahme erneut starten."
+
+#~ msgid "\"{0}\" is required."
+#~ msgstr "\"{0}\" ist erforderlich."
+
+#~ msgid "Porting number \"{0}\" - {1} {2}"
+#~ msgstr "Rufnummernmitnahme \"{0}\" - {1} {2}"
+
+#~ msgid "eety-Account Manager"
+#~ msgstr "eety-Kontomanager"
+
+#~ msgid "Automatic confirmation for number porting"
+#~ msgstr "Automatische Bestätigung zur Rufnummernmitnahme"
+
+#~ msgid "Payment cancellation"
+#~ msgstr "Zahlung Stornierung"
+
+#~ msgid "The payment was cancelled."
+#~ msgstr "Die Zahlung wurde storniert."
+
+#~ msgid "TOPUP_PAYMENT_STATE_FAILURE"
+#~ msgstr "Der Aufladevorgang war leider nicht erfolgreich. Bitte versuchen Sie es zu einem späteren Zeitpunkt noch einmal."
+
+#~ msgid "Your order number is"
+#~ msgstr "Ihre Bestellnummer ist"
+
+#~ msgid "Top up successful"
+#~ msgstr "Guthaben aufgeladen"
+
+#~ msgid "Your top up was successful!"
+#~ msgstr "Ihr Guthaben wurde erfolgreich aufgeladen!"
+
+#~ msgid "Could not send SMS message. Please contact our support."
+#~ msgstr "SMS konnte nicht gesendet werden. Bitte kontaktieren Sie unseren Support."
+
+#~ msgid "A password has just been sent to your specified {0} phone number."
+#~ msgstr "Ein Passwort wurde Ihnen soeben an Ihre angegebene {0}-Rufnummer zugesendet."
+
+#~ msgid "Please check the current password."
+#~ msgstr "Bitte überprüfen Sie das bestehendes Passwort."
+
+#~ msgid "New passwords do not match."
+#~ msgstr "Neue Passwörter stimmen nicht überein."
+
+#~ msgid "Could not set new password. Please contact our support."
+#~ msgstr "Konnte neues Passwort nicht setzen. Bitte kontaktieren Sie unseren Support."
+
+#~ msgid "Your password has been changed."
+#~ msgstr "Ihr Passwort wurde geändert."
+
+#~ msgid "User already exists. New password was set."
+#~ msgstr "Benutzer existiert bereits. Neues Passwort wurde gesetzt."
+
+#~ msgid "Credit"
+#~ msgstr "Guthaben"
+
+#~ msgid "Itemized Call List"
+#~ msgstr "Einzelgesprächsnachweis"
+
+#~ msgid "Port your number"
+#~ msgstr "Rufnummernmitnahme"
+
+#~ msgid "Voice"
+#~ msgstr "Telefonie"
+
+#~ msgid "Voice (outgoing)"
+#~ msgstr "Telefonie (ausgehend)"
+
+#~ msgid "Voice (incoming)"
+#~ msgstr "Telefonie (ankommend)"
+
+#~ msgid "Voice (forwarded)"
+#~ msgstr "Telefonie (weitergeleitet)"
+
+#~ msgid "Current credit"
+#~ msgstr "Aktuelles Guthaben"
+
+#~ msgid "Top-up credit"
+#~ msgstr "Guthaben aufladen"
+
+#~ msgid "TOPUP_INFO"
+#~ msgstr "Wie hätten Sie’s denn gern? Automatische Aufladung für sorgenfreies Telefonieren und Surfen, einmalig online aufladen oder Ihren Ladebon einlösen?"
+
+#~ msgid "One time top-up"
+#~ msgstr "Einmalig aufladen"
+
+#~ msgid "Redeem a voucher"
+#~ msgstr "Ladebon einlösen"
+
+#~ msgid "Top-up voucher invoice for input tax deduction"
+#~ msgstr "Ladebon-Rechnung für Vorsteuerabzug"
+
+#~ msgid "TOPUP_RECEIPT"
+#~ msgstr "Benötigen Sie als UnternehmerIn eine Rechnung für den Vorsteuerabzug, müssen Sie sich seit 01.01.2010 direkt an eety wenden. Wir stellen Ihnen gerne einen vorsteuerabzugsberechtigten Beleg für Ihren gekauften Ladebon aus und senden Ihnen diesen umgehend zu. Die Anforderung können Sie uns entweder über unsere eety-Hotline, unter 65 0 65 von Ihrem eety Handy aus bzw. +43 665 65 0 65 von jedem anderen Telefon aus, bekannt geben, oder Sie senden uns einfach eine e-Mail an <a href=\"mailto:kundenrechnung@eety.at?subject=eety%20Ladebon-Rechnung%20für%20Vorsteuerabzug&amp;body=Liebes%20eety%20Team,%0A%0Ada%20ich%20als%20UnternehmerIn%20bzw.%20Selbstständiger%20vorsteuerabzugsberechtigt%20bin,%20bitte%20ich%20um%20Ausstellung%20einer%20Rechnung%20für%20folgenden%20eety-Ladebon:%0A%0ASeriennummer:%0AWertkartennummer:%0AKontrollnummer:%0AKaufdatum:%0A%0ARechnung%20ausstellen%20auf:%0AFirmenname,%20Name:%0AZusatz:%0AStraße,%20Hausnummer:%0APLZ:%0AOrt:%0A%0AVielen%20Dank,\">kundenrechnung@eety.at</a>."
+
+#~ msgid "AUTOMATIC_TOPUP_INTRO"
+#~ msgstr "Wir machen Ihnen das Aufladen besonders leicht: Wählen Sie einen Aufladebetrag und legen Sie ein Mindestguthaben fest. Sobald dieses erreicht wird, laden wir automatisch den voreingestellten Betrag für Sie auf."
+
+#~ msgid "You can disable automatic top-ups whenever you like here."
+#~ msgstr "Die automatische Aufladung können Sie hier jederzeit wieder deaktivieren."
+
+#~ msgid "Minimum balance"
+#~ msgstr "Mindestguthaben"
+
+#~ msgid "Recharge amount"
+#~ msgstr "Aufladebetrag"
+
+#~ msgid "To change your settings, please deactivate automatic top first."
+#~ msgstr "Falls Sie Ihre Einstellungen ändern möchten, deaktivieren Sie bitte die automatische Aufladung."
+
+#~ msgid "deactivate"
+#~ msgstr "deaktivieren"
+
+#~ msgid "Automatic recharging currently works only with a credit card."
+#~ msgstr "Automatisches Aufladen funktioniert im Moment nur mit Kreditkarte."
+
+#~ msgid "At activation, the configured recharge amount will be topped up."
+#~ msgstr "Bei der Aktivierung wird der eingestellte Aufladebetrag aufgeladen."
+
+#~ msgid "Top Up"
+#~ msgstr "Guthaben aufladen"
+
+#~ msgid "Telephone number"
+#~ msgstr "Rufnummer"
+
+#~ msgid "Choose amount"
+#~ msgstr "Betrag wählen"
+
+#~ msgid "Payment method"
+#~ msgstr "Zahlungsart wählen"
+
+#~ msgid "Enter the voucher number here:"
+#~ msgstr "Ladebon-Nummer hier eingeben:"
+
+#~ msgid "Redeem"
+#~ msgstr "Einlösen"
+
+#~ msgid "Mobile"
+#~ msgstr "am Handy"
+
+#~ msgid "Voucher number"
+#~ msgstr "Ladebon-Nummer"
+
+#~ msgid "Hotline"
+#~ msgstr "oder Aufladehotline"
+
+#~ msgid "Data package active until"
+#~ msgstr "Datenpaket aktiv bis"
+
+#~ msgid "No extra packages / data options active."
+#~ msgstr "Keine extra Pakete/Datenoptionen aktiv."
+
+#~ msgid "Extra data packages"
+#~ msgstr "Zusätzliches Datenpaket"
+
+#~ msgid "No records were found for this period."
+#~ msgstr "Für diesen Zeitraum wurden keine Datensätze gefunden."
+
+#~ msgid "Proof of individual calls"
+#~ msgstr "Einzelgesprächsnachweis"
+
+#~ msgid "Notice"
+#~ msgstr "Hinweis"
+
+#~ msgid "ICL_NOTICE"
+#~ msgstr "Die Anzeige des Einzelgesprächsnachweises kann bis zu 2 Stunden dauern. Aufgrund einer Anordnung der Regulierungsbehörde müssen wir ab sofort die Rufnummern verkürzt darstellen."
+
+#~ msgid "Valid until"
+#~ msgstr "Gültig bis"
+
+#~ msgid "Call credit"
+#~ msgstr "Gesprächsguthaben"
+
+#~ msgid "Available credit"
+#~ msgstr "Verfügbares Guthaben"
+
+#~ msgid "As of"
+#~ msgstr "Stand"
+
+#~ msgid "active"
+#~ msgstr "aktiv"
+
+#~ msgid "Extra packages"
+#~ msgstr "Zusatzpakete"
+
+#~ msgid "This shows the units consumed in your add-on packages."
+#~ msgstr "Hier sehen Sie die verbrauchten Einheiten aus Ihren Zusatzpaketen."
+
+#~ msgid "Add-on packages lose their validity 12 months after activation."
+#~ msgstr "Gültigkeitsdauer der Zusatzpakete: 12 Monate ab Aktivierung."
+
+#~ msgid "Data options"
+#~ msgstr "Datenoptionen"
+
+#~ msgid "This shows the units consumed in your data options packages."
+#~ msgstr "Hier sehen Sie die verbrauchten Einheiten aus Ihren Datenoptionen."
+
+#~ msgid "Data options packages lose their validity 30 days after activation."
+#~ msgstr "Gültigkeitsdauer den Datenoptionen: 1 Monat ab Aktivierung."
+
+#~ msgid "DATA_TOO_LITTLE"
+#~ msgstr "Zu wenig Datenvolumen? Die Tarife eety TOP bzw. eety PRO können jederzeit um kostengünstige Datenoptionen erweitert werden."
+
+#~ msgid "data volumes"
+#~ msgstr "Datenvolumen"
+
+#~ msgid "free"
+#~ msgstr "frei"
+
+#~ msgid "(can be used both in Austria as well as in other EU countries)"
+#~ msgstr "(Diese können sowohl in Österreich, als auch im EU-Ausland verwendet werden.)"
+
+#~ msgid "out of this volume,"
+#~ msgstr "davon können"
+
+#~ msgid "can be used abroad"
+#~ msgstr "im Ausland verwendet werden"
+
+#~ msgid "JOYFUN_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den Tarif: joymobile fun."
+
+#~ msgid "JOYFUN_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif joymobile FUN ist roamingfähig. Sie können alle inkludierten Minuten, SMS und Daten sowohl in Österreich als auch im EU-Ausland* verwenden."
+
+#~ msgid "Data use in other EU countries"
+#~ msgstr "Datennutzung im EU-Ausland"
+
+#~ msgid "JOYFUN_DATA_DETAIL"
+#~ msgstr "Ihr Tarif joymobile FUN beinhaltet 1GB Datenvolumen, dieses kann sowohl in Österreich, als auch im EU-Ausland verwendet werden.</br>Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "TOP_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety TOP Tarif."
+
+#~ msgid "TOP_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety TOP ist roamingfähig. Ab dem 15.6.2017 können Sie alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "TOP_DATA_DETAIL"
+#~ msgstr "Ihr Tarif eety TOP beinhaltet 3 GB LTE-Datenvolumen österreichweit. Davon können 3 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "START_INTRO"
+#~ msgstr "Einfach regelmäßig vor Ablauf des Tarif-Pakets (Laufzeit 30 Tage) ausreichend Guthaben aufladen und eety START mit 1 GB behalten. Andernfalls wird auf eety BASIS umgestellt."
+
+#~ msgid "START_DATA_DETAIL"
+#~ msgstr "Ihr Tarif eety START beinhaltet 1GB LTE-Datenvolumen, dieses kann sowohl in Österreich, als auch im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "PRO_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety PRO Tarif."
+
+#~ msgid "PRO_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety PRO ist roamingfähig. Ab dem 15.6.2017 können Sie alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "PRO_DATA_DETAIL"
+#~ msgstr "Ihr Tarif eety PRO beinhaltet 6 GB LTE-Datenvolumen österreichweit. Davon können 6 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "TOP_PROMO_INTRO"
+#~ msgstr "Einfach regelmäßig vor Ablauf des Tarif-Pakets (Laufzeit 30 Tage) ausreichend Guthaben aufladen und eety TOP PROMO mit 10 GB behalten. Andernfalls wird auf eety BASIS umgestellt."
+
+#~ msgid "TOP_PROMO_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety PROMO ist roamingfähig. Ab dem 15.6.2017 können Sie alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "TOP_PROMO_DATA_DETAIL"
+#~ msgstr "Ihr Tarif eety PROMO beinhaltet 10 GB LTE-Datenvolumen österreichweit. Davon können 10 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "STAR_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety STAR-Tarif."
+
+#~ msgid "STAR_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety STAR ist nicht roamingfähig. Sie können mit diesem Tarif nicht im Ausland telefonieren, SMS schreiben oder surfen. Dieser Tarif ist nicht kombinierbar mit EXTRA-Paketen und Datenoptionen."
+
+#~ msgid "CONNECT_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety CONNECT-Tarif."
+
+#~ msgid "CONNECT_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety CONNECT ist nicht roamingfähig. Sie können mit diesem Tarif nicht im Ausland telefonieren, SMS schreiben oder surfen. Dieser Tarif ist nicht kombinierbar mit EXTRA-Paketen und Datenoptionen."
+
+#~ msgid "TALK_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety TALK-Tarif."
+
+#~ msgid "TALK_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety TALK ist nicht roamingfähig. Sie können mit diesem Tarif nicht im Ausland telefonieren, SMS schreiben oder surfen. Dieser Tarif ist nicht kombinierbar mit EXTRA-Paketen und Datenoptionen."
+
+#~ msgid "EASY_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety EASY-Tarif."
+
+#~ msgid "EASY_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety EASY ist nicht roamingfähig. Sie können mit diesem Tarif nicht im Ausland telefonieren, SMS schreiben oder surfen. Dieser Tarif ist nicht kombinierbar mit EXTRA-Paketen und Datenoptionen."
+
+#~ msgid "HERO_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety HERO ist nicht roamingfähig. Sie können mit diesem Tarif nicht im Ausland telefonieren, SMS schreiben oder surfen. Dieser Tarif ist nicht kombinierbar mit EXTRA-Paketen und Datenoptionen."
+
+#~ msgid "FUN_INTRO"
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety FUN-Tarif."
+
+#~ msgid "FUN_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety FUN ist nicht roamingfähig. Sie können mit diesem Tarif nicht im Ausland telefonieren, SMS schreiben oder surfen. Dieser Tarif ist nicht kombinierbar mit EXTRA-Paketen und Datenoptionen."
+
+#~ msgid "FLAT15_INTRO"
+#~ msgstr "Mit eety FLAT 15 erhalten Sie unbegrenztes Datenvolumen österreichweit für 15 Tage. Der Tarif ist nur zur Datennutzung und nicht mit anderen Tarifen kombinierbar. Im Paket sind keine Minuten und SMS inkludiert."
+
+#~ msgid "FLAT15_DATA_DESCRIPTION"
+#~ msgstr "Der Tarif eety FLAT 15 ist nicht roamingfähig. Sie können damit im Ausland nicht telefonieren, surfen oder SMS schreiben und auch keine Anrufe, SMS oder Daten empfangen."
+
+#~ msgid "FLAT30_INTRO"
+#~ msgstr "Mit eety FLAT 30 erhalten Sie unbegrenztes Datenvolumen österreichweit für 30 Tage. Der Tarif ist nur zur Datennutzung und nicht mit anderen Tarifen kombinierbar. Im Paket sind keine Minuten und SMS inkludiert."
+
+#~ msgid "FLAT30_DATA_DESCRIPTION"
+#~ msgstr "Der Tarif eety FLAT 30 ist nicht roamingfähig. Sie können damit im Ausland nicht telefonieren, surfen oder SMS schreiben und auch keine Anrufe, SMS oder Daten empfangen."
+
+#~ msgid "TOURIST1_INTRO"
+#~ msgstr "Einfach regelmäßig vor Ablauf des Tarif-Pakets (Laufzeit 30 Tage) ausreichend Guthaben aufladen und eety TOURIST1 behalten. Andernfalls wird auf eety BASIS umgestellt."
+
+#~ msgid "TOURIST1_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety Tourist1 ist roamingfähig. Sie können alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "TOURIST1_DATA_DETAIL"
+#~ msgstr "Ihr Tarif eety Tourist1 beinhaltet 10 GB LTE-Datenvolumen österreichweit. Davon können 9,6 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "TOURIST2_INTRO"
+#~ msgstr "Einfach regelmäßig vor Ablauf des Tarif-Pakets (Laufzeit 30 Tage) ausreichend Guthaben aufladen und eety TOURIST2 behalten. Andernfalls wird auf eety BASIS umgestellt."
+
+#~ msgid "TOURIST2_DATA_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety Tourist1 ist roamingfähig. Sie können alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "TOURIST2_DATA_DETAIL"
+#~ msgstr "Ihr Tarif eety Tourist2 beinhaltet 20 GB LTE-Datenvolumen österreichweit. Davon können 19,1 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "SP2018_1_INTRO"
+#~ msgstr "Wenn das Startguthaben Ihres SP 2018 1 (Laufzeit 15 Tage) aufgebraucht ist, können Sie jederzeit bei ausreichend Guthaben den Tarif eety TOURIST1 oder eety TOURIST2 aktivieren. Andernfalls wird auf eety BASIS umgestellt."
+
+#~ msgid "SP2018_1_DATA_DESCRIPTION"
+#~ msgstr "Ihr Startguthaben ist roamingfähig. Sie können alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "SP2018_1_DATA_DETAIL"
+#~ msgstr "Ihr Startguthaben beinhaltet 10 GB LTE-Datenvolumen österreichweit. Davon können 3,6 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "SP2018_2_INTRO"
+#~ msgstr "Wenn das Startguthaben Ihres SP 2018 2 (Laufzeit 15 Tage) aufgebraucht ist, können Sie jederzeit bei ausreichend Guthaben den Tarif eety TOURIST1 oder eety TOURIST2 aktivieren. Andernfalls wird auf eety BASIS umgestellt."
+
+#~ msgid "SP2018_2_DATA_DESCRIPTION"
+#~ msgstr "Ihr Startguthaben ist roamingfähig. Sie können alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "SP2018_2_DATA_DETAIL"
+#~ msgstr "Ihr Startguthaben beinhaltet 20 GB LTE-Datenvolumen österreichweit. Davon können 6 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "used"
+#~ msgstr "verbraucht"
+
+#~ msgid "Explanation data consumption"
+#~ msgstr "Erklärung Daten Verbrauch"
+
+#~ msgid "Data consumption in Austria"
+#~ msgstr "Datenverbrauch in Österreich"
+
+#~ msgid "Period"
+#~ msgstr "Zeitraum"
+
+#~ msgid "joymobile TARIFFS"
+#~ msgstr "joymobile TARIFE"
+
+#~ msgid "eety TARIFFS"
+#~ msgstr "eety TARIFE"
+
+#~ msgid "At any time, you can switch to other tariffs with included minutes, SMS and data."
+#~ msgstr "Sie können jederzeit auf ein eety Tarif-Paket mit inkludierten Minuten, SMS und Daten umsteigen."
+
+#~ msgid "Roaming"
+#~ msgstr "Roaming"
+
+#~ msgid "Talk and text abroad (roaming)"
+#~ msgstr "Telefonie und SMS im Ausland"
+
+#~ msgid "On"
+#~ msgstr "Ein"
+
+#~ msgid "Off"
+#~ msgstr "Aus"
+
+#~ msgid "Data abroad (roaming)"
+#~ msgstr "Daten im Ausland (Roaming)"
+
+#~ msgid "Premium calls"
+#~ msgstr "Mehrwertnummern"
+
+#~ msgid "YEAR-MM-DD"
+#~ msgstr "JAHR-MM-TT"
+
+#~ msgid "Decrypt"
+#~ msgstr "Decrypt"
+
+#~ msgid "Please enter both \"id\" and \"unique_id\"."
+#~ msgstr "Bitte geben Sie sowohl \"id\" als auch \"unique_id\" ein."
+
+#~ msgid "decrypt"
+#~ msgstr "decrypt"
+
+#~ msgid "IDENTIFY_INTRO"
+#~ msgstr ""
+#~ "<p>Egal ob Sie Ihre Wertkarte im ausgewählten Fachhandel oder online kaufen, ab 2019 müssen Sie dabei Ihre Stammdaten nach §97 Abs 1a Telekommunikationsgesetz bekannt geben und sich ausweisen.</p>\n"
+#~ "<p>Ihre eingegebenen Daten werden vertraulich behandelt und verschlüsselt übertragen. eety und seine Partner speichert Ihre Bankdaten, sowie Ihr Foto nicht. Ihr Bankkonto wird nicht belastet.</p>\n"
+#~ "<p>Die Verarbeitung der Bankdaten findet ausschließlich aufseiten der jeweiligen Bank statt. Nach der Auswertungen werden Ihre Bilddaten automatisch gelöscht.</p>\n"
+#~ "<p>Für Neukunden ist auf mobilen Endgeräten eine aktive WLAN-Verbindung zwingend erforderlich.</p>\n"
+#~ "<p>Bitte geben Sie Ihre Daten genau wie auf Ihrem Ausweisdokument abgedruckt ein.</p>"
+
+#~ msgid "continue"
+#~ msgstr "weiter"
+
+#~ msgid "Please wait..."
+#~ msgstr "Bitte warten Sie..."
+
+#~ msgid "...while process is being finalized."
+#~ msgstr "...während der Prozess abgeschlossen wird."
+
+#~ msgid "Registration successful"
+#~ msgstr "Registrierung erfolgreich"
+
+#~ msgid "IDENTIFY_SUCCESS"
+#~ msgstr ""
+#~ "<p>Lieber eety-Kunde,</p>\n"
+#~ "<p>vielen Dank für die erfolgreiche Registrierung Ihrer eety Wertkarte.<br />Ihre Karte ist somit startklar und kann sofort benutzt werden.</p>\n"
+#~ "<p>Ihr eety-Team</p>"
+
+#~ msgid "Top-up credits and off you go!"
+#~ msgstr "Guthaben aufladen & los geht's!"
+
+#~ msgid "More information under:"
+#~ msgstr "Mehr Infos unter:"
+
+#~ msgid "You will need this to move your mobile number online:"
+#~ msgstr "Das brauchen Sie für die Online-Rufnummernmitnahme:"
+
+#~ msgid "PORT_NUMBER_INTRO"
+#~ msgstr ""
+#~ "<ul>\n"
+#~ "\t<li>Aktivierte eety SIM-Karte (wird durchs Einlegen ins Handy aktiviert)</li>\n"
+#~ "\t<li>PUK-Code Ihrer alten SIM-Karte (steht am SIM-Karten-Träger)</li>\n"
+#~ "\t<li>NÜV-Information vom bisherigen Betreiber (= Nummernübertragungsinformation, als pdf oder als Digital-Foto)</li>\n"
+#~ "\t<li>Amtlichen Lichtbildausweis, sofern keine NÜV-Information vorhanden (Reisepass, Personalausweis oder Führerschein als pdf oder als Digital-Foto).</li>\n"
+#~ "\t<li>Als Wertkartenkunde: 10 € Guthaben auf Ihrer alten Wertkarte. Zur Info: Diese Kosten verrechnet Ihr alter Betreiber für die Rufnummernmitnahme. Im Aktionszeitraum „Gratis Rufnummernmitnahme“ wird Ihnen dieser Betrag später von uns als eety-Guthaben ersetzt.</li>\n"
+#~ "</ul>\n"
+#~ "<p>Die Rufnummernportierungen ohne NÜV-Information sind online nur als Privatkunde möglich. Sollten Sie als Businesskunde mit Ihrer bestehenden Rufnummer zu eety wechseln wollen, besorgen Sie sich vorab bitte die NÜV-Information von Ihrem bisherigen Betreiber. Bei Fragen wenden Sie sich bitte an unsere Hotline unter +43 665 65 0 65.</p>\n"
+#~ "<p>Hinweis für Wertkartenkunden: Bitte beachten Sie, dass mindestens 10 Euro GH auf Ihrer alten Wertkarte sind.</p>"
+
+#~ msgid "Please select your former provider"
+#~ msgstr "Bitte wählen Sie Ihren bisherigen Betreiber aus"
+
+#~ msgid "Click on \"complete\" to initiate the mobile phone transfer."
+#~ msgstr "Mit dem Klick auf „fertigstellen“ leiten Sie die Rufnummernmitnahme ein."
+
+#~ msgid "complete"
+#~ msgstr "fertigstellen"
+
+#~ msgid "Are you a contract customer or pre-paid customer with your previous provider?"
+#~ msgstr "Sind Sie bei Ihrem bisherigen Betreiber Vertrags- oder Wertkartenkunde?"
+
+#~ msgid "Do you have a 10 Euro credit on the pre-paid card of your previous provider?"
+#~ msgstr "Haben Sie 10 Euro Guthaben auf der Wertkarte Ihres bisherigen Betreibers?"
+
+#~ msgid "Are you a private or a business customer with your previous provider?"
+#~ msgstr "Sind Sie bei Ihrem bisherigen Betreiber Privat- oder Businesskunde?"
+
+#~ msgid "Please enter the required data"
+#~ msgstr "Geben Sie bitte die benötigten Daten ein"
+
+#~ msgid "DD.MM.YEAR"
+#~ msgstr "TT.MM.JAHR"
+
+#~ msgid "The PUK code is on the SIM-card holder that you broke the SIM-card out of."
+#~ msgstr "Der PUK Code steht am SIM-Karten Träger, aus dem Sie die SIM-Karte heraus gedrückt haben."
+
+#~ msgid "digits"
+#~ msgstr "Ziffern"
+
+#~ msgid "EMAIL_PORT_NUMBER_CUSTOMER"
+#~ msgstr ""
+#~ "Lieber {0} Kunde!<br /><br />\n"
+#~ "Wir haben Ihre Unterlagen zur Rufnummernmitnahme erhalten! Der Prozess zur Rufnummernmitnahme für {1} wurde gestartet. Im nächsten Schritt erhalten Sie von uns ein E-Mail mit dem Portierdatum.\n"
+#~ "<br /><br />Ihr {2} Team"
+
+#~ msgid "NUEV_INTRO"
+#~ msgstr "Haben Sie bereits eine NÜV-Information von Ihrem derzeitigen Betreiber?"
+
+#~ msgid "NUMBER_INTRO"
+#~ msgstr "Bitte tragen Sie Ihre Rufnummer, die Sie zu eety mitnehmen möchten in die Felder unten ein (Format Beispiel 664XXXXXX)."
+
+#~ msgid "Thank you! You will soon receive a confirmation mail."
+#~ msgstr "Vielen Dank! Sie erhalten in Kürze eine Bestätigungsmail."
+
+#~ msgid "UPLOAD_INTRO_ID"
+#~ msgstr "Bitte laden Sie einen amtlichen Lichbildausweis hoch (als digital .jpg Bild oder .pdf Dokument)."
+
+#~ msgid "UPLOAD_INTRO"
+#~ msgstr "Bitte laden Sie jetzt Ihre NÜV-Information von Ihrem bisherigen Betreiber hoch (als digital .jpg Bild oder .pdf Dokument)."
+
+#~ msgid "LABEL_UPLOAD_ID"
+#~ msgstr "Lichtbildausweis hochladen"
+
+#~ msgid "...while transaction is being finalized."
+#~ msgstr "...bis die Transaktion abgeschlossen ist."
+
+#~ msgid "Unfortunately your credit was not topped up successfully. Please contact us at info@eety.at"
+#~ msgstr "Leider konnte Ihr Guthaben nicht erfolgreich aufgeladen werden. Bitte kontaktieren Sie uns unter <strong><a href=\" mailto:info@eety.at\">info@eety.at</a></strong>"
+
+#~ msgid "Unfortunately your credit was not topped up successfully. Please try again later."
+#~ msgstr "Der Aufladevorgang war leider nicht erfolgreich. Bitte versuchen Sie es zu einem späteren Zeitpunkt noch einmal."
+
+#~ msgid "Your new balance is"
+#~ msgstr "Ihr aktuelles Guthaben beträgt"
+
+#~ msgid "Forgot<br />password?"
+#~ msgstr "Passwort<br />vergessen?"
+
+#~ msgid "Forgotten your password? It happens to everybody. Not a problem, we’ll send a new one to your phone. This lets you once again access your account manager and keep track of your costs."
+#~ msgstr "Passwort vergessen? Das kennt doch jeder. Kein Problem, denn wir schicken es Ihnen direkt auf Ihr Handy. Damit haben Sie sofort wieder Zugang zum Kontomanager und Ihre Kosten voll im Blick."
+
+#~ msgid "INFO_STAYSAFE"
+#~ msgstr ""
+#~ "#staysafe<br />\n"
+#~ "{0} Ladebons einfach beim nächsten Einkauf im Supermarkt, Drogerie, Trafik oder Tankstelle mitnehmen.<br />\n"
+#~ "Noch praktischer: Guthaben online aufladen"
+
+#~ msgid "Forgotten your password?"
+#~ msgstr "Passwort vergessen?"
+
+#~ msgid "Register user"
+#~ msgstr "Benutzer registrieren"
+
+#~ msgid "back to overview"
+#~ msgstr "zurück zum Überblick"
+
+#~ msgid "Register new user"
+#~ msgstr "Neuen Benutzer registrieren"
+
+#~ msgid "back to login"
+#~ msgstr "zurück zum Login"
+
+#~ msgid "The password will be sent to you per SMS as soon as you have registered. Just enter your phone number and click on SEND SMS."
+#~ msgstr "Bei der ersten Registrierung wird das eety-Passwort per SMS verschickt. Einfach Rufnummer eingeben und SMS ZUSENDEN klicken."
+
+#~ msgid "ATTENTION: In order to register, the eety SIM card must be inserted in a mobile phone."
+#~ msgstr "ACHTUNG: Um sich registrieren zu können, muss die eety SIM-Karte in einem Handy eingelegt sein."
+
+#~ msgid "Send SMS"
+#~ msgstr "SMS zusenden"
+
+#~ msgid "Menu open/close"
+#~ msgstr "Menü öffnen/schließen"
+
+#~ msgid "MAINTENANCE_TOPUP"
+#~ msgstr ""
+#~ "<p><strong>Wartungsarbeiten: Montag, 18. Mai von 00.00 bis 8.00 Uhr</strong></p>\n"
+#~ "<p>\n"
+#~ "Wir erweitern und verbessern unser Angebot für Sie. Wegen der dafür notwendigen Wartungsarbeiten stehen am 18. Mai zwischen 00.00 und 8.00 Uhr Kontomanager, Aufladung und Tarifaktivierung nicht zur Verfügung. Die Nutzung Ihres Tarifs (Telefonie, SMS, Daten) ist davon nicht betroffen.<br />Bei Fragen helfen wir Ihnen unter +43 665 65 0 65 oder <a href=\"mailto:info@eety.at\">info@eety.at</a> gerne weiter.\n"
+#~ "</p>"
+
+#~ msgid "Maintenance"
+#~ msgstr "Wartungsarbeiten"
+
+#~ msgid "Some of the fields have been prefilled."
+#~ msgstr "Einige Felder wurden bereits ausgefüllt."
+
+#~ msgid "New: free shipping!"
+#~ msgstr "Jetzt versandkostenfrei bestellen!"
+
+#~ msgid "No data packages active."
+#~ msgstr "Keine Datenpakete aktiv."
+
+#~ msgid "An error has occurred. Please try again later."
+#~ msgstr "Ein Fehler ist aufgetreten. Bitte versuche es später erneut."
+
+#~ msgid "An error has occurred. Please try again or contact our support."
+#~ msgstr "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut oder wenden Sie sich an unseren Support."
+
+#~ msgid "An error has occurred. Please try again."
+#~ msgstr "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
+
+#~ msgid "With voucher"
+#~ msgstr "Mit Ladebon"
+
+#~ msgid "Voucher-nummer"
+#~ msgstr "Ladebon-Nummer"
+
+#~ msgid "TOPUP_VOUCHER_INTRO"
+#~ msgstr "Wichtig: Alte Ladebons (vor Juni 2015 gekauft) funktionieren natürlich weiterhin. Geben Sie bitte hintereinander die 12-stellige Ladebon- und 4-stellige PIN-Nummer ein."
+
+#~ msgid "Top-up voucher invoice for input tax deductiong"
+#~ msgstr "Ladebon-Rechnung für Vorsteuerabzug"
+
+#~ msgid "The voucher number you have entered is invalid."
+#~ msgstr "Die eingegebene Ladebon-Nummer ist ungültig."
+
+#~ msgid "The voucher you have entered has already been redeemed."
+#~ msgstr "Der von Ihnen eingegebene Ladebon ist bereits eingelöst."
+
+#~ msgid "The amount of the voucher has been added to your balance."
+#~ msgstr "Der Betrag des Ladebons wurde Ihr Guthaben hinzugefügt."
+
+#~ msgid "Reedem this voucher"
+#~ msgstr "Diesen Ladebon einlösen"
+
+#~ msgid "An error has occurred. Please contact our support."
+#~ msgstr "Ein Fehler ist aufgetreten. Bitte wenden Sie sich an unseren Support."
+
+#~ msgid "Voucher amount was added to your balance."
+#~ msgstr "Der Betrag des Gutscheins wurde Ihrem Guthaben hinzugefügt."
+
+#~ msgid "Unfortunately, online charging is currently not possible"
+#~ msgstr "Leider ist das online Aufladen derzeitig nicht möglich."
+
+#~ msgid "A password has just been sent to your specified %s phone number."
+#~ msgstr "Ein Passwort wurde Ihnen soeben an Ihre angegebene %s-Rufnummer zugesendet."
+
+#~ msgid "\"%s\" is required."
+#~ msgstr "\"%s\" ist erforderlich."
+
+#~ msgid "Porting number \"%s\" - %s %s"
+#~ msgstr "Rufnummernmitnahme \"%s\" - %s %s"
+
+#~ msgid "\"%s\" cannot be empty."
+#~ msgstr "\"%s\" darf nicht leer sein."
+
+#~ msgid "PUK code"
+#~ msgstr "PUK-Code"
+
+#~ msgid "Success"
+#~ msgstr "Erfolg"
+
+#~ msgid "No title"
+#~ msgstr "kein Titel"
+
+#~ msgid "Title"
+#~ msgstr "Titel"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Legitimize"
+#~ msgstr "Legitimieren"
+
+#~ msgid "YYYY-MM-DD"
+#~ msgstr "JJJJ-MM-TT"
+
+#~ msgid "DD.MM.YYYY"
+#~ msgstr "TT.MM.JJJJ"
+
+#~ msgid "Year-Month-Day"
+#~ msgstr "Jahr-Monat-Tag"
+
+#~ msgid "date of birth in format Year-Month-Day (YYYY-MM-DD)"
+#~ msgstr "Geburtsdatum im Format Jahr-Monat-Tag (JJJJ-MM-TT)"
+
+#~ msgid "Day.Month.Year"
+#~ msgstr "Tag.Monat.Jahr"
+
+#~ msgid "Are you a private customer or a corporate customer with your previous provider?"
+#~ msgstr "Sind Sie bei Ihrem bisherigen Betreiber Privat- oder Businesskunde?"
+
+#~ msgid "Transaction is being finalized."
+#~ msgstr "Transaktion abgeschlossen wird."
+
+#~ msgid "Transaction is being finalized, please wait..."
+#~ msgstr "Transaktion wird abgeschlossen, bitte warten..."
+
+#~ msgid "Finalizing transaction, please wait..."
+#~ msgstr "Abschluss Transaktion, bitte warten..."
+
+#~ msgid "The formular is not valid."
+#~ msgstr "Die Form ist nicht gültig."
+
+#~ msgid "The confirmed telephone number is different."
+#~ msgstr "Die bestätigte Rufnummer ist anders."
+
+#~ msgid "Rufnummer"
+#~ msgstr "Rufnummer"
+
+#~ msgid "Your Number: %s"
+#~ msgstr "Deine Bestellung: %s"
+
+#~ msgid "Mailbox"
+#~ msgstr "Mailbox"
+
+#~ msgid "DATA_NOT_ENOUGH"
+#~ msgstr "Zu wenig Datenvolumen? Die Tarife eety TOP bzw. eety PRO können jederzeit um kostengünstige Datenoptionen erweitert werden."
+
+#~ msgid "data"
+#~ msgstr "Datenvolumen"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
+
+#~ msgid "JOYFUN_DETAIL"
+#~ msgstr "Ihr Tarif joymobile FUN beinhaltet 1GB Datenvolumen, dieses kann sowohl in Österreich, als auch im EU-Ausland verwendet werden. </br>Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "TOP_PROMO_DESCRIPTION"
+#~ msgstr "Ihr Tarif eety PROMO ist roamingfähig. Ab dem 15.6.2017 können Sie alle inkludierten Minuten und SMS sowohl in Österreich als auch im EU-Ausland* verwenden. Das Datenvolumen ist zum Teil im EU-Ausland verwendbar."
+
+#~ msgid "TOP_PROMO_DETAIL"
+#~ msgstr "Ihr Tarif eety PROMO beinhaltet 5 GB LTE-Datenvolumen österreichweit. Davon können 3 GB im EU-Ausland verwendet werden. Unten sehen Sie den jeweils aktuellen Verbrauch Ihres Datenvolumens in Österreich sowie im EU-Ausland."
+
+#~ msgid "Here you see the units you have used up for the eety TOP tariff."
+#~ msgstr "Hier sehen Sie Ihre verbrauchten Einheiten für den eety TOP Tarif."
+
+#~ msgid "back to Login"
+#~ msgstr "zurück zum Login"
+
+#~ msgid "Could not send SMS message."
+#~ msgstr "SMS konnte nicht gesendet werden."
+
+#~ msgid "A password has just been sent to your specified eety phone number."
+#~ msgstr "Ein Passwort wurde Ihnen soeben an Ihre angegebene eety-Rufnummer zugesendet."
+
+#~ msgid "Forgot password?"
+#~ msgstr "Passwort vergessen?"
+
+#~ msgid "Invalid phone number."
+#~ msgstr "Ungültige Rufnummer."
+
+#~ msgid "The password will be sent to you per SMS as soon as you have registered. Just enter your phone number and click on Send SMS."
+#~ msgstr "Bei der ersten Registrierung wird das eety-Passwort per SMS verschickt. Einfach Rufnummer eingeben und SMS ZUSENDEN klicken."
+
+#~ msgid "dupa"
+#~ msgstr "sraka"
+
+#~ msgid "locale-de"
+#~ msgstr "Deutsch"
+
+#~ msgid "Coupons"
+#~ msgstr "Guthaben, "
+
+#~ msgid "Billing"
+#~ msgstr "Einzelgesprächsnachweis"
+
+#~ msgid "Number transfer"
+#~ msgstr "Rufnummernmitnahme"
+
+#~ msgid "eety-Accountmanager"
+#~ msgstr "eety-Kontomanager"

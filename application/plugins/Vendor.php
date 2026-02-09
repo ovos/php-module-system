@@ -5,6 +5,9 @@ namespace Plugins;
 
 use Ovos\Controller\Plugin;
 use Ovos\Translator;
+use Ovos\ArrayObject;
+use Ovos\Container\Inject;
+use Ovos\Container\ArrayObject as InjectArrayObject;
 
 /**
  * Vendor
@@ -28,22 +31,41 @@ class Vendor extends Plugin
 	}
 	
 	/**
-	 * @return void
+	 * @var ?string
 	 */
-	public function __construct()
+	protected ?string $_vendor;
+	
+	/**
+	 * @var ?ArrayObject
+	 */
+	protected ?ArrayObject $_modules;
+	
+	/**
+	 * @param ?string $vendor
+	 * @param ?ArrayObject $modules
+	 */
+	public function __construct(
+		#[Inject('config')]
+		#[InjectArrayObject('vendor')]
+		?string $vendor,
+		#[Inject('config')]
+		#[InjectArrayObject('system', 'modules')]
+		?ArrayObject $modules,
+	)
 	{
 		parent::__construct();
 		
-		if(($vendor = $this->_app->getConfig()->vendor) === null)
+		if($vendor === null)
 		{
 			return;
 		}
+		$this->_vendor = $vendor;
 		
-		$modules = $this->_app->getConfig()->system->modules;
 		if($modules === null)
 		{
 			return;
 		}
+		$this->_modules = $modules;
 		
 		foreach($modules as $module)
 		{

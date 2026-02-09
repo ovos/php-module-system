@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Controllers\System;
 
 use Ovos\Controller;
+use Ovos\Exception\ForbiddenException;
 use Ovos\Exception\NotFoundException;
+use Ovos\Exception\NotFoundException\PageNotFoundExceptione;
 use Ovos\Exception\NotFoundException\FileNotFoundException;
 use Ovos\Response;
 use Ovos\View;
@@ -60,13 +62,22 @@ class Events extends Controller
 		$event = end($events);
 		if($event instanceof NotFoundException)
 		{
-			$view->title = $this->_('Page not found.');
+			$view->title = $this->_('Not found.');
 			$response->setHttpCode(404);
 			
+			if($event instanceof PageNotFoundExceptione)
+			{
+				$view->title = $this->_('Page not found.');
+			}
 			if($event instanceof FileNotFoundException)
 			{
 				$view->title = $this->_('File not found.');
 			}
+		}
+		else if($event instanceof ForbiddenException)
+		{
+			$view->title = $this->_('Forbidden.');
+			$response->setHttpCode(403);
 		}
 		else
 		{

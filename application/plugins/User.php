@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Plugins;
 
+use Ovos\Container\Inject;
 use Ovos\Controller\Plugin;
+use Ovos\Service\Auth as AuthService;
 use Models\User as Model;
 
 use function Ovos\services;
@@ -30,10 +32,32 @@ class User extends Plugin
 	}
 	
 	/**
+	 * @var ?AuthService
+	 */
+	protected ?AuthService $_authService = null;
+	
+	/**
+	 * @param AuthService $authService
+	 */
+	public function __construct(
+		#[Inject(AuthService::SYMBOL)] ?AuthService $authService,
+	)
+	{
+		parent::__construct();
+		
+		$this->_authService = $authService;
+	}
+	
+	/**
 	 * @return ?Model
 	 */
 	public function user(): ?Model
 	{
-		return services()->auth->getUser();
+		if($this->_authService === null)
+		{
+			return null;
+		}
+		
+		return $this->_authService->getUser();
 	}
 }

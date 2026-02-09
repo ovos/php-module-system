@@ -42,7 +42,7 @@ class Migrations extends Controller\Cli
 	 * @var int
 	 */
 	public const int SUMMARY_LIMIT = 20;
-
+	
 	/**
 	 * @var ArrayObject
 	 */
@@ -70,7 +70,7 @@ class Migrations extends Controller\Cli
 		
 		return $response;
 	}
-
+	
 	/**
 	 * @param ?int $amount
 	 * @aliasof run()
@@ -137,7 +137,7 @@ class Migrations extends Controller\Cli
 		
 		$this->_actionSummary($response, $migrated);
 		$this->_summary($response);
-
+		
 		return $response;
 	}
 	
@@ -151,7 +151,7 @@ class Migrations extends Controller\Cli
 	public function rollback(?int $amount = 1): Response
 	{
 		$response = new Response\Cli;
-
+		
 		$store = new Store;
 		$records = $store->getAll();
 		$migrations = $this->getMigrations(reverse: true);
@@ -192,14 +192,14 @@ class Migrations extends Controller\Cli
 				$record->save();
 			}
 			
-			Terminal::output('done.' . PHP_EOL);			
+			Terminal::output('done.' . PHP_EOL);
 			
 			$migrated[$id] = $migration;
 		}
 		
 		$this->_actionSummary($response, $migrated);
 		$this->_summary($response);
-
+		
 		return $response;
 	}
 	

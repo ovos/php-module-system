@@ -83,21 +83,14 @@ class Cache extends Controller\Cli
 	 */
 	public function clearPerishable(): void
 	{
-		if(services()->memory->isEnabled() === false)
+		// clear http pool
+		if($this->callHttp('clearPerishableHttp'))
 		{
-			Functions::println('<purple>Perishable cache is not active.<reset>', true);
+			Functions::println('<green>Perishable cache cleared.<reset>', true);
 		}
 		else
 		{
-			// clear http pool
-			if($this->callHttp('clearPerishableHttp'))
-			{
-				Functions::println('<green>Perishable cache cleared.<reset>', true);
-			}
-			else
-			{
-				Functions::println('<red>Error clearing perishable cache.<reset>', true);
-			}
+			Functions::println('<red>Error clearing perishable cache.<reset>', true);
 		}
 	}
 	
@@ -300,7 +293,7 @@ class Cache extends Controller\Cli
 			->set((string)$this->{$method}())
 			->send();
 	}
-
+	
 	/**
 	 * @return string
 	 */

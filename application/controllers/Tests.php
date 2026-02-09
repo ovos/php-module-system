@@ -148,7 +148,6 @@ class Tests extends Controller\Cli
 				$this->_formatResult($runner->test->result),
 				$runner->test->reason,
 			]);
-			//$table->addRow([PHP_EOL]);
 		}
 		
 		$response->append(PHP_EOL . $table->getTable());
@@ -253,7 +252,7 @@ class Tests extends Controller\Cli
 		
 		return $runners;
 	}
-
+	
 	/**
 	 * @param int $result
 	 *

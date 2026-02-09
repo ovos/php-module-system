@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Plugins;
 
+use Ovos\ArrayObject;
 use Ovos\Client;
 use Ovos\Controller\Plugin;
 use Ovos\Response;
@@ -29,22 +30,41 @@ class HttpAuth extends Plugin
 	{
 		return self::SYMBOL;
 	}
-
+	
+	/**
+	 * @var ?ArrayObject
+	 */
+	protected ?ArrayObject $_config;
+	
+	/**
+	 * @param ?ArrayObject $config
+	 */
+	public function __construct(
+		#[Inject('config')]
+		#[InjectArrayObject('http_auth')]
+		?ArrayObject $config,
+	)
+	{
+		parent::__construct();
+		
+		$this->_config = $config;
+	}
+	
 	/**
 	 * @return void
 	 */
 	public function preDispatch(): void
 	{
-		if(($config = $this->_app->getConfig()->http_auth) === null)
+		if($this->_config === null)
 		{
 			return;
 		}
 		
 		// allow clients listed in the whitelist
-		if($config->whitelist !== null)
+		if($this->_config->whitelist !== null)
 		{
 			$clientIp = Client::getIp();
-			$whitelist = $config->whitelist->getArrayCopy();
+			$whitelist = $this->_config->whitelist->getArrayCopy();
 			
 			if(in_array($clientIp, $whitelist, true))
 			{
@@ -52,21 +72,23 @@ class HttpAuth extends Plugin
 			}
 		}
 		
-		if($config->enabled === false || empty($config->username))
+		if($this->_config->enabled === false
+			|| empty($this->_config->username))
 		{
 			return;
 		}
 		
 		if(isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
-			&& $_SERVER['PHP_AUTH_USER'] === $config->username 
-			&& $_SERVER['PHP_AUTH_PW'] === $config->password
+			&& $_SERVER['PHP_AUTH_USER'] === $this->_config->username 
+			&& $_SERVER['PHP_AUTH_PW'] === $this->_config->password
 		)
 		{
 			return;
 		}
 		
 		$response = (new Response\Html)
-			->setHeader('WWW-Authenticate', sprintf('Basic realm="%s"', $config->realm))
+			->setHeader('WWW-Authenticate',
+				sprintf('Basic realm="%s"', $this->_config->realm))
 			->setHttpCode(401);
 			
 		$this->getController()->setDispatched(true);
