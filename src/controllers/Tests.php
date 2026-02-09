@@ -128,6 +128,11 @@ class Tests extends Controller\Cli
 			$failed,
 		]);
 		$response->append(PHP_EOL . $table->getTable());
+		
+		if($failed)
+		{
+			exit(1); // exit with error status
+		}
 
 		return $response;
 	}

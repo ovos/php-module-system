@@ -8,6 +8,7 @@ use Ovos\Functions;
 use Ovos\Exception;
 use Ovos\Password;
 use Ovos\Response;
+use Ovos\Stream;
 use function Ovos\services;
 use Throwable;
 use function function_exists;
@@ -86,11 +87,13 @@ class Cache extends Controller\Cli
 	public function clearPerishableHttp(): bool
 	{
 		// clear apcu, this only has an effect when tool is called via http
-		return services()->memory->getPool()->clear();
+		return services()->memory->getStore()->clear();
 	}	
 	
 	/**
 	 * Clear persistent
+	 * 
+	 * @return void
 	 */
 	public function clearPersistent(): void
 	{
@@ -102,7 +105,7 @@ class Cache extends Controller\Cli
 		else
 		{
 			// clear common pool
-			if(($pool = $persistent->getPool()) && $pool->clear())
+			if(($pool = $persistent->getStore()) && $pool->clear())
 			{
 				Functions::println('<green>Persistent cache cleared.<reset>', true);
 			}
@@ -115,6 +118,8 @@ class Cache extends Controller\Cli
 	
 	/**
 	 * Clear OPcache
+	 * 
+	 * @return void
 	 */
 	public function clearOpCache(): void
 	{
@@ -131,7 +136,6 @@ class Cache extends Controller\Cli
 			}
 			else
 			{
-				
 				Functions::println('<red>Error clearing OPcache. Try again!<reset>');
 			}
 		}	
@@ -139,6 +143,8 @@ class Cache extends Controller\Cli
 	
 	/**
 	 * Clear OPcache (has to be called via http) 
+	 * 
+	 * @return bool
 	 */
 	public function clearOpCacheHttp(): bool
 	{
@@ -150,17 +156,38 @@ class Cache extends Controller\Cli
 	 * Calls http method
 	 * 
 	 * @param string $method
+	 * 
+	 * @return bool
 	 */
-	public function callHttp($method) 
+	public function callHttp(string $method): bool
 	{
 		try
 		{
 			// clear the method via http
+			$request = new Stream\Request(SYSTEM_HOST . SYSTEM_PATH
+				. 'cache-call-http.php'
+				. '?' . http_build_query([
+					'method' => $method,
+					'access_token_hash' => base64_encode($this->getAccessTokenHash()),
+				])
+			, [
+				'http' => [
+					'timeout' => 10,
+				],
+				'ssl' => [
+					'verify_peer' => false, // for dev certificates
+					'verify_peer_name' => false, // for dev certificates
+				],
+			]);
+			
+			/*
 			$curl = curl_init();
 			curl_setopt_array($curl, [
 				CURLOPT_TIMEOUT => 10,
 				CURLOPT_CONNECTTIMEOUT => 1,
-				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYHOST => false, // for dev certificates
+				CURLOPT_SSL_VERIFYPEER => false, // for dev certificates
 				CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH
 					. 'cache-call-http.php'
 					. '?' . http_build_query([
@@ -175,8 +202,9 @@ class Cache extends Controller\Cli
 				throw new Exception(curl_error($curl));
 			}
 			curl_close($curl);
+			*/
 			
-			return $response === '1';
+			return $request->invoke()->getResponse() === '1';
 		}
 		catch(Throwable $throwable)
 		{
@@ -185,6 +213,8 @@ class Cache extends Controller\Cli
 			$message = sprintf("<red>HTTP service not reachable:<reset>\n%s", $throwable->getMessage());
 			Functions::println($message, true);
 		}
+		
+		return false;
 	}
 	
 	/**

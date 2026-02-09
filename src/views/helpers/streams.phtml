@@ -1,0 +1,43 @@
+<?php use Ovos\Stream\Request; ?>
+
+<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+
+	<?= $this->render('helpers/debug.phtml'); ?>
+	
+	<table class="debug debug-requests">
+		<tr>
+			<th>Requests (<?= count($this->requests); ?>)</th>
+			<th>Time</th>
+			<th>Memory</th>
+		</tr>
+		<?php foreach($this->requests as $request): ?>
+			<?php /** @var Request $request */ ?>
+			<tr>
+				<td><?= $request->getMethod(); ?> <?= wordwrap($request->getUrl(), 100, PHP_EOL); ?></td>
+				<td><?= $request->getMeasurement()->getTotalTime(); ?></td>
+				<td><?= $request->getMeasurement()->getTotalMemory(); ?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+	
+<?php else: ?>
+
+	<?php
+		$table = new Console_Table();
+		$table->setHeaders(['Requests ('. count($this->requests) .')', 'Time', 'Memory']);
+	
+		foreach($this->requests as $request)
+		{
+			/** @var Request $request */
+			$table->addRow([
+				$request->getMethod() . ' '. wordwrap($request->getUrl(), 150, PHP_EOL),
+				$request->getMeasurement()->getTotalTime(),
+				$request->getMeasurement()->getTotalMemory(),
+			]);
+			$table->addRow([PHP_EOL]);
+		}
+	
+		echo PHP_EOL . $table->getTable();
+	?>
+	
+<?php endif; ?>
