@@ -10,7 +10,8 @@
 
 	<section class="events">
 		<div class="events-title">
-			<?php if($title = $this->title()->get()): ?>
+			<?php if($this->renderTitle !== false
+				&& $title = $this->title()->get()): ?>
 				<h1><?= $title; ?></h1>
 			<?php endif; ?>
 			<div class="events-image"></div>
@@ -40,7 +41,8 @@
 <?php $coloredOutput = $response instanceof Response\Cli
 	&& $response->getColoredOutput(); ?>
 
-<?php if($title = $this->title()->get()): ?>
+<?php if($this->renderTitle !== false
+	&& $title = $this->title()->get()): ?>
 <?= str_pad(Strings::wrap($title, ' '), 50, '-', STR_PAD_BOTH) . PHP_EOL . PHP_EOL; ?>
 <?php endif; ?>
 

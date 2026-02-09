@@ -16,7 +16,14 @@ use SplFileInfo;
 use ReflectionClass;
 use Stores\Migrations as Store;
 use Models\Migration as Model;
+
 use function strlen;
+use function is_dir;
+use function substr;
+use function implode;
+use function explode;
+use function array_shift;
+use function krsort;
 
 /**
  * Migrations
@@ -60,7 +67,7 @@ class Migrations extends Controller\Cli
 		$response = new Response\Cli;
 		
 		$this->_summary($response);
-	
+		
 		return $response;
 	}
 
@@ -85,7 +92,7 @@ class Migrations extends Controller\Cli
 	public function run(?int $amount = null): Response
 	{
 		$response = new Response\Cli;
-
+		
 		$store = new Store;
 		$records = $store->getAll();
 		$migrations = $this->getMigrations();
@@ -162,7 +169,7 @@ class Migrations extends Controller\Cli
 			{
 				continue;
 			}
-					
+			
 			if($amount !== null && count($migrated) >= $amount)
 			{
 				break;
@@ -205,7 +212,7 @@ class Migrations extends Controller\Cli
 		$table = new Table;
 		$table->hasMarkup(true);
 		$table->setHeaders(['Migrations affected (' . count($migrated) . ')', 'Name', 'Time', 'Memory']);
-			
+		
 		foreach($migrated as $id => $migratedRunner)
 		{
 			/**
@@ -218,7 +225,7 @@ class Migrations extends Controller\Cli
 				$migratedRunner->measurement->getTotalMemory(),
 			]);
 		}
-	
+		
 		$response->append(PHP_EOL . $table->getTable());
 	}
 	
@@ -249,10 +256,10 @@ class Migrations extends Controller\Cli
 				$record->rolledback_at,
 			]);
 		}
-	
+		
 		$response->append(PHP_EOL . $table->getTable());
 	}
-
+	
 	/**
 	 * @param bool $reverse
 	 * 
@@ -260,8 +267,8 @@ class Migrations extends Controller\Cli
 	 */
 	public function getMigrations(bool $reverse = false): array
 	{
-		$migrations = [];	
-	
+		$migrations = [];
+		
 		foreach($this->_paths as $path)
 		{
 			$path = Dir::preProcess($path, true);
@@ -288,13 +295,15 @@ class Migrations extends Controller\Cli
 				$relativePath = substr($file->getPath(), $pathLength);
 				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::MIGRATION_EXT);
-				[$id, $filename] = explode('_', $basename);
+				$fileNameParts= explode('_', $basename);
+				$id =  array_shift($fileNameParts);
+				$filename =  implode('_', $fileNameParts);
 				
 				$className = 'Migrations' . $namespace . '\\' . $filename;
 				$class = new ReflectionClass($className);
-		
+				
 				$migrations[$id] = new Runner($class, (int)$id);
-			}			
+			}
 		}
 		
 		if($reverse)

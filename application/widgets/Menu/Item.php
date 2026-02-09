@@ -17,22 +17,22 @@ class Item
 	 * @var string
 	 */
 	protected string $_label;
-
+	
 	/**
 	 * @var ?string
 	 */
 	protected ?string $_title = null;
-
+	
 	/**
 	 * @var ?Url
 	 */
 	protected ?Url $_url = null;
-
+	
 	/**
 	 * @var bool
 	 */
 	protected bool $_active = false;
-
+	
 	/**
 	 * @param string $label
 	 * @param null|string|Url $url
@@ -48,7 +48,7 @@ class Item
 		$this->setUrl($url);
 		$this->setTitle($title);
 	}
-
+	
 	/**
 	 * @param ?string $label
 	 *
@@ -57,10 +57,10 @@ class Item
 	public function setLabel(?string $label): self
 	{
 		$this->_label = $label;
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -68,7 +68,7 @@ class Item
 	{
 		return $this->_label;
 	}
-
+	
 	/**
 	 * @param ?string $title
 	 *
@@ -77,10 +77,10 @@ class Item
 	public function setTitle(?string $title): self
 	{
 		$this->_title = $title;
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -88,7 +88,7 @@ class Item
 	{
 		return $this->_title;
 	}
-
+	
 	/**
 	 * @param null|string|Url $url
 	 *
@@ -105,10 +105,10 @@ class Item
 		
 		$this->_url = new Url($url);
 		$this->_url->setRelative(true);
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -116,7 +116,7 @@ class Item
 	{
 		return $this->_url->__toString();
 	}
-
+	
 	/**
 	 * @param bool $active
 	 *
@@ -125,10 +125,10 @@ class Item
 	public function setActive(bool $active): self
 	{
 		$this->_active = $active;
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * @return bool
 	 */

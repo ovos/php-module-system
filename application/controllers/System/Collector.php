@@ -20,12 +20,12 @@ use SplFileInfo;
 class Collector extends Controller\Cli
 {
 	use Controller\Traits\Cli;
-
+	
 	/**
-	 * @var null|ArrayObject
+	 * @var ?ArrayObject
 	 */
-	protected null|ArrayObject $_collectors = null;
-
+	protected ?ArrayObject $_collectors = null;
+	
 	/**
 	 */
 	public function __construct()
@@ -34,14 +34,14 @@ class Collector extends Controller\Cli
 		
 		$this->_collectors = $this->_app->getConfig()->system->collectors;
 	}
-
+	
 	/**
 	 * @param bool $coloredOutput
 	 */
 	public function index(bool $coloredOutput = false): void
 	{
 		$this->_app->getResponse()->setColoredOutput($coloredOutput);
-	
+		
 		if($this->_collectors !== null)
 		{
 			foreach($this->_collectors as $collector)
@@ -52,7 +52,7 @@ class Collector extends Controller\Cli
 					$this->log('<red>Controller "%s" not found.',
 						$collector->controller);
 						
-					continue;		
+					continue;
 				}
 				
 				/** @var Controller\Cli $controller */
@@ -69,7 +69,7 @@ class Collector extends Controller\Cli
 			}
 		}
 	}
-
+	
 	/**
 	 * @param ArrayObject $config
 	 */
@@ -77,7 +77,7 @@ class Collector extends Controller\Cli
 	{
 		$this->collectLogs($config);
 	}
-
+	
 	/**
 	 * @param ArrayObject $config
 	 */

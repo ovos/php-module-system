@@ -4,7 +4,6 @@ namespace Stores;
 
 use Ovos\Store\Mysql;
 use Models\Migration;
-use PDO;
 use PDOException;
 
 /**
@@ -36,7 +35,7 @@ class Migrations extends Mysql
 		$query = $this->query()
 			->select($select)
 			->from(self::TABLE);
-
+		
 		if(isset($options['order']))
 		{
 			$query->orderBy(...$options['order']);
@@ -50,7 +49,7 @@ class Migrations extends Mysql
 		{
 			$query = $this->prepareQuery($query);
 		}
-		catch (PDOException $exception)
+		catch(PDOException $exception)
 		{
 			return []; // case when migrations table is not yet in db
 		}

@@ -9,6 +9,8 @@ use Ovos\Url;
 use Ovos\View;
 use Widgets\Menu\Item;
 
+use function str_starts_with;
+
 /**
  * Menu
  *
@@ -21,12 +23,12 @@ class Menu extends Widget
 	 * @var string
 	 */
 	protected string $_url;
-
+	
 	/**
 	 * @var Item[]
 	 */
 	protected array $_items = [];
-
+	
 	/**
 	 */
 	public function __construct(string $script = 'widgets/menu.phtml')
@@ -36,7 +38,7 @@ class Menu extends Widget
 		$this->setScript($script);
 		$this->setUrl($this->_app->getRequest()->getUrl());
 	}
-
+	
 	/**
 	 * @param Item $item
 	 *
@@ -45,10 +47,10 @@ class Menu extends Widget
 	public function add(Item $item): self
 	{
 		$this->_items[] = $item;
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * @param string|Url $url
 	 *
@@ -59,15 +61,15 @@ class Menu extends Widget
 		if($url instanceof Url)
 		{
 			$this->_url = $url->getUrl(true);
-
+			
 			return $this;
 		}
-
+		
 		$this->_url = $url;
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -75,7 +77,7 @@ class Menu extends Widget
 	{
 		return $this->_url;
 	}
-
+	
 	/**
 	 * @return string
 	 *
@@ -90,13 +92,13 @@ class Menu extends Widget
 				$item->setActive(true);
 			}
 		}
-
+		
 		$view = new View($this->_script);
 		$view->items = $this->_items;
-
+		
 		return $view->__toString();
 	}
-
+	
 	/**
 	 * @return string
 	 *
@@ -106,7 +108,7 @@ class Menu extends Widget
 	{
 		return $this->render();
 	}
-
+	
 	/**
 	 * @return array
 	 */

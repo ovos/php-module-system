@@ -5,12 +5,6 @@ namespace Controllers\System;
 
 use Ovos\Controller;
 use Ovos\Encryptor;
-use Ovos\Functions;
-use Ovos\Exception;
-use Ovos\Password;
-use Ovos\Response;
-use Ovos\View;
-use function Ovos\services;
 
 /**
  * Tools
@@ -23,9 +17,9 @@ class Tools extends Controller\Cli
 	use Controller\Traits\Cli;
 	
 	/**
-	 * @param string $string (optional)
+	 * @param ?string $string (optional)
 	 */
-	public function encrypt(string $string = null): void
+	public function encrypt(?string $string = null): void
 	{
 		if($string === null)
 		{
@@ -41,9 +35,9 @@ class Tools extends Controller\Cli
 	}
 	
 	/**
-	 * @param string $string (optional)
+	 * @param ?string $string (optional)
 	 */
-	public function decrypt(string $string = null): void
+	public function decrypt(?string $string = null): void
 	{
 		if($string === null)
 		{

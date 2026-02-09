@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Plugins;
 
+use Ovos\Client;
 use Ovos\Controller\Plugin;
 use Ovos\Response;
+
+use function in_array;
 
 /**
  * HttpAuth
@@ -37,6 +40,18 @@ class HttpAuth extends Plugin
 			return;
 		}
 		
+		// allow clients listed in the whitelist
+		if($config->whitelist !== null)
+		{
+			$clientIp = Client::getIp();
+			$whitelist = $config->whitelist->getArrayCopy();
+			
+			if(in_array($clientIp, $whitelist, true))
+			{
+				return;
+			}
+		}
+		
 		if($config->enabled === false || empty($config->username))
 		{
 			return;
@@ -49,7 +64,7 @@ class HttpAuth extends Plugin
 		{
 			return;
 		}
-	
+		
 		$response = (new Response\Html)
 			->setHeader('WWW-Authenticate', sprintf('Basic realm="%s"', $config->realm))
 			->setHttpCode(401);

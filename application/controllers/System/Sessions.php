@@ -7,7 +7,6 @@ use Ovos\Controller;
 use Ovos\Functions;
 use Ovos\Response\Json;
 use Ovos\Service\Session;
-use function Ovos\services;
 
 /**
  * Sessions
@@ -18,7 +17,7 @@ use function Ovos\services;
 class Sessions extends Controller\Cli
 {
 	use Controller\Traits\Cli;
-
+	
 	/**
 	 * Allows to access specified CLI methods via HTTP
 	 *
@@ -27,7 +26,7 @@ class Sessions extends Controller\Cli
 	protected array $_httpActions = [
 		'keep-alive',
 	];
-
+	
 	/**
 	 * Clears sessions
 	 */
