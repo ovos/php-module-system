@@ -2,23 +2,27 @@
 
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
 
+	<?php /*
 	<?= $this->render('helpers/debug.phtml'); ?>
+	*/ ?>
 	
-	<table class="debug debug-requests">
-		<tr>
-			<th>Requests (<?= count($this->requests); ?>)</th>
-			<th>Time</th>
-			<th>Memory</th>
-		</tr>
+	<div class="debug-table debug-requests">
+		
+		<div class="row">
+			<div class="cell header">Requests (<?= count($this->requests); ?>)</div>
+			<div class="cell header">Time</div>
+			<div class="cell header">Memory</div>
+		</div>
+		
 		<?php foreach($this->requests as $request): ?>
 			<?php /** @var Request $request */ ?>
-			<tr>
-				<td><?= $request->getMethod(); ?> <?= wordwrap($request->getUrl(), 100, PHP_EOL); ?></td>
-				<td><?= $request->getMeasurement()->getTotalTime(); ?></td>
-				<td><?= $request->getMeasurement()->getTotalMemory(); ?></td>
-			</tr>
+			<div class="row">
+				<div class="cell"><?= $request->getMethod(); ?> <?= $request->getUrl(); ?><?php /*<?= wordwrap($request->getUrl(), 100, PHP_EOL); ?>*/ ?></div>
+				<div class="cell"><?= $request->getMeasurement()->getTotalTime(); ?></div>
+				<div class="cell"><?= $request->getMeasurement()->getTotalMemory(); ?></div>
+			</div>
 		<?php endforeach; ?>
-	</table>
+	</div>
 	
 <?php else: ?>
 

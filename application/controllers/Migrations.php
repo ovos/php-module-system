@@ -30,6 +30,11 @@ class Migrations extends Controller\Cli
 	 * @var string
 	 */
 	public const MIGRATION_EXT = 'php';
+	
+	/**
+	 * @var int
+	 */
+	public const SUMMARY_LIMIT = 20;
 
 	/**
 	 * @var ArrayObject
@@ -223,11 +228,14 @@ class Migrations extends Controller\Cli
 	protected function _summary(Response\Cli $response): void
 	{
 		$store = new Store;
-		$records = $store->getAll(options: ['order' => ['id', 'DESC']]);
+		$records = $store->getAll(options: [
+			'order' => ['id DESC'],
+			'limit' => self::SUMMARY_LIMIT,
+		]);
 		
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Migrations (' . count($records) . ')', 'Name', 'Migrated at', 'Rolled back at']);
+		$table->setHeaders(['Migrations (last ' . count($records) . ')', 'Name', 'Migrated at', 'Rolled back at']);
 			
 		foreach($records as $id => $record)
 		{

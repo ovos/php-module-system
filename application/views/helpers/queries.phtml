@@ -1,27 +1,31 @@
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
 
+	<?php /*
 	<?= $this->render('helpers/debug.phtml'); ?>
+	*/ ?>
 	
-	<table class="debug debug-queries">
-		<tr>
-			<th>Queries (<?= count($this->queries); ?>)</th>
-			<th>Time</th>
-			<th>Memory</th>
-		</tr>
+	<div class="debug-table debug-queries">
+		
+		<div class="row">
+			<div class="cell header">Queries (<?= count($this->queries); ?>)</div>
+			<div class="cell header">Time</div>
+			<div class="cell header">Memory</div>
+		</div>
+
 		<?php foreach($this->queries as $query): ?>
-			<tr>
-				<td><?= wordwrap($query->sql, 100, PHP_EOL); ?></td>
-				<td><?= $query->time; ?></td>
-				<td><?= $query->memory; ?></td>
-			</tr>
+			<div class="row">
+				<div class="cell"><?= $query->sql; ?></div>
+				<div class="cell"><?= $query->time; ?></div>
+				<div class="cell"><?= $query->memory; ?></div>
+			</div>
 		<?php endforeach; ?>
-	</table>
+	</div>
 	
 <?php else: ?>
 
 	<?php
 		$table = new Console_Table();
-		$table->setHeaders(['Queries (' . count($this->queries) . ')', 'Time', 'Memory']);
+		$table->setHeaders(['Queries (last ' . count($this->queries) . ')', 'Time', 'Memory']);
 	
 		foreach($this->queries as $query)
 		{
