@@ -25,8 +25,6 @@ use function strlen;
  */
 class Tests extends Controller\Cli
 {
-	use Controller\Traits\Cli;
-
 	/**
 	 * @var string
 	 */
@@ -42,7 +40,6 @@ class Tests extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setColoredOutput(true);
 		
 		$this->_paths = $this->_app->getConfig()->system->tests;
 	}
@@ -74,7 +71,8 @@ class Tests extends Controller\Cli
 			{
 				continue;
 			}
-			if($method && $test->method !== $method)
+			
+			if($method && $test->method->name !== $method)
 			{
 				continue;
 			}
@@ -165,13 +163,19 @@ class Tests extends Controller\Cli
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::TEST_EXT);
-				$className = 'Tests' . $relativePath . '\\' . $basename;
+				$className = 'Tests' . $namespace . '\\' . $basename;
 				$class = new ReflectionClass($className);
 				$methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
 				
 				foreach($methods as $method)
 				{
+					if($method->isConstructor() || $method->isDestructor())
+					{
+						continue;
+					}
+					
 					$tests[] = new Runner($class, $method);
 				}
 			}			

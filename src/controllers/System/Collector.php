@@ -31,7 +31,6 @@ class Collector extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setColoredOutput(true);
 		
 		$this->_collectors = $this->_app->getConfig()->system->collectors;
 	}
@@ -41,6 +40,8 @@ class Collector extends Controller\Cli
 	 */
 	public function index(bool $coloredOutput = false): void
 	{
+		$this->_app->getResponse()->setColoredOutput($coloredOutput);
+	
 		if($this->_collectors !== null)
 		{
 			foreach($this->_collectors as $collector)
@@ -56,8 +57,6 @@ class Collector extends Controller\Cli
 				
 				/** @var Controller\Cli $controller */
 				$controller = new $controllerClassNs();
-				$controller->setColoredOutput($coloredOutput);
-				
 				if(method_exists($controller, $collector->action) === false)
 				{
 					$this->log('<red>Method "%s" not found on controller "%s".',
@@ -122,12 +121,12 @@ class Collector extends Controller\Cli
 				$unlink = unlink($file->getPathname());
 				if($unlink)
 				{
-					Terminal::output('<green>Done.', $this->getColoredOutput());
+					Terminal::output('<green>Done.');
 					$affected++;
 				}
 				else
 				{
-					Terminal::output('<red>Error.', $this->getColoredOutput());
+					Terminal::output('<red>Error.');
 				}
 				
 				print(PHP_EOL);

@@ -1,4 +1,4 @@
-<?php use Ovos\Controller\Cli; ?>
+<?php use Ovos\Response; ?>
 <?php use Ovos\Strings; ?>
 <?php use Ovos\Terminal; ?>
 
@@ -6,29 +6,39 @@
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
 
 	<?php /* HTTP output */ ?>
-	<?php $this->elements()->main->addClass('events'); ?>
+	<?php $this->elements()->main->addClass('main-events'); ?>
 
 	<section class="events">
-		<?php if($title = $this->title()->get()): ?>
-			<h1><?= $title; ?></h1>
-		<?php endif; ?>
-		
-		<?php if($this->events): ?>
-			<?php foreach($this->events as $event): ?>
-				<h2><?php if($event instanceof \Ovos\Error): ?><?= $event->getName(); ?><?php else: ?><?= get_class($event); ?><?php endif; ?></h2>
-				<pre><?= $event->__toString(); ?></pre>
-			<?php endforeach; ?>
-		<?php endif; ?>
-		<?php if($this->content): ?>
-			<h2>Output</h2>
-			<pre id="output"><?= $this->escape($this->content); ?></pre>
-		<?php endif; ?>	
+		<div class="events-title">
+			<?php if($title = $this->title()->get()): ?>
+				<h1><?= $title; ?></h1>
+			<?php endif; ?>
+			<div class="events-image"></div>
+		</div>
+		<div class="events-buttons buttons">
+			<a href="<?= SYSTEM_PATH; ?>" class="button">
+				<?= $this->_('Back to startpage'); ?>
+			</a>
+		</div>
+		<div class="events-debug">
+			<?php if($this->events): ?>
+				<?php foreach($this->events as $event): ?>
+					<h2><?php if($event instanceof \Ovos\Error): ?><?= $event->getName(); ?><?php else: ?><?= get_class($event); ?><?php endif; ?></h2>
+					<pre><?= $event->__toString(); ?></pre>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<?php if($this->content): ?>
+				<h2>Output</h2>
+				<pre id="output"><?= $this->escape($this->content); ?></pre>
+			<?php endif; ?>
+		</div>
 	</section>
 
 <?php else: ?>
 <?php /* CLI output */ ?>
-<?php $coloredOutput = $this->controllerInstance instanceof Cli
-	&& $this->controllerInstance->getColoredOutput(); ?>
+<?php $response = $this->app->getResponse(); ?>
+<?php $coloredOutput = $response instanceof Response\Cli
+	&& $response->getColoredOutput(); ?>
 
 <?php if($title = $this->title()->get()): ?>
 <?= str_pad(Strings::wrap($title, ' '), 50, '-', STR_PAD_BOTH) . PHP_EOL . PHP_EOL; ?>
@@ -38,8 +48,8 @@
 <?php foreach($this->events as $event): ?>
 <?php if($event instanceof \Ovos\Error): ?><?php $eventName = $event->getName(); ?><?php else: ?><?php $eventName = get_class($event); ?><?php endif; ?>
 <?php $eventName = str_pad(Strings::wrap($eventName, ' '), 50, '-', STR_PAD_BOTH); ?>
-<?= Terminal::output('<red>' . $eventName . '<reset>', $coloredOutput) . PHP_EOL; ?>
-<?= Terminal::output('<white>' . $event->__toString() . '<reset>', $coloredOutput) . PHP_EOL . PHP_EOL; ?>
+<?= Terminal::getMessage('<red>' . $eventName . '<reset>', $coloredOutput) . PHP_EOL; ?>
+<?= Terminal::getMessage('<white>' . $event->__toString() . '<reset>', $coloredOutput) . PHP_EOL . PHP_EOL; ?>
 <?php endforeach; ?>
 <?php endif; ?>
 <?php if($this->content): ?>

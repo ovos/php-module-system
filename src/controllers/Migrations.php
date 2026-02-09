@@ -26,8 +26,6 @@ use function strlen;
  */
 class Migrations extends Controller\Cli
 {
-	use Controller\Traits\Cli;
-	
 	/**
 	 * @var string
 	 */
@@ -43,7 +41,6 @@ class Migrations extends Controller\Cli
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setColoredOutput(true);
 		
 		$this->_paths = $this->_app->getConfig()->system->migrations;
 	}
@@ -281,10 +278,11 @@ class Migrations extends Controller\Cli
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::MIGRATION_EXT);
 				[$id, $filename] = explode('_', $basename);
 				
-				$className = 'Migrations' . $relativePath . '\\' . $filename;
+				$className = 'Migrations' . $namespace . '\\' . $filename;
 				$class = new ReflectionClass($className);
 		
 				$migrations[$id] = new Runner($class, (int)$id);
