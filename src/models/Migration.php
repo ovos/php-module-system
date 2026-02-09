@@ -22,13 +22,21 @@ use Stores\Migrations;
  */
 class Migration extends Mysql
 {
+	/**
+	 * Autoincrement key
+	 *
+	 * @var null|string
+	 */
+	protected null|string $_autoIncrementKey = null;
+
+	/**
+	 * @return string
+	 */
 	public static function getStoreClass(): string
 	{
 		return Migrations::class;
 	}
 	
-	/**
-	 */
 	public function setUp(): void
 	{
 		$this->addTemplate(new Timestamps);

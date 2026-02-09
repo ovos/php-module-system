@@ -21,7 +21,7 @@
 
 	<?php
 		$table = new Console_Table();
-		$table->setHeaders(['Queries ('. count($this->queries) .')', 'Time', 'Memory']);
+		$table->setHeaders(['Queries (' . count($this->queries) . ')', 'Time', 'Memory']);
 	
 		foreach($this->queries as $query)
 		{
