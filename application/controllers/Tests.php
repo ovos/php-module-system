@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Controllers;
 
+use Ovos\Container\Injector\TypeClass;
 use Ovos\Controller;
 use Ovos\Exception\MissingException\MissingConfigException;
 use Ovos\Response;
@@ -65,7 +66,8 @@ class Tests extends Controller\Cli
 		
 		if(($paths = $this->_app->getConfig()->getPath($this->_configPath)) === null)
 		{
-			throw new MissingConfigException('This tool requires an existing config path: "%s".',
+			throw new MissingConfigException(
+				'This tool requires an existing config path: "%s".',
 				implode('.', $this->_configPath)
 			);
 		}
@@ -254,7 +256,11 @@ class Tests extends Controller\Cli
 				$className = $this->_namespace . $namespace . '\\' . $basename;
 				
 				$class = new ReflectionClass($className);
-				$runners[] = new Runner($class);
+				$runners[] = $this->_container->inject(
+					new TypeClass(Runner::class, [
+						'class' => $class,
+					]),
+				);
 			}
 		}
 		

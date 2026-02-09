@@ -117,9 +117,16 @@ class Cache extends Controller\Cli
 		}
 		else
 		{
-			if(($store = $cache->getStore())
-				&& $store->clear() !== false
-			)
+			if(($store = $cache->getStore()) === null)
+			{
+				return;
+			}
+			
+			// reloading libraries
+			$store->loadLibraries(true);
+			Functions::println('<green>Persistent cache libraries reloaded.<reset>', true);
+			
+			if($store->clear() !== false)
 			{
 				Functions::println('<green>Persistent cache cleared.<reset>', true);
 			}
