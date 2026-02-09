@@ -1,8 +1,11 @@
-<?php $messages = $this->messages()->toArray(); ?>
+<?php use Ovos\View\Helper\Messages\Message; ?>
+
+<?php $messages = $this->messages; ?>
+<?php $iterator = new CachingIterator(new ArrayIterator($messages)); ?>
 
 <?php if($this->app->isInterfaceHttp()): ?>
 	
-	<?php if(count($messages)): ?>
+	<?php if(count($iterator->getInnerIterator())): ?>
 	
 		<?php $iconMapping = [
 			'error' => 'exclamation-circle',
@@ -12,8 +15,8 @@
 		]; ?>
 	
 		<div class="messages">
-			<?php foreach($messages as $message): ?>
-				<?php /** @var \Ovos\View\Helper\Messages\Message $message */ ?>
+			<?php foreach($iterator as $message): ?>
+				<?php /** @var Message $message */ ?>
 				<div class="message message-<?= $message->getType(); ?>">
 					<div class="message-icon icon-<?= $iconMapping[$message->getType()]; ?>"></div>
 					<div class="message-body">
@@ -21,7 +24,11 @@
 							<h3><?= $title; ?></h3>
 						<?php endif; ?>
 						<?php if($description = $message->getDescription()): ?>
-							<p><?= nl2br($description); ?></p>
+							<?php if($message->isRaw()): ?>
+								<?= $description; ?>
+							<?php else: ?>
+								<p><?= nl2br($description); ?></p>
+							<?php endif; ?>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -33,17 +40,24 @@
 
 	<?php
 		$table = new Console_Table();
-		$table->setHeaders(['Messages (' . count($this->messages) . ')', 'Type']);
-	
-		foreach($this->messages()->toArray() as $message)
+		$table->setHeaders(['Messages (' . count($iterator->getInnerIterator()) . ')', 'Type']);
+		
+		foreach($iterator as $message)
 		{
-			/** @var \Ovos\View\Helper\Messages\Message $message */
-			$text = [$message->getTitle(), $message->getDescription()];
+			/** @var Message $message */
+			$text = [$message->getDescription()];
+			if($title = $message->getTitle())
+			{
+				array_unshift($text, $title);
+			}
 			$table->addRow([
 				wordwrap(implode(PHP_EOL . PHP_EOL, $text), 150, PHP_EOL),
 				ucfirst($message->getType()),
 			]);
-			$table->addRow([PHP_EOL]);
+			if($iterator->hasNext())
+			{
+				$table->addRow([PHP_EOL]);	
+			}
 		}
 	
 		echo PHP_EOL . $table->getTable();
