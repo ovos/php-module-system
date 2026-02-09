@@ -36,12 +36,12 @@ class Migrations extends Controller\Cli
 	/**
 	 * @var string
 	 */
-	public const MIGRATION_EXT = 'php';
+	public const string MIGRATION_EXT = 'php';
 	
 	/**
 	 * @var int
 	 */
-	public const SUMMARY_LIMIT = 20;
+	public const int SUMMARY_LIMIT = 20;
 
 	/**
 	 * @var ArrayObject

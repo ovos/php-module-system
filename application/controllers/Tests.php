@@ -36,12 +36,12 @@ class Tests extends Controller\Cli
 	/**
 	 * @var string
 	 */
-	public const TEST_EXT = 'php';
+	public const string TEST_EXT = 'php';
 	
 	/**
 	 * @var string
 	 */
-	public const METHOD_ATTRIBUTE_INTERNAL = Internal::class;
+	public const string METHOD_ATTRIBUTE_INTERNAL = Internal::class;
 	
 	/**
 	 * @var ArrayObject
@@ -75,6 +75,7 @@ class Tests extends Controller\Cli
 		$passed = [];
 		$failed = [];
 		$skipped = [];
+		$throwables = [];
 		// class::method mode
 		$classMethodMode = $class !== null && str_contains($class, '::');
 		$classMode = $class !== null;
@@ -176,17 +177,12 @@ class Tests extends Controller\Cli
 				$runner->__toString()) . PHP_EOL
 			, true);
 			
-			if($runner->test === null)
+			if($runner->throwable === null)
 			{
 				continue;
 			}
 			
-			if($runner->test->throwable === null)
-			{
-				continue;
-			}
-			
-			$this->_displayThrowable($throwable);
+			$this->_displayThrowable($runner->throwable);
 		}
 		
 		if(count($failed))

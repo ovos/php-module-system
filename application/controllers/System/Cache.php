@@ -54,6 +54,31 @@ class Cache extends Controller\Cli
 	}
 	
 	/**
+	 * php cli.php system cache collect-garbage
+	 * 
+	 * @param bool $coloredOutput
+	 * 
+	 * @return void
+	 */
+	public function collectGarbage(bool $coloredOutput = false): void
+	{
+		$persistent = services()->cache;
+		if($persistent->isEnabled() === false)
+		{
+			return;
+		}
+		
+		if($persistent->getPersistentStore()->collectGarbage())
+		{
+			Functions::println('<green>Successfully collected garbage in persistent cache.<reset>', true);
+		}
+		else
+		{
+			Functions::println('<red>Error collecting garbage in persistent cache.<reset>', true);
+		}
+	}
+	
+	/**
 	 * Clear perishable
 	 */
 	public function clearPerishable(): void
@@ -92,14 +117,14 @@ class Cache extends Controller\Cli
 	 */
 	public function clearPersistent(): void
 	{
-		$persistent = services()->cache;
-		if($persistent->isEnabled() === false)
+		$cache = services()->cache;
+		if($cache->isEnabled() === false)
 		{
 			Functions::println('<purple>Persistent cache is not active.<reset>', true);
 		}
 		else
 		{
-			if(($store = $persistent->getStore())
+			if(($store = $cache->getStore())
 				&& $store->clear() !== false
 			)
 			{
@@ -157,6 +182,12 @@ class Cache extends Controller\Cli
 	 */
 	public function callHttp(string $method): bool
 	{
+		// CLI application, no need to call HTTP
+		if(SYSTEM_HOST === null)
+		{
+			return true;
+		}
+		
 		try
 		{
 			$callUrl = SYSTEM_HOST . SYSTEM_PATH

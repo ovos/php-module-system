@@ -17,7 +17,7 @@ class Vendor extends Plugin
 	/**
 	 * @var string
 	 */
-	public const SYMBOL = 'vendor';
+	public const string SYMBOL = 'vendor';
 	
 	/**
 	 * @return string
