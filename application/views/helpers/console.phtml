@@ -1,5 +1,5 @@
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
-	
+
 	<div class="debug-table debug-console">
 		
 		<div class="row">
@@ -7,7 +7,7 @@
 			<div class="cell header">Time</div>
 			<div class="cell header">Memory</div>
 		</div>
-
+		
 		<?php foreach($this->messages as $message): ?>
 			<div class="row">
 				<div class="cell"><?= is_string($message->message) ? $message->message : print_r($message->message, true); ?></div>
@@ -18,11 +18,11 @@
 	</div>
 	
 <?php else: ?>
-
+	
 	<?php
 		$table = new Console_Table();
 		$table->setHeaders(['Messages (last ' . count($this->messages) . ')', 'Time', 'Memory']);
-	
+		
 		foreach($this->messages as $message)
 		{
 			$table->addRow([
@@ -32,7 +32,7 @@
 			]);
 			$table->addRow([PHP_EOL]);
 		}
-	
+		
 		echo PHP_EOL . $table->getTable();
 	?>
 	

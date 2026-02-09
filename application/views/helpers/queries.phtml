@@ -1,5 +1,5 @@
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
-
+	
 	<?php /*
 	<?= $this->render('helpers/debug.phtml'); ?>
 	*/ ?>
@@ -11,7 +11,7 @@
 			<div class="cell header">Time</div>
 			<div class="cell header">Memory</div>
 		</div>
-
+		
 		<?php foreach($this->queries as $query): ?>
 			<div class="row">
 				<div class="cell"><?= $query->sql; ?></div>
@@ -22,11 +22,11 @@
 	</div>
 	
 <?php else: ?>
-
+	
 	<?php
 		$table = new Console_Table();
 		$table->setHeaders(['Queries (last ' . count($this->queries) . ')', 'Time', 'Memory']);
-	
+		
 		foreach($this->queries as $query)
 		{
 			$table->addRow([
@@ -36,7 +36,7 @@
 			]);
 			$table->addRow([PHP_EOL]);
 		}
-	
+		
 		echo PHP_EOL . $table->getTable();
 	?>
 	

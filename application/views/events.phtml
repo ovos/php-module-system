@@ -4,10 +4,10 @@
 
 <?php $this->title()->set($this->title ? $this->title : $this->_('Oops. An error has occurred :-(')); ?>
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
-
+	
 	<?php /* HTTP output */ ?>
 	<?php $this->elements()->main->addClass('main-events'); ?>
-
+	
 	<section class="events">
 		<div class="events-title">
 			<?php if($this->renderTitle !== false

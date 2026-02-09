@@ -2,7 +2,7 @@
 <?php use Ovos\Measurement; ?>
 
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
-
+	
 	<?= $this->render('helpers/debug.phtml'); ?>
 	
 	<div class="debug-table debug-benchmark">
@@ -30,11 +30,11 @@
 	</div>
 	
 <?php else: ?>
-
+	
 	<?php
 		$table = new Table;
 		$table->setHeaders(['Requests (' . count($this->measurements) . ')', 'Time', 'Memory']);
-	
+		
 		foreach($this->measurements as $marker => $measurement)
 		{
 			/** @var Measurement $measurement */
@@ -45,7 +45,7 @@
 			]);
 			$table->addRow([PHP_EOL]);
 		}
-	
+		
 		echo PHP_EOL . $table->getTable();
 	?>
 	

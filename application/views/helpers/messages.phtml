@@ -6,15 +6,15 @@
 <?php if($this->app->isInterfaceHttp()): ?>
 	
 	<?php if(count($iterator->getInnerIterator())): ?>
-	
+		
 		<?php $iconMapping = [
 			'error' => 'exclamation-circle',
 			'warning' => 'exclamation-circle',
 			'info' => 'info-circle',
 			'success' => 'check-circle',
 		]; ?>
-	
-		<div class="messages">
+		
+		<div class="messages" role="status">
 			<?php foreach($iterator as $message): ?>
 				<?php /** @var Message $message */ ?>
 				<div class="message message-<?= $message->getType(); ?>">
@@ -35,9 +35,9 @@
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
-
+	
 <?php else: ?>
-
+	
 	<?php
 		$table = new Console_Table();
 		$table->setHeaders(['Messages (' . count($iterator->getInnerIterator()) . ')', 'Type']);
@@ -56,11 +56,11 @@
 			]);
 			if($iterator->hasNext())
 			{
-				$table->addRow([PHP_EOL]);	
+				$table->addRow([PHP_EOL]);
 			}
 		}
-	
+		
 		echo PHP_EOL . $table->getTable();
 	?>
-
+	
 <?php endif; ?>

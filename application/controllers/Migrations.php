@@ -5,6 +5,7 @@ namespace Controllers;
 
 use Ovos\Controller;
 use Ovos\ArrayObject;
+use Ovos\Exception\MissingException\MissingConfigException;
 use Ovos\Pdo\Expression;
 use Ovos\Response;
 use Ovos\Migration\Runner;
@@ -36,7 +37,12 @@ class Migrations extends Controller\Cli
 	/**
 	 * @var string
 	 */
-	public const string MIGRATION_EXT = 'php';
+	public const string EXT = 'php';
+	
+	/**
+	 * @var string[]
+	 */
+	protected array $_configPath = ['system', 'migrations'];
 	
 	/**
 	 * @var int
@@ -54,11 +60,18 @@ class Migrations extends Controller\Cli
 	{
 		parent::__construct();
 		
-		$this->_paths = $this->_app->getConfig()->system->migrations;
+		if(($paths = $this->_app->getConfig()->getPath($this->_configPath)) === null)
+		{
+			throw new MissingConfigException('This tool requires an existing config path: "%s".',
+				implode('.', $this->_configPath)
+			);
+		}
+		
+		$this->_paths = $paths;
 	}
 	
 	/**
-	 * Displays summary of migrations
+	 * Displays a summary of migrations
 	 * 
 	 * @return Response
 	 */
@@ -83,7 +96,7 @@ class Migrations extends Controller\Cli
 	}
 	
 	/**
-	 * Runs migrations
+	 * Run migrations
 	 * 
 	 * @param ?int $amount
 	 * 
@@ -159,7 +172,7 @@ class Migrations extends Controller\Cli
 		
 		foreach($migrations as $id => $migration)
 		{
-			if(!isset($records[$id]))
+			if(isset($records[$id]) === false)
 			{
 				continue;
 			}
@@ -278,23 +291,23 @@ class Migrations extends Controller\Cli
 			}
 			
 			$pathLength = strlen($path);
-			$files = Dir::getFiles($path, skipCallback: function($file)
+			$files = Dir::getFiles($path, skipCallback: static function($file)
 			{
 				/**
 				* @var SplFileInfo $file
 				*/
 				// filter out non .php files
-				return $file->getExtension() !== self::MIGRATION_EXT;
-			});
+				return $file->getExtension() !== self::EXT;
+			}, filter: Dir::FILTER_FILES);
 			
 			foreach($files as $file)
 			{
-				// include the migration, because filename is not psr-4 compatible
+				// include the migration because the filename is not psr-4 compatible
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
 				$namespace = str_replace('/', '\\', $relativePath);
-				$basename = $file->getBasename('.' . self::MIGRATION_EXT);
+				$basename = $file->getBasename('.' . self::EXT);
 				$fileNameParts= explode('_', $basename);
 				$id =  array_shift($fileNameParts);
 				$filename =  implode('_', $fileNameParts);
