@@ -157,6 +157,7 @@ class Cache extends Controller\Cli
 						'access_token_hash' => base64_encode($this->getAccessTokenHash()),
 					])
 			]);
+			
 			$response = curl_exec($curl);
 			if(curl_errno($curl))
 			{

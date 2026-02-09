@@ -1,3 +1,4 @@
+<?php use Ovos\Console\Table; ?>
 <?php use Ovos\Measurement; ?>
 
 <?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
@@ -24,7 +25,7 @@
 <?php else: ?>
 
 	<?php
-		$table = new Console_Table();
+		$table = new Table;
 		$table->setHeaders(['Requests (' . count($this->measurements) . ')', 'Time', 'Memory']);
 	
 		foreach($this->measurements as $marker => $measurement)

@@ -1,6 +1,6 @@
 {
 	"name": "ovos/php-module-system",
-	"description": "ovos module",
+	"description": "ovos module: system",
 	"type": "library",
 	"authors": [
 		{
@@ -9,7 +9,7 @@
 		}
 	],
   "require" : {
-    "php": ">=7.2.0"
+    "php": ">=8.0.0"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
