@@ -8,7 +8,7 @@ use Ovos\Exception;
 use Ovos\Exception\NotFoundException;
 use Ovos\Response;
 use Ovos\View;
-use function Eety\services;
+use function Ovos\services;
 
 /**
  * Events
@@ -18,8 +18,6 @@ use function Eety\services;
  */
 class Events extends Controller
 {
-	use \Eety\Controller\Traits\Controller;
-
 	/**
 	 */
 	public function __construct()
