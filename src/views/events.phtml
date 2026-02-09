@@ -1,0 +1,39 @@
+<?php use Ovos\Strings; ?>
+
+<?php $this->title()->set($this->title ? $this->title : $this->_('Oops. An error has occurred :-(')); ?>
+
+<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+
+	<?php $this->elements()->main->addClass('event'); ?>
+
+	<?php if($title = $this->title()->get()): ?>
+		<h1><?= $title; ?></h1>
+	<?endif; ?>
+	
+	<?php if($this->events): ?>
+		<?php foreach($this->events as $event): ?>
+			<h2><?php if($event instanceof \Ovos\Error): ?><?= $event->getName(); ?><?php else: ?><?= get_class($event); ?><?php endif; ?></h2>
+			<pre><?= $event->__toString(); ?></pre>
+		<?php endforeach; ?>
+	<?php endif; ?>
+	<?php if($this->content): ?>
+		<h2>Output</h2>
+		<pre id="output"><?= $this->escape($this->content); ?></pre>
+	<?php endif; ?>
+
+<?php else: ?>
+<?php if($title = $this->title()->get()): ?>
+<?= str_pad(Strings::wrap($title, ' '), 50, '-', STR_PAD_BOTH) . PHP_EOL . PHP_EOL; ?>
+<?endif; ?>
+<?php if($this->events): ?>
+<?php foreach($this->events as $event): ?>
+<?php if($event instanceof \Ovos\Error): ?><?php $eventName = $event->getName(); ?><?php else: ?><?php $eventName = get_class($event); ?><?php endif; ?>
+<?= str_pad(Strings::wrap($eventName, ' '), 50, '-', STR_PAD_BOTH) . PHP_EOL; ?>
+<?= $event->__toString() . PHP_EOL . PHP_EOL; ?>
+<?php endforeach; ?>
+<?php endif; ?>
+<?php if($this->content): ?>
+<?= str_pad(' Output ', 50, '-', STR_PAD_BOTH) . PHP_EOL; ?>
+<?= $this->content; ?>
+<?php endif; ?>
+<?php endif; ?>
