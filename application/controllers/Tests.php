@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Controllers;
 
-use Ovos\Container\Injector\TypeClass;
 use Ovos\Controller;
 use Ovos\Exception\MissingException\MissingConfigException;
 use Ovos\Response;
@@ -19,44 +18,31 @@ use SplFileInfo;
 use ReflectionClass;
 use Throwable;
 
-use function strlen;
-use function is_dir;
-use function substr;
-use function str_contains;
 use function implode;
+use function is_dir;
+use function str_contains;
+use function strlen;
+use function substr;
 
 /**
  * Tests
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Tests extends Controller\Cli
 {
-	/**
-	 * @var string
-	 */
 	public const string EXT = 'php';
 	
 	/**
 	 * @var string[]
 	 */
-	protected array $_configPath = ['system', 'tests'];
+	protected array $configPath = ['system', 'tests'];
 	
-	/**
-	 * @var ArrayObject
-	 */
-	protected ArrayObject $_paths;
+	protected ArrayObject $paths;
 	
-	/**
-	 * @var string
-	 */
-	protected string $_header = 'Test';
+	protected string $header = 'Test';
 	
-	/**
-	 * @var string
-	 */
-	protected string $_namespace = 'Tests';
+	protected string $namespace = 'Tests';
 	
 	/**
 	 */
@@ -64,27 +50,26 @@ class Tests extends Controller\Cli
 	{
 		parent::__construct();
 		
-		if(($paths = $this->_app->getConfig()->getPath($this->_configPath)) === null)
+		if(($paths = $this->app->getConfig()
+			->getPath($this->configPath)) === null)
 		{
 			throw new MissingConfigException(
 				'This tool requires an existing config path: "%s".',
-				implode('.', $this->_configPath)
+				implode('.', $this->configPath),
 			);
 		}
 		
-		$this->_paths = $paths;
+		$this->paths = $paths;
 	}
 	
 	/**
 	 * Runs tests
 	 * Specify class or method to narrow the pool
-	 * 
-	 * @param ?string $class (can be also used to specify the class::method as string)
-	 * @param ?string $method
-	 * 
-	 * @return Response
 	 */
-	public function run(?string $class = null, ?string $method = null): Response
+	public function run(
+		?string $class = null, // can be also used to specify the class::method as string
+		?string $method = null,
+	): Response
 	{
 		$response = new Response\Cli;
 		
@@ -134,7 +119,7 @@ class Tests extends Controller\Cli
 		$table = new Table;
 		$table->hasMarkup(true);
 		$table->setHeaders([
-			$this->_header . ' (' . count($runners) . ')',
+			$this->header . ' (' . count($runners) . ')',
 			'Time',
 			'Memory',
 			'Result',
@@ -150,7 +135,7 @@ class Tests extends Controller\Cli
 			$row[] = $result->measurement?->getTotalTime();
 			$row[] = $result->measurement?->getTotalMemory();
 			
-			$row[] = $this->_formatResult($result->getResult());
+			$row[] = $this->formatResult($result->getResult());
 			$row[] = $result->reason ?? ($result->throwable?->getMessage()); // most likely failed on __construct
 			
 			$table->addRow($row);
@@ -161,10 +146,10 @@ class Tests extends Controller\Cli
 		$table = new Table;
 		$table->hasMarkup(true);
 		$table->setHeaders(['Total',
-			$this->_formatResult(Result::RESULT_PASSED),
-			$this->_formatResult(Result::RESULT_FAILED),
-			$this->_formatResult(Result::RESULT_COMPLETED),
-			$this->_formatResult(Result::RESULT_SKIPPED),
+			$this->formatResult(Result::RESULT_PASSED),
+			$this->formatResult(Result::RESULT_FAILED),
+			$this->formatResult(Result::RESULT_COMPLETED),
+			$this->formatResult(Result::RESULT_SKIPPED),
 		]);
 		$table->addRow([
 			count($results),
@@ -181,7 +166,7 @@ class Tests extends Controller\Cli
 		{
 			Terminal::output(sprintf(
 				'%s <white>%s<reset> has <red>failed<reset>...',
-				$this->_header,
+				$this->header,
 				$result->__toString()) . PHP_EOL
 			, true);
 			
@@ -190,7 +175,7 @@ class Tests extends Controller\Cli
 				continue;
 			}
 			
-			$this->_displayThrowable($result->throwable);
+			$this->displayThrowable($result->throwable);
 		}
 		
 		if(count($resultsGrouped[Result::RESULT_FAILED]))
@@ -201,14 +186,11 @@ class Tests extends Controller\Cli
 		return $response;
 	}
 	
-	/**
-	 * @return array
-	 */
 	public function getTestRunners(): array
 	{
 		$runners = [];
 		
-		foreach($this->_paths as $path)
+		foreach($this->paths as $path)
 		{
 			$path = Dir::preProcess($path, true);
 			if(is_dir($path = BASE_DIR . $path) === false)
@@ -228,7 +210,7 @@ class Tests extends Controller\Cli
 					return true;
 				}
 				
-				// filter out files, which are not test files
+				// filter out files which are not test files
 				if(str_ends_with($file->getBasename(self::EXT), '.file.'))
 				{
 					return true;
@@ -253,13 +235,13 @@ class Tests extends Controller\Cli
 				$relativePath = substr($file->getPath(), $pathLength);
 				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::EXT);
-				$className = $this->_namespace . $namespace . '\\' . $basename;
+				$className = $this->namespace . $namespace . '\\' . $basename;
 				
 				$class = new ReflectionClass($className);
-				$runners[] = $this->_container->inject(
-					new TypeClass(Runner::class, [
+				$runners[] = $this->container
+					->injectClass(Runner::class, [
 						'class' => $class,
-					]),
+					],
 				);
 			}
 		}
@@ -267,12 +249,9 @@ class Tests extends Controller\Cli
 		return $runners;
 	}
 	
-	/**
-	 * @param string $result
-	 *
-	 * @return string
-	 */
-	protected function _formatResult(string $result): string
+	protected function formatResult(
+		string $result,
+	): string
 	{
 		$markup = match($result)
 		{
@@ -285,12 +264,9 @@ class Tests extends Controller\Cli
 		return Formatter::handleMarkup($markup);
 	}
 	
-	/**
-	 * @param Throwable $throwable
-	 *
-	 * @return void
-	 */
-	public function _displayThrowable(Throwable $throwable): void
+	public function displayThrowable(
+		Throwable $throwable,
+	): void
 	{
 		$view = new View('events.phtml');
 		$view->renderTitle = false;

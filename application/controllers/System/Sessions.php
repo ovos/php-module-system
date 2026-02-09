@@ -11,7 +11,6 @@ use Ovos\Service\Session;
 /**
  * Sessions
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Sessions extends Controller\Cli
@@ -19,11 +18,9 @@ class Sessions extends Controller\Cli
 	use Controller\Traits\Cli;
 	
 	/**
-	 * Allows to access specified CLI methods via HTTP
-	 *
-	 * @var array
+	 * Allows accessing specified CLI methods via HTTP
 	 */
-	protected array $_httpActions = [
+	protected array $httpActions = [
 		'keep-alive',
 	];
 	
@@ -34,7 +31,8 @@ class Sessions extends Controller\Cli
 	{
 		Functions::println('Clearing sessions ...' . PHP_EOL);
 		
-		$session = new Session;
+		$session = $this->container
+			->getClass(Session::class);
 		if($session->flush())
 		{
 			Functions::println('<green>Sessions cleared.<reset>', true);

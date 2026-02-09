@@ -8,7 +8,6 @@ use Ovos\Migration;
 /**
  * Migrations
  *
- * @package Migrations
  * @author Marcin Gil <mg@ovos.at>
  */
 class Migrations extends Migration

@@ -8,44 +8,23 @@ use Ovos\Controller\Plugin;
 use Ovos\Service\Auth as AuthService;
 use Models\User as Model;
 
-use function Ovos\services;
-
 /**
  * User
  *
- * @package Plugins
  * @author Marcin Gil <mg@ovos.at>
  */
 class User extends Plugin
 {
-	/**
-	 * @var string
-	 */
 	public const string SYMBOL = 'user';
+	protected ?AuthService $authService = null;
 	
-	/**
-	 * @return string
-	 */
-	public static function getSymbol(): string
-	{
-		return self::SYMBOL;
-	}
-	
-	/**
-	 * @var ?AuthService
-	 */
-	protected ?AuthService $_authService = null;
-	
-	/**
-	 * @param AuthService $authService
-	 */
 	public function __construct(
 		#[Inject(AuthService::SYMBOL)] ?AuthService $authService,
 	)
 	{
 		parent::__construct();
 		
-		$this->_authService = $authService;
+		$this->authService = $authService;
 	}
 	
 	/**
@@ -53,11 +32,11 @@ class User extends Plugin
 	 */
 	public function user(): ?Model
 	{
-		if($this->_authService === null)
+		if($this->authService === null)
 		{
 			return null;
 		}
 		
-		return $this->_authService->getUser();
+		return $this->authService->getUser();
 	}
 }

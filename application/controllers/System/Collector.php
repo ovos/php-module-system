@@ -14,46 +14,39 @@ use SplFileInfo;
 /**
  * Collector
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Collector extends Controller\Cli
 {
 	use Controller\Traits\Cli;
 	
-	/**
-	 * @var ?ArrayObject
-	 */
-	protected ?ArrayObject $_collectors = null;
+	protected ?ArrayObject $collectors = null;
 	
-	/**
-	 */
 	public function __construct()
 	{
 		parent::__construct();
 		
-		$this->_collectors = $this->_app->getConfig()->system->collectors;
+		$this->collectors = $this->app->getConfig()->system->collectors;
 	}
 	
-	/**
-	 * @param bool $coloredOutput
-	 *
-	 * @return void
-	 */
-	public function index(bool $coloredOutput = false): void
+	public function index(
+		bool $coloredOutput = false,
+	): void
 	{
-		$this->_app->getResponse()->setColoredOutput($coloredOutput);
+		$this->app->getResponse()
+			->setColoredOutput($coloredOutput);
 		
-		if($this->_collectors !== null)
+		if($this->collectors !== null)
 		{
-			foreach($this->_collectors as $collector)
+			foreach($this->collectors as $collector)
 			{
 				$controllerClassNs = Controller::NAMESPACE . $collector->controller;
 				if(class_exists($controllerClassNs) === false)
 				{
 					$this->log('<red>Controller "%s" not found.',
-						$collector->controller);
-						
+						$collector->controller,
+					);
+					
 					continue;
 				}
 				
@@ -62,8 +55,10 @@ class Collector extends Controller\Cli
 				if(method_exists($controller, $collector->action) === false)
 				{
 					$this->log('<red>Method "%s" not found on controller "%s".',
-						$collector->action, $collector->controller);
-						
+						$collector->action,
+						$collector->controller,
+					);
+					
 					continue;
 				}
 				
@@ -72,18 +67,16 @@ class Collector extends Controller\Cli
 		}
 	}
 	
-	/**
-	 * @param ArrayObject $config
-	 */
-	public function collect(ArrayObject $config): void
+	public function collect(
+		ArrayObject $config,
+	): void
 	{
 		$this->collectLogs($config);
 	}
 	
-	/**
-	 * @param ArrayObject $config
-	 */
-	public function collectLogs(ArrayObject $config): void
+	public function collectLogs(
+		ArrayObject $config,
+	): void
 	{
 		$this->log('Collecting <blue>logs<reset>...');
 		
@@ -92,11 +85,17 @@ class Collector extends Controller\Cli
 		
 		$affected = 0;
 		
-		$directoryIterator = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
+		$directoryIterator = new RecursiveDirectoryIterator(
+			$directory,
+			FilesystemIterator::SKIP_DOTS,
+		);
 		/**
 		 * @var RecursiveDirectoryIterator $iterator
 		 */
-		foreach($iterator = new RecursiveIteratorIterator($directoryIterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
+		foreach($iterator = new RecursiveIteratorIterator(
+			$directoryIterator,
+			RecursiveIteratorIterator::CHILD_FIRST,
+		) as $file)
 		{
 			/**
 			 * @var SplFileInfo $file
@@ -106,7 +105,8 @@ class Collector extends Controller\Cli
 				continue;
 			}
 			
-			if(str_starts_with($file->getBasename(), '.')) // skip hidden files
+			 // skip hidden files
+			if(str_starts_with($file->getBasename(), '.'))
 			{
 				continue;
 			}

@@ -3,47 +3,25 @@ declare(strict_types=1);
 
 namespace Plugins;
 
-use Ovos\Controller\Plugin;
-use Ovos\Translator;
 use Ovos\ArrayObject;
+use Ovos\Controller\Plugin;
 use Ovos\Container\Inject;
 use Ovos\Container\ArrayObject as InjectArrayObject;
+use Ovos\Translator;
 
 /**
  * Vendor
  *
- * @package Plugins
  * @author Marcin Gil <mg@ovos.at>
  */
 class Vendor extends Plugin
 {
-	/**
-	 * @var string
-	 */
 	public const string SYMBOL = 'vendor';
 	
-	/**
-	 * @return string
-	 */
-	public static function getSymbol(): string
-	{
-		return self::SYMBOL;
-	}
+	protected ?string $vendor;
 	
-	/**
-	 * @var ?string
-	 */
-	protected ?string $_vendor;
+	protected ?ArrayObject $modules;
 	
-	/**
-	 * @var ?ArrayObject
-	 */
-	protected ?ArrayObject $_modules;
-	
-	/**
-	 * @param ?string $vendor
-	 * @param ?ArrayObject $modules
-	 */
 	public function __construct(
 		#[Inject('config')]
 		#[InjectArrayObject('vendor')]
@@ -59,13 +37,13 @@ class Vendor extends Plugin
 		{
 			return;
 		}
-		$this->_vendor = $vendor;
+		$this->vendor = $vendor;
 		
 		if($modules === null)
 		{
 			return;
 		}
-		$this->_modules = $modules;
+		$this->modules = $modules;
 		
 		foreach($modules as $module)
 		{

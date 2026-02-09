@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Widgets;
 
 use Ovos\Controller\Widget;
-use Ovos\Exception;
 use Ovos\Url;
 use Ovos\View;
+use Override;
 use Widgets\Menu\Item;
 
 use function str_starts_with;
@@ -14,106 +14,82 @@ use function str_starts_with;
 /**
  * Menu
  *
- * @package Widgets
  * @author Marcin Gil <mg@ovos.at>
  */
 class Menu extends Widget
 {
-	/**
-	 * @var string
-	 */
-	protected string $_url;
+	protected string $url;
 	
 	/**
 	 * @var Item[]
 	 */
-	protected array $_items = [];
+	protected array $items = [];
 	
-	/**
-	 */
-	public function __construct(string $script = 'widgets/menu.phtml')
+	public function __construct(
+		string $script = 'widgets/menu.phtml',
+	)
 	{
 		parent::__construct();
 		
 		$this->setScript($script);
-		$this->setUrl($this->_app->getRequest()->getUrl());
+		$this->setUrl($this->app->getRequest()->getUrl());
 	}
 	
-	/**
-	 * @param Item $item
-	 *
-	 * @return self
-	 */
-	public function add(Item $item): self
+	public function add(
+		Item $item,
+	): self
 	{
-		$this->_items[] = $item;
+		$this->items[] = $item;
 		
 		return $this;
 	}
 	
-	/**
-	 * @param string|Url $url
-	 *
-	 * @return self
-	 */
-	public function setUrl(string|Url $url): self
+	public function setUrl(
+		string|Url $url,
+	): self
 	{
 		if($url instanceof Url)
 		{
-			$this->_url = $url->getUrl(true);
+			$this->url = $url->getUrl(true);
 			
 			return $this;
 		}
 		
-		$this->_url = $url;
+		$this->url = $url;
 		
 		return $this;
 	}
 	
-	/**
-	 * @return string
-	 */
 	public function getUrl(): string
 	{
-		return $this->_url;
+		return $this->url;
 	}
 	
-	/**
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
+	#[Override]
 	public function render(): string
 	{
-		foreach($this->_items as $item)
+		foreach($this->items as $item)
 		{
-			if(str_starts_with($this->_url, $item->getUrl()))
+			if(str_starts_with($this->url, $item->getUrl()))
 			{
 				$item->setActive(true);
 			}
 		}
 		
-		$view = new View($this->_script);
-		$view->items = $this->_items;
+		$view = new View($this->script);
+		$view->items = $this->items;
 		
 		return $view->__toString();
 	}
 	
-	/**
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->render();
 	}
 	
-	/**
-	 * @return array
-	 */
 	public function toArray(): array
 	{
-		return $this->_items;
+		return $this->items;
 	}
 }

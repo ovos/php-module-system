@@ -4,12 +4,12 @@ namespace Models;
 
 use Ovos\Model\Mysql;
 use Ovos\Model\Mysql\Template\Timestamps;
+use Override;
 use Stores\Migrations;
 
 /**
  * Migration
  *
- * @package Models
  * @author Marcin Gil <mg@ovos.at>
  *
  * @property int $id
@@ -17,25 +17,22 @@ use Stores\Migrations;
  * @property mixed $created_at
  * @property mixed $modified_at
  * @property mixed $migrated_at
- * @property mixed $rolledback_at
+ * @property mixed $rolled_back_at
  */
 class Migration extends Mysql
 {
 	/**
 	 * Autoincrement key
-	 *
-	 * @var ?string
 	 */
-	protected ?string $_autoIncrementKey = null;
+	protected ?string $autoIncrementKey = null;
 	
-	/**
-	 * @return string
-	 */
+	#[Override]
 	public static function getStoreClass(): string
 	{
 		return Migrations::class;
 	}
 	
+	#[Override]
 	public function setUp(): void
 	{
 		$this->addTemplate(new Timestamps);

@@ -9,17 +9,15 @@ use Ovos\Encryptor;
 /**
  * Tools
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Tools extends Controller\Cli
 {
 	use Controller\Traits\Cli;
 	
-	/**
-	 * @param ?string $string (optional)
-	 */
-	public function encrypt(?string $string = null): void
+	public function encrypt(
+		?string $string = null,
+	): void
 	{
 		if($string === null)
 		{
@@ -27,17 +25,16 @@ class Tools extends Controller\Cli
 			$string = $this->readLine();
 		}
 		
-		$config = $this->_app->getConfig()->encryption;
+		$config = $this->app->getConfig()->encryption;
 		$encryptor = new Encryptor($config->key, $config->method);
 		$encrypted = $encryptor->encrypt($string);
 		
 		$this->log($encrypted);
 	}
 	
-	/**
-	 * @param ?string $string (optional)
-	 */
-	public function decrypt(?string $string = null): void
+	public function decrypt(
+		?string $string = null,
+	): void
 	{
 		if($string === null)
 		{
@@ -45,7 +42,7 @@ class Tools extends Controller\Cli
 			$string = $this->readLine();
 		}
 		
-		$config = $this->_app->getConfig()->encryption;
+		$config = $this->app->getConfig()->encryption;
 		$encryptor = new Encryptor($config->key);
 		$decrypted = $encryptor->decrypt($string);
 		

@@ -21,7 +21,11 @@
 	
 	<?php
 		$table = new Console_Table();
-		$table->setHeaders(['Messages (last ' . count($this->messages) . ')', 'Time', 'Memory']);
+		$table->setHeaders([
+			'Messages (last ' . count($this->messages) . ')',
+			'Time',
+			'Memory',
+		]);
 		
 		foreach($this->messages as $message)
 		{

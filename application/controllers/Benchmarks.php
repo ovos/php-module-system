@@ -6,7 +6,6 @@ namespace Controllers;
 /**
  * Benchmarks
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Benchmarks extends Tests
@@ -14,15 +13,9 @@ class Benchmarks extends Tests
 	/**
 	 * @var string[]
 	 */
-	protected array $_configPath = ['system', 'benchmarks'];
+	protected array $configPath = ['system', 'benchmarks'];
 	
-	/**
-	 * @var string
-	 */
-	protected string $_header = 'Benchmark';
+	protected string $header = 'Benchmark';
 	
-	/**
-	 * @var string
-	 */
-	protected string $_namespace = 'Benchmarks';
+	protected string $namespace = 'Benchmarks';
 }

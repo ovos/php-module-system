@@ -5,104 +5,89 @@ namespace Controllers;
 
 use Ovos\Controller;
 use Ovos\ArrayObject;
+use Ovos\Console\Table;
+use Ovos\Dir;
 use Ovos\Exception\MissingException\MissingConfigException;
+use Ovos\Migration;
+use Ovos\Migration\Runner;
 use Ovos\Pdo\Expression;
 use Ovos\Response;
-use Ovos\Migration\Runner;
-use Ovos\Dir;
 use Ovos\Terminal;
-use Ovos\Console\Table;
-use Ovos\Migration;
 use SplFileInfo;
 use ReflectionClass;
 use Stores\Migrations as Store;
 use Models\Migration as Model;
 
-use function strlen;
-use function is_dir;
-use function substr;
-use function implode;
-use function explode;
 use function array_shift;
+use function explode;
+use function implode;
+use function is_dir;
 use function krsort;
+use function strlen;
+use function substr;
 
 /**
  * Migrations
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Migrations extends Controller\Cli
 {
-	/**
-	 * @var string
-	 */
 	public const string EXT = 'php';
 	
 	/**
 	 * @var string[]
 	 */
-	protected array $_configPath = ['system', 'migrations'];
+	protected array $configPath = ['system', 'migrations'];
 	
-	/**
-	 * @var int
-	 */
 	public const int SUMMARY_LIMIT = 20;
 	
-	/**
-	 * @var ArrayObject
-	 */
-	protected ArrayObject $_paths;
+	protected ArrayObject $paths;
 	
-	/**
-	 */
 	public function __construct()
 	{
 		parent::__construct();
 		
-		if(($paths = $this->_app->getConfig()->getPath($this->_configPath)) === null)
+		if(($paths = $this->app->getConfig()
+			->getPath($this->configPath)) === null)
 		{
-			throw new MissingConfigException('This tool requires an existing config path: "%s".',
-				implode('.', $this->_configPath)
+			throw new MissingConfigException(
+				'This tool requires an existing config path: "%s".',
+				implode('.', $this->configPath),
 			);
 		}
 		
-		$this->_paths = $paths;
+		$this->paths = $paths;
 	}
 	
 	/**
 	 * Displays a summary of migrations
-	 * 
-	 * @return Response
 	 */
 	public function status(): Response
 	{
 		$response = new Response\Cli;
 		
-		$this->_summary($response);
+		$this->summary($response);
 		
 		return $response;
 	}
 	
 	/**
-	 * @param ?int $amount
 	 * @aliasof run()
-	 *
-	 * @return Response
 	 */
-	public function migrate(?int $amount = null): Response
+	public function migrate(
+		?int $amount = null,
+	): Response
 	{
 		return $this->run($amount);
 	}
 	
 	/**
 	 * Run migrations
-	 * 
-	 * @param ?int $amount
-	 * 
-	 * @return Response
 	 */
-	public function run(?int $amount = null): Response
+	public function run(
+		?int $amount = null,
+	): Response
 	{
 		$response = new Response\Cli;
 		
@@ -135,12 +120,12 @@ class Migrations extends Controller\Cli
 			$migration->run(Migration::DIRECTION_UP);
 			
 			$record = isset($records[$id])
-				? $records[$id] // rolledback
+				? $records[$id] // rolled back
 				: new Model; // new
 			$record->id = $id;
 			$record->name = $migration->__toString();
 			$record->migrated_at = new Expression('NOW()');
-			$record->rolledback_at = null;
+			$record->rolled_back_at = null;
 			$record->save();
 			
 			Terminal::output('done.' . PHP_EOL);
@@ -148,20 +133,18 @@ class Migrations extends Controller\Cli
 			$migrated[$id] = $migration;
 		}
 		
-		$this->_actionSummary($response, $migrated);
-		$this->_summary($response);
+		$this->actionSummary($response, $migrated);
+		$this->summary($response);
 		
 		return $response;
 	}
 	
 	/**
 	 * Rolls back migrations
-	 * 
-	 * @param ?int $amount
-	 * 
-	 * @return Response
 	 */
-	public function rollback(?int $amount = 1): Response
+	public function rollback(
+		?int $amount = 1,
+	): Response
 	{
 		$response = new Response\Cli;
 		
@@ -199,7 +182,7 @@ class Migrations extends Controller\Cli
 			$migration->run(Migration::DIRECTION_DOWN);
 			
 			$record->migrated_at = null;
-			$record->rolledback_at = new Expression('NOW()');
+			$record->rolled_back_at = new Expression('NOW()');
 			if($store->tableExists()) // for case when we delete our migrations table
 			{
 				$record->save();
@@ -210,21 +193,25 @@ class Migrations extends Controller\Cli
 			$migrated[$id] = $migration;
 		}
 		
-		$this->_actionSummary($response, $migrated);
-		$this->_summary($response);
+		$this->actionSummary($response, $migrated);
+		$this->summary($response);
 		
 		return $response;
 	}
 	
-	/**
-	 * @param Response\Cli $response
-	 * @param array $migrated
-	 */
-	protected function _actionSummary(Response\Cli $response, array $migrated): void
+	protected function actionSummary(
+		Response\Cli $response,
+		array $migrated,
+	): void
 	{
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Migrations affected (' . count($migrated) . ')', 'Name', 'Time', 'Memory']);
+		$table->setHeaders([
+			'Migrations affected (' . count($migrated) . ')',
+			'Name',
+			'Time',
+			'Memory',
+		]);
 		
 		foreach($migrated as $id => $migratedRunner)
 		{
@@ -242,10 +229,9 @@ class Migrations extends Controller\Cli
 		$response->append(PHP_EOL . $table->getTable());
 	}
 	
-	/**
-	 * @param Response\Cli $response
-	 */
-	protected function _summary(Response\Cli $response): void
+	protected function summary(
+		Response\Cli $response,
+	): void
 	{
 		$store = new Store;
 		$records = $store->getAll(options: [
@@ -255,8 +241,12 @@ class Migrations extends Controller\Cli
 		
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Migrations (last ' . count($records) . ')', 'Name', 'Migrated at', 'Rolled back at']);
-			
+		$table->setHeaders(['Migrations (last ' . count($records) . ')',
+			'Name',
+			'Migrated at',
+			'Rolled back at',
+		]);
+		
 		foreach($records as $id => $record)
 		{
 			/**
@@ -266,23 +256,20 @@ class Migrations extends Controller\Cli
 				$record->id,
 				$record->name,
 				$record->migrated_at,
-				$record->rolledback_at,
+				$record->rolled_back_at,
 			]);
 		}
 		
 		$response->append(PHP_EOL . $table->getTable());
 	}
 	
-	/**
-	 * @param bool $reverse
-	 * 
-	 * @return array
-	 */
-	public function getMigrations(bool $reverse = false): array
+	public function getMigrations(
+		bool $reverse = false,
+	): array
 	{
 		$migrations = [];
 		
-		foreach($this->_paths as $path)
+		foreach($this->paths as $path)
 		{
 			$path = Dir::preProcess($path, true);
 			if(is_dir($path = BASE_DIR . $path) === false)
@@ -315,7 +302,12 @@ class Migrations extends Controller\Cli
 				$className = 'Migrations' . $namespace . '\\' . $filename;
 				$class = new ReflectionClass($className);
 				
-				$migrations[$id] = new Runner($class, (int)$id);
+				$migrations[$id] = $this->container
+					->injectClass(Runner::class, [
+						'class' => $class,
+						'id' => (int)$id,
+					],
+				);
 			}
 		}
 		

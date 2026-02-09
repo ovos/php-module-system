@@ -6,20 +6,19 @@ namespace Controllers\System;
 use Ovos\Controller;
 use Ovos\Exception\ForbiddenException;
 use Ovos\Exception\NotFoundException;
-use Ovos\Exception\NotFoundException\PageNotFoundExceptione;
+use Ovos\Exception\NotFoundException\PageNotFoundException;
 use Ovos\Exception\NotFoundException\FileNotFoundException;
 use Ovos\Response;
+use Ovos\Service\Events as ServiceEvents;
 use Ovos\View;
 
-use function Ovos\services;
+use function end;
 use function ob_clean;
 use function ob_get_length;
-use function end;
 
 /**
  * Events
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Events extends Controller
@@ -39,25 +38,27 @@ class Events extends Controller
 	
 	/**
 	 * Index
-	 *
-	 * @param ?string $output
-	 *
-	 * @return Response
 	 */
-	public function index(?string $output = null): Response
+	public function index(
+		?string $output = null,
+	): Response
 	{
 		$view = new View('events.phtml');
-		$events = services()->events->toArray();
-		if($this->_app->getConfig()->system->debug)
+		$eventsService = $this->container
+			->get(ServiceEvents::SYMBOL);
+		
+		if($this->app->getConfig()->system->debug)
 		{
-			$view->events = services()->events;
+			$view->events = $eventsService;
 			$view->content = $output;
 		}
 		
-		$response = $this->_app->getResponse(); // reuse the object
+		$response = $this->app->getResponse(); // reuse the object
 		// because of possible settings affecting output
 		$response->setIsSent(false);
 		
+		$events = $eventsService
+			->toArray();
 		// fetch last event
 		$event = end($events);
 		if($event instanceof NotFoundException)
@@ -65,7 +66,7 @@ class Events extends Controller
 			$view->title = $this->_('Not found.');
 			$response->setHttpCode(404);
 			
-			if($event instanceof PageNotFoundExceptione)
+			if($event instanceof PageNotFoundException)
 			{
 				$view->title = $this->_('Page not found.');
 			}

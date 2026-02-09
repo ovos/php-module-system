@@ -1,7 +1,9 @@
 <?php use Ovos\View\Helper\Messages\Message; ?>
 
 <?php $messages = $this->messages; ?>
-<?php $iterator = new CachingIterator(new ArrayIterator($messages)); ?>
+<?php $iterator = new CachingIterator(
+	new ArrayIterator($messages),
+); ?>
 
 <?php if($this->app->isInterfaceHttp()): ?>
 	
@@ -40,7 +42,10 @@
 	
 	<?php
 		$table = new Console_Table();
-		$table->setHeaders(['Messages (' . count($iterator->getInnerIterator()) . ')', 'Type']);
+		$table->setHeaders([
+			'Messages (' . count($iterator->getInnerIterator()) . ')',
+			'Type',
+		]);
 		
 		foreach($iterator as $message)
 		{

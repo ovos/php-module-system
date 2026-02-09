@@ -9,27 +9,21 @@ use PDOException;
 /**
  * Migrations
  *
- * @package Stores
  * @author Marcin Gil <mg@ovos.at>
  */
 class Migrations extends Mysql
 {
 	/**
 	 * Primary table name
-	 *
-	 * @var ?string
 	 */
 	public const ?string TABLE = 'migrations';
 	
 	/**
-	 * @param string $select
-	 * @param array $options
-	 *
 	 * @return Migration[]
 	 */
 	public function getAll(
 		string $select = 'id, ' . self::TABLE . '.*',
-		array $options = []
+		array $options = [],
 	): array // group by ID
 	{
 		$query = $this->query()
@@ -51,7 +45,7 @@ class Migrations extends Mysql
 		}
 		catch(PDOException $exception)
 		{
-			return []; // case when migrations table is not yet in db
+			return []; // case when the migrations table is not yet in db
 		}
 		
 		$query->execute();

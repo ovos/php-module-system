@@ -33,7 +33,11 @@
 	
 	<?php
 		$table = new Table;
-		$table->setHeaders(['Requests (' . count($this->measurements) . ')', 'Time', 'Memory']);
+		$table->setHeaders([
+			'Requests (' . count($this->measurements) . ')',
+			'Time',
+			'Memory',
+		]);
 		
 		foreach($this->measurements as $marker => $measurement)
 		{

@@ -13,27 +13,21 @@ use function disk_free_space;
 /**
  * Stats
  *
- * @package Controllers
  * @author Marcin Gil <mg@ovos.at>
  */
 class Stats extends Controller\Cli
 {
-	/**
-	 * @var array
-	 */
-	protected array $_httpActions = [
+	protected array $httpActions = [
 		'free-space',
 	];
 	
 	/**
 	 * Returns amount of free space
-	 *
-	 * @param bool $formatSize
-	 * @param bool $eol
-	 * 
-	 * @return Response
 	 */
-	public function freeSpace(bool $formatSize = true, bool $eol = true): Response
+	public function freeSpace(
+		bool $formatSize = true,
+		bool $eol = true,
+	): Response
 	{
 		if($this->hasPlugin(Layout::SYMBOL))
 		{
