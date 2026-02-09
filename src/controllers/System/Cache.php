@@ -91,7 +91,7 @@ class Cache extends Controller\Cli
 		else
 		{
 			// clear common pool
-			if($persistent->getPool()->clear())
+			if(($pool = $persistent->getPool()) && $pool->clear())
 			{
 				Functions::println('<green>Persistent cache cleared.<reset>', true);
 			}
