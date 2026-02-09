@@ -25,9 +25,9 @@ class Migration extends Mysql
 	/**
 	 * Autoincrement key
 	 *
-	 * @var null|string
+	 * @var ?string
 	 */
-	protected null|string $_autoIncrementKey = null;
+	protected ?string $_autoIncrementKey = null;
 
 	/**
 	 * @return string

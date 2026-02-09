@@ -6,13 +6,9 @@ namespace Controllers\System;
 use FilesystemIterator;
 use Ovos\ArrayObject;
 use Ovos\Controller;
-use Ovos\Response;
-use Ovos\View;
 use Ovos\Terminal;
-use function Ovos\services;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use ReflectionClass;
 use SplFileInfo;
 
 /**
@@ -26,15 +22,16 @@ class Collector extends Controller\Cli
 	use Controller\Traits\Cli;
 
 	/**
-	 * @var ArrayObject
+	 * @var null|ArrayObject
 	 */
-	protected $_collectors;
+	protected null|ArrayObject $_collectors = null;
 
 	/**
 	 */
 	public function __construct()
 	{
 		parent::__construct();
+		$this->setColoredOutput(true);
 		
 		$this->_collectors = $this->_app->getConfig()->system->collectors;
 	}
@@ -42,7 +39,7 @@ class Collector extends Controller\Cli
 	/**
 	 * @param bool $coloredOutput
 	 */
-	public function index($coloredOutput = false): void
+	public function index(bool $coloredOutput = false): void
 	{
 		if($this->_collectors !== null)
 		{
@@ -57,7 +54,7 @@ class Collector extends Controller\Cli
 					continue;		
 				}
 				
-				/** @var Controller $controller */
+				/** @var Controller\Cli $controller */
 				$controller = new $controllerClassNs();
 				$controller->setColoredOutput($coloredOutput);
 				
@@ -94,8 +91,11 @@ class Collector extends Controller\Cli
 		
 		$affected = 0;
 		
-		$iterator = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
-		foreach(new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
+		$directoryIterator = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
+		/**
+		 * @var RecursiveDirectoryIterator $iterator
+		 */
+		foreach($iterator = new RecursiveIteratorIterator($directoryIterator, RecursiveIteratorIterator::CHILD_FIRST) as $file)
 		{
 			/**
 			 * @var SplFileInfo $file
@@ -105,7 +105,7 @@ class Collector extends Controller\Cli
 				continue;
 			}
 			
-			if(strpos($file->getBasename(), '.') === 0) // skip hidden files
+			if(str_starts_with($file->getBasename(), '.')) // skip hidden files
 			{
 				continue;
 			}
@@ -122,12 +122,12 @@ class Collector extends Controller\Cli
 				$unlink = unlink($file->getPathname());
 				if($unlink)
 				{
-					Terminal::output('<green>Done.');
+					Terminal::output('<green>Done.', $this->getColoredOutput());
 					$affected++;
 				}
 				else
 				{
-					Terminal::output('<red>Error.');
+					Terminal::output('<red>Error.', $this->getColoredOutput());
 				}
 				
 				print(PHP_EOL);

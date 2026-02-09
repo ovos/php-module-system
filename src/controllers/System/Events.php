@@ -35,11 +35,11 @@ class Events extends Controller
 	/**
 	 * Index
 	 *
-	 * @param string $output
+	 * @param ?string $output
 	 *
 	 * @return Response
 	 */
-	public function index(string $output = null): Response
+	public function index(?string $output = null): Response
 	{
 		$view = new View('events.phtml');
 		$events = services()->events->toArray();

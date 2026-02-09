@@ -10,7 +10,7 @@ use PDOException;
 /**
  * Migrations
  *
- * @package Models
+ * @package Stores
  * @author Marcin Gil <mg@ovos.at>
  */
 class Migrations extends Mysql
@@ -26,12 +26,12 @@ class Migrations extends Mysql
 	 * @param string $select
 	 * @param array $options
 	 *
-	 * @return Migration[]|false
+	 * @return Migration[]
 	 */
 	public function getAll(
-		$select = 'id, ' . self::TABLE . '.*',
-		$options = []
-	): array|false // group by ID
+		string $select = 'id, ' . self::TABLE . '.*',
+		array $options = []
+	): array // group by ID
 	{
 		$query = $this->query()
 			->select($select)
@@ -39,7 +39,7 @@ class Migrations extends Mysql
 
 		if(isset($options['order']))
 		{
-			$sql->orderBy($options['order']);
+			$query->orderBy(...$options['order']);
 		}
 		
 		try

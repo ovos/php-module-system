@@ -10,18 +10,12 @@ use Ovos\Response;
 use Ovos\Migration\Runner;
 use Ovos\Dir;
 use Ovos\Terminal;
-use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
 use Ovos\Migration;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use SplFileInfo;
 use ReflectionClass;
-use ReflectionMethod;
 use Stores\Migrations as Store;
 use Models\Migration as Model;
-use Throwable;
 use function strlen;
 
 /**
@@ -52,6 +46,31 @@ class Migrations extends Controller\Cli
 		$this->setColoredOutput(true);
 		
 		$this->_paths = $this->_app->getConfig()->system->migrations;
+	}
+	
+	/**
+	 * Displays summary of migrations
+	 * 
+	 * @return Response
+	 */
+	public function status(): Response
+	{
+		$response = new Response\Cli;
+		
+		$this->_summary($response);
+	
+		return $response;
+	}
+
+	/**
+	 * @param ?int $amount
+	 * @aliasof run()
+	 *
+	 * @return Response
+	 */
+	public function migrate(?int $amount = null): Response
+	{
+		return $this->run($amount);
 	}
 	
 	/**
@@ -107,7 +126,8 @@ class Migrations extends Controller\Cli
 			$migrated[$id] = $migration;
 		}
 		
-		$this->responseSummary($response, $migrated);
+		$this->_actionSummary($response, $migrated);
+		$this->_summary($response);
 
 		return $response;
 	}
@@ -119,7 +139,7 @@ class Migrations extends Controller\Cli
 	 * 
 	 * @return Response
 	 */
-	public function rollback(?int $amount = null): Response
+	public function rollback(?int $amount = 1): Response
 	{
 		$response = new Response\Cli;
 
@@ -158,14 +178,18 @@ class Migrations extends Controller\Cli
 			
 			$record->migrated_at = null;
 			$record->rolledback_at = new Expression('NOW()');
-			$record->save();
+			if($store->tableExists()) // for case when we delete our migrations table
+			{
+				$record->save();
+			}
 			
 			Terminal::output('done.' . PHP_EOL);			
 			
 			$migrated[$id] = $migration;
 		}
 		
-		$this->responseSummary($response, $migrated);
+		$this->_actionSummary($response, $migrated);
+		$this->_summary($response);
 
 		return $response;
 	}
@@ -174,11 +198,11 @@ class Migrations extends Controller\Cli
 	 * @param Response\Cli $response
 	 * @param array $migrated
 	 */
-	public function responseSummary(Response\Cli $response, array $migrated): void
+	protected function _actionSummary(Response\Cli $response, array $migrated): void
 	{
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Migration (' . count($migrated) . ')', 'ID', 'Time', 'Memory']);
+		$table->setHeaders(['Migrations affected (' . count($migrated) . ')', 'Name', 'Time', 'Memory']);
 			
 		foreach($migrated as $id => $migratedRunner)
 		{
@@ -186,10 +210,38 @@ class Migrations extends Controller\Cli
 			 * @var Runner $migratedRunner
 			 */
 			$table->addRow([
-				$migratedRunner->__toString(),
 				$id,
+				$migratedRunner->__toString(),
 				$migratedRunner->measurement->getTotalTime(),
 				$migratedRunner->measurement->getTotalMemory(),
+			]);
+		}
+	
+		$response->append(PHP_EOL . $table->getTable());
+	}
+	
+	/**
+	 * @param Response\Cli $response
+	 */
+	protected function _summary(Response\Cli $response): void
+	{
+		$store = new Store;
+		$records = $store->getAll(options: ['order' => ['id', 'DESC']]);
+		
+		$table = new Table;
+		$table->hasMarkup(true);
+		$table->setHeaders(['Migrations (' . count($records) . ')', 'Name', 'Migrated at', 'Rolled back at']);
+			
+		foreach($records as $id => $record)
+		{
+			/**
+			 * @var Model $record
+			 */
+			$table->addRow([
+				$record->id,
+				$record->name,
+				$record->migrated_at,
+				$record->rolledback_at,
 			]);
 		}
 	
@@ -214,26 +266,22 @@ class Migrations extends Controller\Cli
 			}
 			
 			$pathLength = strlen($path);
-			$files = Dir::getFiles($path, function($file)
+			$files = Dir::getFiles($path, skipCallback: function($file)
 			{
 				/**
 				* @var SplFileInfo $file
 				*/
 				// filter out non .php files
-				if($file->getExtension() !== self::MIGRATION_EXT)
-				{
-					return null;
-				}
-				
-				return $file->getBasename('.' . self::MIGRATION_EXT);
+				return $file->getExtension() !== self::MIGRATION_EXT;
 			});
 			
-			foreach($files as $basename => $file)
+			foreach($files as $file)
 			{
 				// include the migration, because filename is not psr-4 compatible
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$basename = $file->getBasename('.' . self::MIGRATION_EXT);
 				[$id, $filename] = explode('_', $basename);
 				
 				$className = 'Migrations' . $relativePath . '\\' . $filename;

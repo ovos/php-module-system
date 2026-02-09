@@ -5,16 +5,12 @@ namespace Controllers;
 
 use Ovos\Controller;
 use Ovos\Response;
-use Ovos\Size;
 use Ovos\ArrayObject;
 use Ovos\Terminal;
 use Ovos\Test\Runner;
 use Ovos\Dir;
 use Ovos\Terminal\Formatter;
 use Ovos\Console\Table;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use SplFileInfo;
 use ReflectionClass;
 use ReflectionMethod;
@@ -47,30 +43,49 @@ class Tests extends Controller\Cli
 	{
 		parent::__construct();
 		$this->setColoredOutput(true);
-				
+		
 		$this->_paths = $this->_app->getConfig()->system->tests;
 	}
+	
 	/**
 	 * Runs tests
+	 * Specify class or method to narrow the pool
+	 * 
+	 * @param ?string $class
+	 * @param ?string $method
 	 * 
 	 * @return Response
 	 */
-	public function run(): Response
+	public function run(?string $class = null, ?string $method = null): Response
 	{
 		$response = new Response\Cli;
 		
 		$tests = $this->getTests();
-		$countPassed = 0;
-		$countFailed = 0;
+		$ran = [];
+		$passed = 0;
+		$failed = 0;
 		
 		foreach($tests as $test)
 		{
+			/**
+			 * @var Runner $test
+			 */
+			if($class && $test->method->class !== 'Tests\\' . $class)
+			{
+				continue;
+			}
+			if($method && $test->method !== $method)
+			{
+				continue;
+			}
+			
 			try
 			{
 				/**
 				 * @var Runner $test
 				 */
-				$test->run() ? $countPassed++ : $countFailed++;
+				$test->run() ? $passed++ : $failed++;
+				$ran[] = $test;
 			}
 			catch(Throwable $throwable)
 			{
@@ -85,9 +100,9 @@ class Tests extends Controller\Cli
 		
 		$table = new Table;
 		$table->hasMarkup(true);
-		$table->setHeaders(['Test (' . count($tests) . ')', 'Time', 'Memory', 'Result']);
+		$table->setHeaders(['Test (' . count($ran) . ')', 'Time', 'Memory', 'Result']);
 			
-		foreach($tests as $test)
+		foreach($ran as $test)
 		{
 			/**
 			 * @var Runner $test
@@ -110,9 +125,9 @@ class Tests extends Controller\Cli
 			Formatter::handleMarkup('<red>Failed<reset>')
 		]);
 		$table->addRow([
-			count($tests),
-			$countPassed,
-			$countFailed,
+			count($ran),
+			$passed,
+			$failed,
 		]);
 		$response->append(PHP_EOL . $table->getTable());
 
@@ -135,26 +150,22 @@ class Tests extends Controller\Cli
 			}
 			
 			$pathLength = strlen($path);
-			$files = Dir::getFiles($path, function($file)
+			$files = Dir::getFiles($path, skipCallback: function($file)
 			{
 				/**
 				* @var SplFileInfo $file
 				*/
 				// filter out non .php files
-				if($file->getExtension() !== self::TEST_EXT)
-				{
-					return null;
-				}
-				
-				return $file->getBasename('.' . self::TEST_EXT);
+				return $file->getExtension() !== self::TEST_EXT;
 			});
 			
-			foreach($files as $basename => $file)
+			foreach($files as $file)
 			{
 				// include the test, composer is always excluding /tests from psr-4 autoloader
 				include_once($file->getPathname());
 				
 				$relativePath = substr($file->getPath(), $pathLength);
+				$basename = $file->getBasename('.' . self::TEST_EXT);
 				$className = 'Tests' . $relativePath . '\\' . $basename;
 				$class = new ReflectionClass($className);
 				$methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
