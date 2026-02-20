@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-06-11 22:20+0200\n"
-"PO-Revision-Date: 2025-06-11 22:20+0200\n"
+"POT-Creation-Date: 2026-02-20 01:00+0100\n"
+"PO-Revision-Date: 2026-02-20 01:01+0100\n"
 "Last-Translator: Anreas Friedl <af@ovos.at>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -10,19 +10,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: translate;translatePlural:1,2;_n:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: views/_includes\n"
 
-#: controllers/System/Events.php:63
+#: controllers/System/Events.php:66
+msgid "Not found."
+msgstr ""
+
+#: controllers/System/Events.php:71
 msgid "Page not found."
 msgstr ""
 
-#: controllers/System/Events.php:68
+#: controllers/System/Events.php:75
 msgid "File not found."
+msgstr ""
+
+#: controllers/System/Events.php:80
+msgid "Forbidden."
 msgstr ""
 
 #: translations/phrases.php:3
@@ -36,135 +44,3 @@ msgstr ""
 #: views/events.phtml:21
 msgid "Back to startpage"
 msgstr ""
-
-#~ msgid "TITLE"
-#~ msgstr "Career Orientation To Go"
-
-#~ msgid "LABEL_STEP_1"
-#~ msgstr "Explore"
-
-#~ msgid "LABEL_STEP_2"
-#~ msgstr "Select"
-
-#~ msgid "LABEL_STEP_3"
-#~ msgstr "Get started"
-
-#~ msgid "UPDATE_BROWSER"
-#~ msgstr "Please make sure you are using the latest version of your browser."
-
-#~ msgid "ACTION_ARCHIVE"
-#~ msgstr "Archive"
-
-#~ msgid "NOTES_AND_DISCLAIMER"
-#~ msgstr ""
-#~ "The website is a joint project of the Lower Austrian Chamber of Labour and the Lower Austrian Economic Chamber.\n"
-#~ "With regard to the technical characteristics of the internet, no guarantee can be given for the authenticity, correctness and completeness of the information provided on the internet. Nor is any guarantee given for the availability or operation of this website and its contents.\n"
-#~ "Any liability for direct, indirect or other damage, irrespective of its causes, arising from the use or non-availability of the data and information on this website is excluded to the extent permitted by law.\n"
-#~ "The content of this website is subject to copyright protection. The information is intended for personal use only. Any further use, in particular storage in databases, duplication and any form of commercial use as well as disclosure to third parties – also in parts or in modified form – without the consent of the respective organisation is prohibited.\n"
-#~ "Hyperlinks to this website are welcome. Any integration of individual pages of our offer into external frames is to be avoided.\n"
-#~ "Insofar as personal terms are used in the content in the masculine form only, they refer equally to women and men."
-
-#~ msgid "WHAT_IS_HEADER"
-#~ msgstr "What is Career Orientation To Go?"
-
-#~ msgid "WHAT_IS_DESCRIPTION"
-#~ msgstr "Making the right decision in 3 steps: \"Career Orientation To Go\" is a platform that helps parents, guardians and training advisers support children and young adults searching for their dream job."
-
-#~ msgid "EXPLORE_LABEL"
-#~ msgstr "1. Explore"
-
-#~ msgid "EXPLORE_DESCRIPTION"
-#~ msgstr "In the \"Explore\" phase, a personal interest and competence profile is created together with the child from a list of interests of competences, supplemented with an additional filter for occupational groups."
-
-#~ msgid "SELECT_LABEL"
-#~ msgstr "2. Select"
-
-#~ msgid "SELECT_DESCRIPTION"
-#~ msgstr "In the \"Select\" phase, the focus is on finding suitable job profiles that are tailored to the child's strengths and desires. Requirements and tasks related to the specific professions add detail to the search result."
-
-#~ msgid "GETSTARTED_LABEL"
-#~ msgstr "3. Get started"
-
-#~ msgid "GETSTARTED_DESCRIPTION"
-#~ msgstr "Now it's time to get started. Individual offers, such as information on events, companies and application methods, round off your child's search result and help with planning the further course of action."
-
-#~ msgid "GENERAL_INFORMATION"
-#~ msgstr "The following information provides a simple overview of what happens to your personal data when you visit our website. Personal data are any data that can be used to identify you personally. For detailed information on the subject of data protection, please refer to our privacy policy presented below this text."
-
-#~ msgid "DATA_COLLECTION"
-#~ msgstr "The protection of your personal data is of particular concern to us. We therefore process your data exclusively on the basis of the legal provisions (GDPR, Telecommunications Act 2003). In this data protection information, we inform you about the most important aspects of data processing within the framework of our website."
-
-#~ msgid "DATA_COLLECTION_2"
-#~ msgstr "When you visit our website, your IP address as well as the start and end of the session are recorded for the duration of this session. This is for technical reasons and thus constitutes a legitimate interest as defined in Art. 6 (1) (f) GDPR. Unless stipulated otherwise in the following paragraphs, these data will not be further processed by us."
-
-#~ msgid "COOKIES"
-#~ msgstr "Our website uses so-called cookies as well as the localStorage and the indexedDB application programming interfaces of your browser. These are technologies that can store information on your end device with the help of the browser. They do not cause any damage."
-
-#~ msgid "COOKIES_2"
-#~ msgstr "We use these technologies to make our website more user-friendly. Some of this information remains stored on your end device until you delete it. It enables us to recognise your browser upon your next visit."
-
-#~ msgid "COOKIES_3"
-#~ msgstr "If you would prefer not to be recognised, you can set up your browser so that it informs you about the placing of cookies and you can approve or disapprove of this on a case-by-case basis."
-
-#~ msgid "COOKIES_4"
-#~ msgstr "Disabling cookies as well as the localStorage and indexedDB features may limit the functionality of our website."
-
-#~ msgid "CONTACTING_US"
-#~ msgstr "If you contact us by using the form on our website or by email, the data you provide will be stored by us for six months for the purpose of processing the enquiry and in case of follow-up questions. We will not pass on these data without your consent."
-
-#~ msgid "ANALYTICAL_TOOLS"
-#~ msgstr "When you visit our website, your surfing behaviour may be statistically analysed. This is done primarily by means of cookies and so-called analytical programs. The analysis of your surfing behaviour is usually anonymous; the surfing behaviour cannot be traced back to you. You can object to this analysis or prevent it by not using certain tools."
-
-#~ msgid "DATA_SECURITY"
-#~ msgstr "We use technical and organisational security measures to protect the data we hold about you against accidental or intentional manipulation, loss, destruction or against access by unauthorised persons. Our security measures are constantly being improved. Data processing as well as data transmission are carried out with the SSL procedure (Secure Socket Layer)."
-
-#~ msgid "YOUR_RIGHTS"
-#~ msgstr "With regard to your data stored by us, you are generally entitled to the rights of information, correction, erasure, restriction, portability, revocation and objection. You can contact us at any time via the address specified in the Legal notice with regard to this and other questions on the subject of data protection. Furthermore, you have the right to lodge a complaint with the competent supervisory authority."
-
-#~ msgid "COPYRIGHT_DISCLAIMER"
-#~ msgstr "With regard to the technical characteristics of the internet, no guarantee can be given in respect of the authenticity, correctness and completeness of the information provided on the internet. Nor is any guarantee given for the availability or operation of this website and its contents. Any liability for direct, indirect or other damage, irrespective of its causes, arising from the use or non-availability of the data and information on this website is excluded to the extent permitted by law. The content of this website is subject to copyright protection. The information is intended for personal use only. Any further use, in particular storage in databases, duplication and any form of commercial use as well as disclosure to third parties – also in parts or in modified form – without the consent of the website owner is prohibited."
-
-#~ msgid "WHO_IS_RESPONSIBLE"
-#~ msgstr "Data processing on this website is carried out by the website owner. You can find the contact details in the Legal notice of this website."
-
-#~ msgid "WHO_IS_RESPONSIBLE_2 {0} {1}"
-#~ msgstr "Further information on data protection can also be found on the websites of the Lower Austrian Economic Chamber ({0}) and the Lower Austrian Chamber of Labour ({1})."
-
-#~ msgid "DESCRIPTION"
-#~ msgstr "Jointly finding the educational path that suits your child!"
-
-#~ msgid "ACTION_REGISTER"
-#~ msgstr "register"
-
-#~ msgid "LANGUAGE_INFORMATION"
-#~ msgstr "The complete service of \"Berufsorientierung To Go\" is currently only available in German."
-
-#~ msgid "BACK_TO_LOGIN"
-#~ msgstr "Click here to"
-
-#~ msgid "ACTION_LOGIN"
-#~ msgstr "login"
-
-#~ msgid "LABEL_PRIVACY_POLICY"
-#~ msgstr "privacy policy"
-
-#~ msgid "Logout"
-#~ msgstr "Log out"
-
-#~ msgid "OPTIONAL"
-#~ msgstr "optional"
-
-#~ msgid "Imprint"
-#~ msgstr "Legal notice"
-
-#~ msgid "E-Mail"
-#~ msgstr "Email"
-
-#~ msgid "at least {0} characters"
-#~ msgstr "at least {0} characters"
-
-#~ msgid "at least {0} capital letters"
-#~ msgstr "at least {0} capital letters"
-
-#~ msgid "at least {0} digits"
-#~ msgstr "at least {0} digits"
