@@ -128,7 +128,7 @@ class Cache extends Controller\Cli
 			}
 			
 			// reloading libraries
-			$store->loadLibraries(true);
+			$store->getFunctions()->loadLibraries(true);
 			Functions::println(
 				'<green>Persistent cache libraries reloaded.<reset>',
 				true,
