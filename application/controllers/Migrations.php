@@ -295,9 +295,9 @@ class Migrations extends Controller\Cli
 				$relativePath = substr($file->getPath(), $pathLength);
 				$namespace = str_replace('/', '\\', $relativePath);
 				$basename = $file->getBasename('.' . self::EXT);
-				$fileNameParts= explode('_', $basename);
-				$id =  array_shift($fileNameParts);
-				$filename =  implode('_', $fileNameParts);
+				$fileNameParts = explode('_', $basename);
+				$id = array_shift($fileNameParts);
+				$filename = implode('_', $fileNameParts);
 				
 				$className = 'Migrations' . $namespace . '\\' . $filename;
 				$class = new ReflectionClass($className);
