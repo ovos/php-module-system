@@ -116,11 +116,14 @@ class Tests extends Controller\Cli
 			}
 		}
 		
+		// erase the last in-progress status line before the results table
+		Terminal::clearLine();
+		
 		$table = new Table;
 		$table->hasMarkup(true);
 		$table->setHeaders([
 			$this->header . ' (' . count($runners) . ')',
-			'Time',
+			'Time (s)',
 			'Memory',
 			'Result',
 			'Reason',
