@@ -1,6 +1,8 @@
+<?php use Ovos\Application; ?>
+<?php use Ovos\Console\Table; ?>
 <?php use Ovos\Stream\Request; ?>
 
-<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+<?php if($this->interface === Application::INT_HTTP): ?>
 	
 	<?php /*
 	<?= $this->render('helpers/debug.phtml'); ?>
@@ -27,7 +29,7 @@
 <?php else: ?>
 
 	<?php
-		$table = new Console_Table();
+		$table = new Table;
 		$table->setHeaders(['Requests ('. count($this->requests) .')', 'Time', 'Memory']);
 		
 		foreach($this->requests as $request)

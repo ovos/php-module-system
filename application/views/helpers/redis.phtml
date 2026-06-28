@@ -1,0 +1,42 @@
+<?php use Ovos\Application; ?>
+<?php use Ovos\Console\Table; ?>
+
+<?php if($this->interface === Application::INT_HTTP): ?>
+	
+	<div class="debug-table debug-redis">
+		
+		<div class="row">
+			<div class="cell header">Redis (<?= count($this->commands); ?>)</div>
+			<div class="cell header">Time</div>
+			<div class="cell header">Memory</div>
+		</div>
+		
+		<?php foreach($this->commands as $command): ?>
+			<div class="row">
+				<div class="cell"><?= $command->call; ?></div>
+				<div class="cell"><?= $command->time; ?></div>
+				<div class="cell"><?= $command->memory; ?></div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	
+<?php else: ?>
+	
+	<?php
+		$table = new Table;
+		$table->setHeaders(['Redis (last ' . count($this->commands) . ')', 'Time', 'Memory']);
+		
+		foreach($this->commands as $command)
+		{
+			$table->addRow([
+				wordwrap($command->call, 150, PHP_EOL),
+				$command->time,
+				$command->memory
+			]);
+			$table->addRow([PHP_EOL]);
+		}
+		
+		echo PHP_EOL . $table->getTable();
+	?>
+	
+<?php endif; ?>

@@ -1,4 +1,7 @@
-<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+<?php use Ovos\Application; ?>
+<?php use Ovos\Console\Table; ?>
+
+<?php if($this->interface === Application::INT_HTTP): ?>
 
 	<div class="debug-table debug-console">
 		
@@ -20,7 +23,7 @@
 <?php else: ?>
 	
 	<?php
-		$table = new Console_Table();
+		$table = new Table;
 		$table->setHeaders([
 			'Messages (last ' . count($this->messages) . ')',
 			'Time',

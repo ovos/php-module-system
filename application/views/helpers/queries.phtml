@@ -1,4 +1,7 @@
-<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+<?php use Ovos\Application; ?>
+<?php use Ovos\Console\Table; ?>
+
+<?php if($this->interface === Application::INT_HTTP): ?>
 	
 	<?php /*
 	<?= $this->render('helpers/debug.phtml'); ?>
@@ -24,7 +27,7 @@
 <?php else: ?>
 	
 	<?php
-		$table = new Console_Table();
+		$table = new Table;
 		$table->setHeaders(['Queries (last ' . count($this->queries) . ')', 'Time', 'Memory']);
 		
 		foreach($this->queries as $query)
