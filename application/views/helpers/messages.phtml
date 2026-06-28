@@ -1,3 +1,4 @@
+<?php use Ovos\Terminal\Table; ?>
 <?php use Ovos\View\Helper\Messages\Message; ?>
 
 <?php $messages = $this->messages; ?>
@@ -41,7 +42,7 @@
 <?php else: ?>
 	
 	<?php
-		$table = new Console_Table();
+		$table = new Table;
 		$table->setHeaders([
 			'Messages (' . count($iterator->getInnerIterator()) . ')',
 			'Type',
