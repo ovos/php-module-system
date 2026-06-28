@@ -1,7 +1,8 @@
+<?php use Ovos\Application; ?>
 <?php use Ovos\Console\Table; ?>
 <?php use Ovos\Measurement; ?>
 
-<?php if($this->interface === \Ovos\Application::INT_HTTP): ?>
+<?php if($this->interface === Application::INT_HTTP): ?>
 	
 	<?= $this->render('helpers/debug.phtml'); ?>
 	
