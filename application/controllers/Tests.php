@@ -12,7 +12,7 @@ use Ovos\Test\Result;
 use Ovos\Test\Runner;
 use Ovos\Dir;
 use Ovos\Terminal\Formatter;
-use Ovos\Console\Table;
+use Ovos\Terminal\Table;
 use Ovos\View;
 use SplFileInfo;
 use ReflectionClass;

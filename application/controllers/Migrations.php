@@ -5,7 +5,7 @@ namespace Controllers;
 
 use Ovos\Controller;
 use Ovos\ArrayObject;
-use Ovos\Console\Table;
+use Ovos\Terminal\Table;
 use Ovos\Dir;
 use Ovos\Exception\MissingException\MissingConfigException;
 use Ovos\Migration;
