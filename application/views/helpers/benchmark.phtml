@@ -4,9 +4,9 @@
 
 <?php if($this->interface === Application::INT_HTTP): ?>
 	
-	<?= $this->render('helpers/debug.phtml'); ?>
+	<?= $this->render('helpers/profiler.phtml'); ?>
 	
-	<div class="debug-table debug-benchmark">
+	<div class="profiler-table profiler-benchmark">
 		
 		<div class="row">
 			<div class="cell header auto">Marker (<?= count($this->measurements); ?>)</div>
@@ -25,9 +25,9 @@
 		<?php endforeach; ?>
 	</div>
 	
-	<div class="debug debug-tools">
-		<a class="debug-tool clear-cache" target="_blank" href="tools/clear-cache">Clear cache</a>
-		<a class="debug-tool collapse">Collapse</a>
+	<div class="profiler profiler-tools">
+		<a class="profiler-tool clear-cache" target="_blank" href="tools/clear-cache">Clear cache</a>
+		<a class="profiler-tool collapse">Collapse</a>
 	</div>
 	
 <?php else: ?>
