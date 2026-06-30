@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Profiler</title>
+		<link href="<?= $this->asset('themes/' . $this->config->vendor . '/theme.css'); ?>" rel="stylesheet" />
+	</head>
+	<body class="profiler-page">
+		<ovos-profiler mode="full" stream-url="<?= $this->streamUrl; ?>"></ovos-profiler>
+		<script src="<?= $this->asset('scripts/ovos/collapse.js'); ?>"></script>
+		<script src="<?= $this->asset('scripts/ovos/profiler.js'); ?>"></script>
+	</body>
+</html>

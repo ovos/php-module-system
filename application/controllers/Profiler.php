@@ -8,7 +8,11 @@ use Ovos\Connection\RedisCommon;
 use Ovos\Connections;
 use Ovos\Controller;
 use Ovos\Exception\NotFoundException;
+use Ovos\Response;
+use Ovos\View;
+use Redis as RedisClient;
 
+use function array_reverse;
 use function connection_aborted;
 use function flush;
 use function header;
@@ -22,9 +26,9 @@ use function session_id;
 /**
  * Profiler
  *
- * Server-sent events endpoint that tails the current session's profiler stream
- * (written by Ovos\Service\Profiler), feeding the live profiler panel and the
- * /profiler/ surface.
+ * The /profiler/ surface: an HTML page (index) and a server-sent events
+ * endpoint (stream) that tails the current session's profiler stream, written
+ * by Ovos\Service\Profiler. Feeds the live profiler panel and the full page.
  *
  * Dev-only: 404 unless profilers.stream is enabled.
  *
@@ -46,6 +50,17 @@ class Profiler extends Controller
 		}
 		
 		$this->stream = $profilers->stream;
+	}
+	
+	/**
+	 * Full profiler surface — every retained request for this session
+	 */
+	public function index(): Response
+	{
+		$view = new View('profiler/index.phtml');
+		$view->streamUrl = SYSTEM_PATH . 'profiler/stream';
+		
+		return new Response\Html($view->render());
 	}
 	
 	/**
@@ -77,6 +92,11 @@ class Profiler extends Controller
 		
 		$key = (string)$this->stream->key_prefix . $sessionId;
 		$lastId = $this->getLastId();
+		// a fresh connect (no resume id) replays recent history first
+		if($lastId === '$')
+		{
+			$lastId = $this->backfill($client, $key);
+		}
 		$start = microtime(true);
 		
 		while(true)
@@ -98,10 +118,40 @@ class Profiler extends Controller
 			foreach($entries[$key] as $id => $fields)
 			{
 				$lastId = $id;
-				$body = $fields['body'] ?? (string)json_encode($fields);
-				$this->send('id: ' . $id . "\n" . 'data: ' . $body);
+				$this->sendEntry($id, $fields);
 			}
 		}
+	}
+	
+	/**
+	 * Replays the last N entries on a fresh connect; returns the id to continue
+	 * tailing from (or '$' when the stream is empty)
+	 */
+	protected function backfill(
+		RedisClient $client,
+		string $key,
+	): string
+	{
+		$count = (int)$this->stream->backfill;
+		if($count <= 0)
+		{
+			return '$';
+		}
+		
+		$entries = $client->xRevRange($key, '+', '-', $count);
+		if(empty($entries))
+		{
+			return '$';
+		}
+		
+		$lastId = '$';
+		foreach(array_reverse($entries, true) as $id => $fields)
+		{
+			$this->sendEntry($id, $fields);
+			$lastId = $id;
+		}
+		
+		return $lastId;
 	}
 	
 	/**
@@ -141,6 +191,18 @@ class Profiler extends Controller
 		ignore_user_abort(false);
 		
 		$this->send('retry: 3000');
+	}
+	
+	/**
+	 * @param array<string, string> $fields
+	 */
+	protected function sendEntry(
+		string $id,
+		array $fields,
+	): void
+	{
+		$body = $fields['body'] ?? (string)json_encode($fields);
+		$this->send('id: ' . $id . "\n" . 'data: ' . $body);
 	}
 	
 	protected function send(
