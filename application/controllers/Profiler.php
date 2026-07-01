@@ -21,6 +21,7 @@ use function microtime;
 use function ob_end_flush;
 use function ob_get_level;
 use function session_id;
+use function set_time_limit;
 
 /**
  * Profiler
@@ -58,7 +59,7 @@ class Profiler extends Controller
 	{
 		$view = new View('profiler/index.phtml');
 		$view->streamUrl = SYSTEM_PATH . 'profiler/stream';
-
+		
 		// render our own standalone page — bypass the app layout (page.phtml),
 		// which would otherwise nest this document and double-load profiler.js
 		header('Content-Type: text/html; charset=utf-8');
@@ -184,10 +185,21 @@ class Profiler extends Controller
 	
 	protected function startStream(): void
 	{
+		// flush any open output buffers so events reach the browser immediately
+		while(ob_get_level() > 0)
+		{
+			ob_end_flush();
+		}
+		
 		header('Content-Type: text/event-stream');
-		header('Cache-Control: no-cache');
+		header('Cache-Control: no-cache, no-store');
 		header('Connection: keep-alive');
-		header('X-Accel-Buffering: no'); // disable proxy buffering
+		header('Content-Encoding: none'); // stop gzip from buffering the stream
+		header('X-Accel-Buffering: no'); // disable nginx proxy buffering
+		
+		// the loop outlives PHP's max_execution_time (30s under Apache) — lift it;
+		// the loop is still bounded by max_lifetime_ms and connection_aborted()
+		set_time_limit(0);
 		
 		// the framework must not also render/append onto this stream
 		$this->app->getResponse()->setIsSent(true);
@@ -213,11 +225,6 @@ class Profiler extends Controller
 	): void
 	{
 		echo $message . "\n\n";
-		
-		while(ob_get_level() > 0)
-		{
-			ob_end_flush();
-		}
 		flush();
 	}
 }
