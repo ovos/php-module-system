@@ -8,6 +8,7 @@ use Ovos\Connection\RedisCommon;
 use Ovos\Connections;
 use Ovos\Controller;
 use Ovos\Exception\NotFoundException;
+use Ovos\Response\Json;
 use Ovos\View;
 use Redis as RedisClient;
 
@@ -61,12 +62,43 @@ class Profiler extends Controller
 	{
 		$view = new View('profiler/index.phtml');
 		$view->streamUrl = SYSTEM_PATH . 'profiler/stream';
+		$view->clearUrl = SYSTEM_PATH . 'profiler/clear';
 		
 		// render our own standalone page — bypass the app layout (page.phtml),
 		// which would otherwise nest this document and double-load profiler.js
 		header('Content-Type: text/html; charset=utf-8');
 		$this->app->getResponse()->setIsSent(true);
 		echo $view->render();
+	}
+	
+	/**
+	 * Drops the current session's profiler stream, clearing every retained
+	 * record. POST only (a state change); the live tail keeps working — the
+	 * next request re-creates the stream.
+	 */
+	public function clear(): Json
+	{
+		$response = new Json;
+		
+		if($this->request->isPost() === false)
+		{
+			return $response->failure('Clearing the profiler requires POST.', true);
+		}
+		
+		$connection = $this->container
+			->getClass(Connections::class)
+			->get((string)$this->stream->connection);
+		$client = $connection->getClient();
+		if($client === null)
+		{
+			return $response->failure('Profiler connection unavailable.', true);
+		}
+		
+		$response->cleared = (int)$client->del(
+			(string)$this->stream->key_prefix . $this->getSessionId(),
+		);
+		
+		return $response;
 	}
 	
 	/**

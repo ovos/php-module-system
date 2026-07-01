@@ -14,6 +14,7 @@ class OvosProfiler extends HTMLElement
 	{
 		this.mode = this.getAttribute('mode') || 'compact';
 		this.streamUrl = this.getAttribute('stream-url');
+		this.clearUrl = this.getAttribute('clear-url');
 		this.limit = this.mode === 'full' ? 200 : 20;
 		this.requests = [];
 		this.filter = '';
@@ -112,7 +113,25 @@ class OvosProfiler extends HTMLElement
 		this.count = document.createElement('span');
 		this.count.className = 'profiler-count';
 		
-		toolbar.append(filter, this.count);
+		const clear = document.createElement('button');
+		clear.className = 'profiler-clear';
+		clear.type = 'button';
+		clear.textContent = 'Clear';
+		clear.addEventListener('click', () =>
+		{
+			this.clearAll();
+		});
+		
+		const close = document.createElement('button');
+		close.className = 'profiler-close';
+		close.type = 'button';
+		close.textContent = 'Close';
+		close.addEventListener('click', () =>
+		{
+			window.close();
+		});
+		
+		toolbar.append(filter, this.count, clear, close);
 		
 		this.list = document.createElement('div');
 		this.list.className = 'profiler-list';
@@ -166,6 +185,31 @@ class OvosProfiler extends HTMLElement
 		const visible = [...this.list.children].filter((card) => card.hidden === false).length;
 		
 		this.count.textContent = `${visible} / ${total} requests`;
+	}
+	
+	// clears the current session's stream server-side, then empties the list;
+	// the SSE tail keeps running, so new requests stream back in
+	async clearAll()
+	{
+		if(this.clearUrl)
+		{
+			try
+			{
+				const response = await fetch(this.clearUrl, {method: 'POST'});
+				if(response.ok === false)
+				{
+					return;
+				}
+			}
+			catch(error)
+			{
+				return;
+			}
+		}
+		
+		this.requests = [];
+		this.list.replaceChildren();
+		this.updateCount();
 	}
 	
 	renderCard(request)

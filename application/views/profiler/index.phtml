@@ -5,10 +5,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Profiler</title>
 		<base href="<?= SYSTEM_PATH; ?>">
+		
+		<link rel="icon" type="image/svg+xml" href="favicon.svg">
+		<link rel="alternate icon" href="favicon.ico">
+		
 		<link href="<?= $this->asset('themes/' . $this->config->vendor . '/theme.css'); ?>" rel="stylesheet" />
 	</head>
 	<body class="profiler-page">
-		<ovos-profiler mode="full" stream-url="<?= $this->streamUrl; ?>"></ovos-profiler>
+		<ovos-profiler mode="full" stream-url="<?= $this->streamUrl; ?>" clear-url="<?= $this->clearUrl; ?>"></ovos-profiler>
 		<script src="<?= SYSTEM_PATH; ?>profiler/asset"></script>
 	</body>
 </html>
