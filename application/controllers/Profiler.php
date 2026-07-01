@@ -8,7 +8,6 @@ use Ovos\Connection\RedisCommon;
 use Ovos\Connections;
 use Ovos\Controller;
 use Ovos\Exception\NotFoundException;
-use Ovos\Response;
 use Ovos\View;
 use Redis as RedisClient;
 
@@ -55,12 +54,16 @@ class Profiler extends Controller
 	/**
 	 * Full profiler surface — every retained request for this session
 	 */
-	public function index(): Response
+	public function index(): void
 	{
 		$view = new View('profiler/index.phtml');
 		$view->streamUrl = SYSTEM_PATH . 'profiler/stream';
-		
-		return new Response\Html($view->render());
+
+		// render our own standalone page — bypass the app layout (page.phtml),
+		// which would otherwise nest this document and double-load profiler.js
+		header('Content-Type: text/html; charset=utf-8');
+		$this->app->getResponse()->setIsSent(true);
+		echo $view->render();
 	}
 	
 	/**
