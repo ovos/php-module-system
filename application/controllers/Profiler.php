@@ -16,10 +16,12 @@ use function connection_aborted;
 use function flush;
 use function header;
 use function ignore_user_abort;
+use function is_file;
 use function json_encode;
 use function microtime;
 use function ob_end_flush;
 use function ob_get_level;
+use function readfile;
 use function session_id;
 use function set_time_limit;
 
@@ -65,6 +67,24 @@ class Profiler extends Controller
 		header('Content-Type: text/html; charset=utf-8');
 		$this->app->getResponse()->setIsSent(true);
 		echo $view->render();
+	}
+	
+	/**
+	 * Serves the profiler client script, shipped with this module so the
+	 * profiler is self-contained (no per-project public asset required)
+	 */
+	public function asset(): void
+	{
+		$file = __DIR__ . '/../assets/profiler.js';
+		
+		header('Content-Type: text/javascript; charset=utf-8');
+		header('Cache-Control: no-cache');
+		$this->app->getResponse()->setIsSent(true);
+		
+		if(is_file($file))
+		{
+			readfile($file);
+		}
 	}
 	
 	/**
