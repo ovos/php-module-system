@@ -163,17 +163,12 @@ class Profiler extends Controller
 		
 		$key = (string)$this->stream->key_prefix . $sessionId;
 		$lastId = $this->getLastId();
-		// a fresh connect (no resume id) replays recent history first
+		// a fresh connect (no resume id) replays recent history first and
+		// yields a concrete anchor — never '$', which XREAD re-anchors to
+		// "now" on every retry, skipping entries written between two reads
 		if($lastId === '$')
 		{
 			$lastId = $this->backfill($client, $key);
-		}
-		// resolve '$' (empty stream) to the concrete current tail: '$' means
-		// "entries after THIS call", so re-issuing it after each idle timeout
-		// would permanently skip anything written between two blocking reads
-		if($lastId === '$')
-		{
-			$lastId = $this->lastStreamId($client, $key);
 		}
 		$start = microtime(true);
 		
@@ -225,8 +220,11 @@ class Profiler extends Controller
 	}
 	
 	/**
-	 * Replays the last N entries on a fresh connect; returns the id to continue
-	 * tailing from (or '$' when the stream is empty)
+	 * Replays the last N entries on a fresh connect and returns the concrete
+	 * id to continue tailing from. An empty backfill anchors at 0-0 — taking
+	 * a second "what is the tail now" snapshot instead would lose whatever
+	 * landed between the two reads (XREAD only returns ids strictly greater
+	 * than the anchor).
 	 */
 	protected function backfill(
 		RedisClient $client,
@@ -236,16 +234,18 @@ class Profiler extends Controller
 		$count = (int)$this->stream->backfill;
 		if($count <= 0)
 		{
-			return '$';
+			// replay disabled: tail from the current end of the stream
+			return $this->lastStreamId($client, $key);
 		}
 		
 		$entries = $client->xRevRange($key, '+', '-', $count);
 		if(empty($entries))
 		{
-			return '$';
+			// nothing to replay — deliver everything that ever lands
+			return '0-0';
 		}
 		
-		$lastId = '$';
+		$lastId = '0-0';
 		foreach(array_reverse($entries, true) as $id => $fields)
 		{
 			$this->sendEntry($id, $fields);
