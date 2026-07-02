@@ -17,7 +17,8 @@
 		
 		<?php foreach($this->queries as $query): ?>
 			<div class="row">
-				<div class="cell"><?= $query->sql; ?></div>
+				<?php // bound values can carry user input — escape ?>
+				<div class="cell"><?= htmlspecialchars((string)$query->sql, ENT_QUOTES); ?></div>
 				<div class="cell"><?= $query->time; ?></div>
 				<div class="cell"><?= $query->memory; ?></div>
 			</div>

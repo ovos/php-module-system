@@ -13,7 +13,8 @@
 		
 		<?php foreach($this->commands as $command): ?>
 			<div class="row">
-				<div class="cell"><?= $command->call; ?></div>
+				<?php // command args can carry user input (e.g. FT.SEARCH terms) — escape ?>
+				<div class="cell"><?= htmlspecialchars((string)$command->call, ENT_QUOTES); ?></div>
 				<div class="cell"><?= $command->time; ?></div>
 				<div class="cell"><?= $command->memory; ?></div>
 			</div>
