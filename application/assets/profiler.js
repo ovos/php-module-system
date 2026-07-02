@@ -125,7 +125,7 @@ class OvosProfiler extends HTMLElement
 		const close = document.createElement('button');
 		close.className = 'profiler-close';
 		close.type = 'button';
-		close.textContent = 'Close';
+		close.textContent = '✕ Close';
 		close.addEventListener('click', () =>
 		{
 			window.close();

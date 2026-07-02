@@ -18,10 +18,12 @@ use function flush;
 use function header;
 use function ignore_user_abort;
 use function is_file;
+use function is_string;
 use function json_encode;
 use function microtime;
 use function ob_end_flush;
 use function ob_get_level;
+use function preg_match;
 use function readfile;
 use function session_id;
 use function set_time_limit;
@@ -39,6 +41,12 @@ use function set_time_limit;
  */
 class Profiler extends Controller
 {
+	/**
+	 * Entries fetched per XREAD — a burst of profiled requests drains in one
+	 * round trip instead of one blocking read per entry
+	 */
+	public const int READ_BATCH = 50;
+	
 	protected ArrayObject $stream;
 	
 	public function __construct()
@@ -139,16 +147,25 @@ class Profiler extends Controller
 			false, // skip the lua busy-reply config (may lack CONFIG perms)
 		);
 		$client = $connection->getClient();
-		
-		$this->startStream();
 		if($client === null)
 		{
+			// fail BEFORE the SSE preamble: 'retry: 3000' on a dead redis
+			// would put the browser into an endless silent reconnect loop,
+			// while a non-200 makes EventSource surface the error and stop
+			header('Content-Type: text/plain; charset=utf-8', true, 503);
+			$this->app->getResponse()->setIsSent(true);
+			echo 'profiler stream unavailable';
+			
 			return;
 		}
 		
+		$this->startStream();
+		
 		$key = (string)$this->stream->key_prefix . $sessionId;
 		$lastId = $this->getLastId();
-		// a fresh connect (no resume id) replays recent history first
+		// a fresh connect (no resume id) replays recent history first and
+		// yields a concrete anchor — never '$', which XREAD re-anchors to
+		// "now" on every retry, skipping entries written between two reads
 		if($lastId === '$')
 		{
 			$lastId = $this->backfill($client, $key);
@@ -163,7 +180,7 @@ class Profiler extends Controller
 				break;
 			}
 			
-			$entries = $client->xRead([$key => $lastId], 1, $blockMs);
+			$entries = $client->xRead([$key => $lastId], self::READ_BATCH, $blockMs);
 			if(empty($entries[$key]))
 			{
 				$this->send(': heartbeat');
@@ -180,8 +197,34 @@ class Profiler extends Controller
 	}
 	
 	/**
-	 * Replays the last N entries on a fresh connect; returns the id to continue
-	 * tailing from (or '$' when the stream is empty)
+	 * The concrete id of the newest entry, or '0-0' for a missing/empty
+	 * stream — both anchors deliver everything written after this moment
+	 */
+	protected function lastStreamId(
+		RedisClient $client,
+		string $key,
+	): string
+	{
+		$entries = $client->xRevRange($key, '+', '-', 1);
+		if(empty($entries))
+		{
+			return '0-0';
+		}
+		
+		foreach($entries as $id => $fields)
+		{
+			return (string)$id;
+		}
+		
+		return '0-0';
+	}
+	
+	/**
+	 * Replays the last N entries on a fresh connect and returns the concrete
+	 * id to continue tailing from. An empty backfill anchors at 0-0 — taking
+	 * a second "what is the tail now" snapshot instead would lose whatever
+	 * landed between the two reads (XREAD only returns ids strictly greater
+	 * than the anchor).
 	 */
 	protected function backfill(
 		RedisClient $client,
@@ -191,16 +234,18 @@ class Profiler extends Controller
 		$count = (int)$this->stream->backfill;
 		if($count <= 0)
 		{
-			return '$';
+			// replay disabled: tail from the current end of the stream
+			return $this->lastStreamId($client, $key);
 		}
 		
 		$entries = $client->xRevRange($key, '+', '-', $count);
 		if(empty($entries))
 		{
-			return '$';
+			// nothing to replay — deliver everything that ever lands
+			return '0-0';
 		}
 		
-		$lastId = '$';
+		$lastId = '0-0';
 		foreach(array_reverse($entries, true) as $id => $fields)
 		{
 			$this->sendEntry($id, $fields);
@@ -230,9 +275,20 @@ class Profiler extends Controller
 	 */
 	protected function getLastId(): string
 	{
-		return (string)($_SERVER['HTTP_LAST_EVENT_ID']
+		$lastId = $_SERVER['HTTP_LAST_EVENT_ID']
 			?? $_GET['lastId']
-			?? '$');
+			?? '$';
+		
+		// query params can arrive as arrays (?lastId[]=x — a string cast
+		// would throw via the promoted warning) and a stream id must look
+		// like <ms>-<seq>; anything else falls back to a fresh tail
+		if(is_string($lastId) === false
+			|| preg_match('/^\d+-\d+$/', $lastId) !== 1)
+		{
+			return '$';
+		}
+		
+		return $lastId;
 	}
 	
 	protected function startStream(): void
