@@ -15,14 +15,11 @@ use Redis as RedisClient;
 use function array_reverse;
 use function connection_aborted;
 use function flush;
-use function header;
 use function ignore_user_abort;
 use function is_file;
 use function is_string;
 use function json_encode;
 use function microtime;
-use function ob_end_flush;
-use function ob_get_level;
 use function preg_match;
 use function readfile;
 use function session_id;
@@ -68,14 +65,16 @@ class Profiler extends Controller
 	 */
 	public function index(): void
 	{
-		$view = new View('profiler/index.phtml');
+		$view = new View('layouts/profiler.phtml');
 		$view->streamUrl = SYSTEM_PATH . 'profiler/stream';
 		$view->clearUrl = SYSTEM_PATH . 'profiler/clear';
 		
 		// render our own standalone page — bypass the app layout (page.phtml),
 		// which would otherwise nest this document and double-load profiler.js
-		header('Content-Type: text/html; charset=utf-8');
-		$this->app->getResponse()->setIsSent(true);
+		$this->app->getResponse()
+			->setHeader('Content-Type', 'text/html; charset=utf-8', true)
+			->sendHeaders()
+			->setIsSent(true);
 		echo $view->render();
 	}
 	
@@ -117,9 +116,11 @@ class Profiler extends Controller
 	{
 		$file = __DIR__ . '/../assets/profiler.js';
 		
-		header('Content-Type: text/javascript; charset=utf-8');
-		header('Cache-Control: no-cache');
-		$this->app->getResponse()->setIsSent(true);
+		$this->app->getResponse()
+			->setHeader('Content-Type', 'text/javascript; charset=utf-8', true)
+			->setHeader('Cache-Control', 'no-cache', true)
+			->sendHeaders()
+			->setIsSent(true);
 		
 		if(is_file($file))
 		{
@@ -152,8 +153,11 @@ class Profiler extends Controller
 			// fail BEFORE the SSE preamble: 'retry: 3000' on a dead redis
 			// would put the browser into an endless silent reconnect loop,
 			// while a non-200 makes EventSource surface the error and stop
-			header('Content-Type: text/plain; charset=utf-8', true, 503);
-			$this->app->getResponse()->setIsSent(true);
+			$this->app->getResponse()
+				->setHttpCode(503)
+				->setHeader('Content-Type', 'text/plain; charset=utf-8', true)
+				->sendHeaders()
+				->setIsSent(true);
 			echo 'profiler stream unavailable';
 			
 			return;
@@ -294,23 +298,20 @@ class Profiler extends Controller
 	protected function startStream(): void
 	{
 		// flush any open output buffers so events reach the browser immediately
-		while(ob_get_level() > 0)
-		{
-			ob_end_flush();
-		}
-		
-		header('Content-Type: text/event-stream');
-		header('Cache-Control: no-cache, no-store');
-		header('Connection: keep-alive');
-		header('Content-Encoding: none'); // stop gzip from buffering the stream
-		header('X-Accel-Buffering: no'); // disable nginx proxy buffering
+		$this->app->getResponse()
+			->flushBuffers()
+			->setHeader('Content-Type', 'text/event-stream', true)
+			->setHeader('Cache-Control', 'no-cache, no-store', true)
+			->setHeader('Connection', 'keep-alive', true)
+			->setHeader('Content-Encoding', 'none', true) // stop gzip from buffering the stream
+			->setHeader('X-Accel-Buffering', 'no', true) // disable nginx proxy buffering
+			->sendHeaders()
+			// the framework must not also render/append onto this stream
+			->setIsSent(true);
 		
 		// the loop outlives PHP's max_execution_time (30s under Apache) — lift it;
 		// the loop is still bounded by max_lifetime_ms and connection_aborted()
 		set_time_limit(0);
-		
-		// the framework must not also render/append onto this stream
-		$this->app->getResponse()->setIsSent(true);
 		ignore_user_abort(false);
 		
 		$this->send('retry: 3000');

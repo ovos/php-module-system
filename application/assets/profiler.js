@@ -77,7 +77,7 @@ class OvosProfiler extends HTMLElement
 		}
 	}
 	
-	// ----- compact: inline panel -----
+	/* compact: inline panel */
 	
 	renderCompact(request)
 	{
@@ -93,7 +93,7 @@ class OvosProfiler extends HTMLElement
 		}
 	}
 	
-	// ----- full: /profiler/ page -----
+	/* full: /profiler/ page */
 	
 	buildFullChrome()
 	{
@@ -235,7 +235,7 @@ class OvosProfiler extends HTMLElement
 		return card;
 	}
 	
-	// ----- shared rendering -----
+	/* shared rendering */
 	
 	formatSummary(request)
 	{
