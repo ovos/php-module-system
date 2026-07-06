@@ -2,18 +2,33 @@
 	<img src="docs/logo.svg" alt="ovos php-module-system" width="940">
 </p>
 
-# ovos php module system
+# ovos php-module-system
 
-### GitHub
-https://github.com/ovos/php-module-system
+The **system administration module** for applications built with
+[ovos/php-library](https://github.com/ovos/php-library) — the CLI and HTTP
+tooling that keeps a running app maintainable: cache control, database
+migrations, a test/benchmark runner, session and log housekeeping, error pages,
+encryption utilities and the profiler helpers.
 
-## Overview
+<p align="center">
+	<img src="docs/highlights.svg" alt="System module: cache, migrations, tests, profiler, sessions, toolkit" width="940">
+</p>
 
-This is a system administration module for applications built with [ovos/php-library](https://github.com/ovos/php-library).
-It provides CLI and HTTP tooling for cache management, database migrations, test/benchmark
-runners, session management, error handling, encryption utilities, and profiling helpers.
+**GitHub:** https://github.com/ovos/php-module-system
 
-It is designed to work with:
+## What's inside
+
+Register the module once (see [Installation](#installation)) and these land on
+your CLI and in your app:
+
+- **⚡ One-shot cache control** — clear all three tiers (APCu, Redis, OPcache) with a single `system cache clear`; APCu and OPcache are flushed through token-authenticated internal HTTP calls, since they are per-process. → [Cache Management](#cache-management)
+- **🗂 Database migrations** — timestamped `up`/`down` SQL, discovered across configured directories and tracked in a `migrations` table. → [Migrations](#migrations)
+- **🧪 Test & benchmark runner** — discovers and runs test/benchmark classes with per-item time and memory, grouped pass/fail/skip, and a non-zero exit on failure. → [Tests](#tests)
+- **📡 Profiler helpers** — queries, outbound HTTP streams, timings, console log and messages, rendered as HTML *or* ASCII tables. → [Profiler Helpers](#profiler-helpers)
+- **🧹 Session & log housekeeping** — clear sessions, garbage-collect the json handler's activity index, and prune old log files via collectors. → [Sessions](#sessions) · [Collectors](#collectors)
+- **🔒 Ops toolkit** — string encrypt/decrypt, HTTP Basic Auth middleware, disk-space stats. → [Encryption Tools](#encryption-tools) · [HttpAuth](#httpauth)
+
+Works alongside:
 - https://github.com/ovos/php-library (core MVC framework)
 - https://github.com/ovos/php-module-admin (administration panel)
 
@@ -24,6 +39,7 @@ It is designed to work with:
 
 ## Table of Contents
 
+- [What's inside](#whats-inside)
 - [Installation](#installation)
 - [Project Structure](#project-structure)
 - [CLI Commands](#cli-commands)
