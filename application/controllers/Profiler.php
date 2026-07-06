@@ -22,7 +22,6 @@ use function json_encode;
 use function microtime;
 use function preg_match;
 use function readfile;
-use function session_id;
 use function set_time_limit;
 
 /**
@@ -268,7 +267,9 @@ class Profiler extends Controller
 	{
 		$session = $this->app->getServices()->session;
 		$session->start();
-		$sessionId = session_id();
+		// handler-agnostic: session_id() is EMPTY under the json handler,
+		// whose ids never touch the native machinery
+		$sessionId = (string)$session->getId();
 		$session->close();
 		
 		return $sessionId;
