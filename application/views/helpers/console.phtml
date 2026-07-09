@@ -21,8 +21,7 @@
 	</div>
 	
 <?php else: ?>
-	
-	<?php
+	<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
 		$table->setHeaders([
 			'Messages (last ' . count($this->messages) . ')',
@@ -42,5 +41,4 @@
 		
 		echo PHP_EOL . $table->getTable();
 	?>
-	
 <?php endif; ?>
