@@ -27,8 +27,7 @@
 	</div>
 	
 <?php else: ?>
-	
-	<?php
+	<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
 		$table->setHeaders(['Requests ('. count($this->requests) .')', 'Time', 'Memory']);
 		
@@ -45,5 +44,4 @@
 		
 		echo PHP_EOL . $table->getTable();
 	?>
-	
 <?php endif; ?>
