@@ -57,6 +57,14 @@ class Profiler extends Controller
 		}
 		
 		$this->stream = $profilers->stream;
+		
+		// the panel loads its script and tails the stream on every page -
+		// including the login page itself - so these actions must reach
+		// unauthorized users too (mirrors System\Events)
+		if($auth = $this->auth())
+		{
+			$auth->authorizeActions(['index', 'stream', 'clear', 'asset']);
+		}
 	}
 	
 	/**
