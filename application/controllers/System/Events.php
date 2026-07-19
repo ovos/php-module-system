@@ -30,7 +30,9 @@ class Events extends Controller
 		parent::__construct();
 		
 		// these actions should be available to unauthorized users
-		if($auth = $this->auth())
+		// (explicit getPlugin — the plugin is legitimately absent on
+		// projects without one; the magic accessor logs unknown symbols)
+		if($auth = $this->getPlugin('auth'))
 		{
 			$auth->authorizeActions(['index']);
 		}

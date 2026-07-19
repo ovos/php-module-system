@@ -84,7 +84,10 @@ class Profiler extends Controller
 	 */
 	protected function gate(): void
 	{
-		$auth = $this->auth();
+		// explicit getPlugin: the auth plugin is legitimately absent on
+		// projects without one — the magic $this->auth() accessor now logs
+		// unknown symbols (typo protection), which this probe is not
+		$auth = $this->getPlugin('auth');
 		
 		if($auth !== null && method_exists($auth, 'isAdmin'))
 		{
