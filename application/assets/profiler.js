@@ -22,7 +22,6 @@ class OvosProfiler extends HTMLElement
 		this.limit = this.mode === 'full' ? 200 : 20;
 		this.requests = [];
 		this.runs = new Map();
-		this.filter = '';
 		
 		if(this.mode === 'full')
 		{
@@ -117,33 +116,9 @@ class OvosProfiler extends HTMLElement
 	
 	buildFullChrome()
 	{
-		const toolbar = document.createElement('div');
-		toolbar.className = 'profiler-toolbar';
-		
-		const filter = document.createElement('input');
-		filter.className = 'profiler-filter';
-		filter.type = 'search';
-		filter.placeholder = 'Filter requests and CLI runs…';
-		filter.addEventListener('input', () =>
-		{
-			this.filter = filter.value.toLowerCase();
-			this.applyFilter();
-		});
-		
-		const close = document.createElement('button');
-		close.className = 'profiler-close';
-		close.type = 'button';
-		close.textContent = '✕ Close';
-		close.addEventListener('click', () =>
-		{
-			window.close();
-		});
-		
-		toolbar.append(filter, close);
-		
 		this.panes = {
-			requests: this.buildPane('Requests', 'requests'),
-			cli: this.buildPane('CLI', 'cli'),
+			requests: this.buildPane('Requests', 'requests', 'Filter by method or URL…'),
+			cli: this.buildPane('CLI', 'cli', 'Filter by command or source…', true),
 		};
 		this.list = this.panes.requests.list;
 		this.count = this.panes.requests.count;
@@ -152,11 +127,13 @@ class OvosProfiler extends HTMLElement
 		columns.className = 'profiler-columns';
 		columns.append(this.panes.requests.pane, this.panes.cli.pane);
 		
-		this.replaceChildren(toolbar, columns);
+		this.replaceChildren(columns);
 	}
 	
-	// a pane: title + count + its own CLEAR + a scrolling card list
-	buildPane(title, scope)
+	// a pane: title + its own filter + count + CLEAR (+ CLOSE on the last
+	// pane) above a scrolling card list — the sections are searched
+	// independently, each input directly above what it filters
+	buildPane(title, scope, placeholder, withClose = false)
 	{
 		const pane = document.createElement('section');
 		pane.className = `profiler-pane profiler-pane-${scope}`;
@@ -167,6 +144,16 @@ class OvosProfiler extends HTMLElement
 		const label = document.createElement('span');
 		label.className = 'profiler-pane-title';
 		label.textContent = title;
+		
+		const filter = document.createElement('input');
+		filter.className = 'profiler-filter';
+		filter.type = 'search';
+		filter.placeholder = placeholder;
+		filter.addEventListener('input', () =>
+		{
+			this.panes[scope].filter = filter.value.toLowerCase();
+			this.applyFilter(scope);
+		});
 		
 		const count = document.createElement('span');
 		count.className = 'profiler-count';
@@ -180,7 +167,20 @@ class OvosProfiler extends HTMLElement
 			this.clearScope(scope);
 		});
 		
-		head.append(label, count, clear);
+		head.append(label, filter, count, clear);
+		
+		if(withClose)
+		{
+			const close = document.createElement('button');
+			close.className = 'profiler-close';
+			close.type = 'button';
+			close.textContent = '✕ Close';
+			close.addEventListener('click', () =>
+			{
+				window.close();
+			});
+			head.append(close);
+		}
 		
 		const list = document.createElement('div');
 		list.className = 'profiler-list';
@@ -196,7 +196,7 @@ class OvosProfiler extends HTMLElement
 		
 		pane.append(head, list);
 		
-		return {pane, list, count};
+		return {pane, list, count, filter: ''};
 	}
 	
 	// new cards are prepended (newest first) so existing cards — and their
@@ -204,7 +204,7 @@ class OvosProfiler extends HTMLElement
 	addCard(request)
 	{
 		const card = this.renderCard(request);
-		card.hidden = this.matchesFilter(card.dataset.filter) === false;
+		card.hidden = this.matchesFilter(card.dataset.filter, 'requests') === false;
 		this.list.prepend(card);
 		
 		while(this.list.children.length > this.limit)
@@ -215,24 +215,28 @@ class OvosProfiler extends HTMLElement
 		this.updateCount();
 	}
 	
-	applyFilter()
+	applyFilter(scope)
 	{
-		for(const card of this.list.children)
+		for(const card of this.panes[scope].list.children)
 		{
-			card.hidden = this.matchesFilter(card.dataset.filter) === false;
+			card.hidden = this.matchesFilter(card.dataset.filter, scope) === false;
 		}
-		for(const card of this.panes.cli.list.children)
+		
+		if(scope === 'cli')
 		{
-			card.hidden = this.matchesFilter(card.dataset.filter) === false;
+			this.updateCliCount();
+			
+			return;
 		}
 		
 		this.updateCount();
-		this.updateCliCount();
 	}
 	
-	matchesFilter(haystack)
+	matchesFilter(haystack, scope)
 	{
-		return this.filter === '' || haystack.includes(this.filter);
+		const filter = this.panes[scope].filter;
+		
+		return filter === '' || haystack.includes(filter);
 	}
 	
 	updateCount()
@@ -458,7 +462,7 @@ class OvosProfiler extends HTMLElement
 		body.append(output);
 		
 		card.append(head, body);
-		card.hidden = this.matchesFilter(card.dataset.filter) === false;
+		card.hidden = this.matchesFilter(card.dataset.filter, 'cli') === false;
 		
 		this.panes.cli.list.prepend(card);
 		this.trimRuns();
