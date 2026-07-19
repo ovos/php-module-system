@@ -118,7 +118,7 @@ class OvosProfiler extends HTMLElement
 	{
 		this.panes = {
 			requests: this.buildPane('Requests', 'requests', 'Filter by method or URL…'),
-			cli: this.buildPane('CLI', 'cli', 'Filter by command or source…', true),
+			cli: this.buildPane('CLI', 'cli', 'Filter by command or output…', true),
 		};
 		this.list = this.panes.requests.list;
 		this.count = this.panes.requests.count;
@@ -467,7 +467,14 @@ class OvosProfiler extends HTMLElement
 		this.panes.cli.list.prepend(card);
 		this.trimRuns();
 		
-		this.runs.set(entry.run_id, {card, summary, output, command: entry.command});
+		this.runs.set(entry.run_id, {
+			card,
+			summary,
+			output,
+			command: entry.command,
+			haystack: card.dataset.filter,
+			tail: '',
+		});
 		this.updateCliCount();
 	}
 	
@@ -481,6 +488,24 @@ class OvosProfiler extends HTMLElement
 			>= run.output.scrollHeight - 24;
 		
 		this.appendColorized(run.output, `${entry.message}`, entry.markup === true);
+		
+		// output content joins the card's search haystack (color-tag names
+		// excluded, capped so a chatty run cannot grow the attribute
+		// unbounded — the cap drops the oldest output first, the command
+		// stays searchable via the base haystack)
+		const text = `${entry.message}`.split(OvosProfiler.TERMINAL_TAGS)
+			.filter((part, index) => index % 2 === 0)
+			.join('');
+		run.tail = `${run.tail} ${text.toLowerCase()}`.slice(-16384);
+		run.card.dataset.filter = `${run.haystack} ${run.tail}`;
+		
+		// arriving content can satisfy an active filter — reveal the card
+		if(run.card.hidden
+			&& this.matchesFilter(run.card.dataset.filter, 'cli'))
+		{
+			run.card.hidden = false;
+			this.updateCliCount();
+		}
 		
 		// messages compose like the terminal (no implicit newline), but
 		// line-wise output reads better — close any unterminated line
