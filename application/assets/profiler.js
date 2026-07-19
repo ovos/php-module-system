@@ -1,15 +1,19 @@
 /**
- * Live profiler console — tails the per-request profiler stream over SSE.
- * Fed by Ovos\Service\Profiler via a redis stream.
+ * Live profiler console — tails the profiler streams over SSE.
+ * Fed by Ovos\Service\Profiler via redis streams.
  *
  *   mode="compact"  inline panel — shows the latest request (default)
- *   mode="full"     /profiler/ page — filterable list of all retained requests
+ *   mode="full"     /profiler/ page — two panes: the session's requests and
+ *                   the shared CLI stream (runs with live Terminal output)
  *
  * @author Marcin Gil <mg@ovos.at>
  */
 
 class OvosProfiler extends HTMLElement
 {
+	// Terminal <color> markup vocabulary (Ovos\Terminal\Formatter::$colors)
+	static TERMINAL_TAGS = /<(reset|black|gray|darkgray|blue|darkblue|green|darkgreen|cyan|darkcyan|red|darkred|purple|darkpurple|brown|yellow|white)>/;
+	
 	connectedCallback()
 	{
 		this.mode = this.getAttribute('mode') || 'compact';
@@ -17,6 +21,7 @@ class OvosProfiler extends HTMLElement
 		this.clearUrl = this.getAttribute('clear-url');
 		this.limit = this.mode === 'full' ? 200 : 20;
 		this.requests = [];
+		this.runs = new Map();
 		this.filter = '';
 		
 		if(this.mode === 'full')
@@ -32,12 +37,18 @@ class OvosProfiler extends HTMLElement
 		if(this.streamUrl)
 		{
 			this.connect();
+			
+			if(this.mode === 'full')
+			{
+				this.connectCli();
+			}
 		}
 	}
 	
 	disconnectedCallback()
 	{
 		this.source?.close();
+		this.cliSource?.close();
 	}
 	
 	connect()
@@ -46,6 +57,15 @@ class OvosProfiler extends HTMLElement
 		this.source.addEventListener('message', (event) =>
 		{
 			this.handle(event.data);
+		});
+	}
+	
+	connectCli()
+	{
+		this.cliSource = new EventSource(`${this.streamUrl}?scope=cli`);
+		this.cliSource.addEventListener('message', (event) =>
+		{
+			this.handleCli(event.data);
 		});
 	}
 	
@@ -103,23 +123,11 @@ class OvosProfiler extends HTMLElement
 		const filter = document.createElement('input');
 		filter.className = 'profiler-filter';
 		filter.type = 'search';
-		filter.placeholder = 'Filter by method or URL…';
+		filter.placeholder = 'Filter requests and CLI runs…';
 		filter.addEventListener('input', () =>
 		{
 			this.filter = filter.value.toLowerCase();
 			this.applyFilter();
-		});
-		
-		this.count = document.createElement('span');
-		this.count.className = 'profiler-count';
-		
-		const clear = document.createElement('button');
-		clear.className = 'profiler-clear';
-		clear.type = 'button';
-		clear.textContent = 'Clear';
-		clear.addEventListener('click', () =>
-		{
-			this.clearAll();
 		});
 		
 		const close = document.createElement('button');
@@ -131,21 +139,64 @@ class OvosProfiler extends HTMLElement
 			window.close();
 		});
 		
-		toolbar.append(filter, this.count, clear, close);
+		toolbar.append(filter, close);
 		
-		this.list = document.createElement('div');
-		this.list.className = 'profiler-list';
-		// self-contained card collapse — the /profiler/ page needs no collapse.js
-		this.list.addEventListener('click', (event) =>
+		this.panes = {
+			requests: this.buildPane('Requests', 'requests'),
+			cli: this.buildPane('CLI', 'cli'),
+		};
+		this.list = this.panes.requests.list;
+		this.count = this.panes.requests.count;
+		
+		const columns = document.createElement('div');
+		columns.className = 'profiler-columns';
+		columns.append(this.panes.requests.pane, this.panes.cli.pane);
+		
+		this.replaceChildren(toolbar, columns);
+	}
+	
+	// a pane: title + count + its own CLEAR + a scrolling card list
+	buildPane(title, scope)
+	{
+		const pane = document.createElement('section');
+		pane.className = `profiler-pane profiler-pane-${scope}`;
+		
+		const head = document.createElement('header');
+		head.className = 'profiler-pane-head';
+		
+		const label = document.createElement('span');
+		label.className = 'profiler-pane-title';
+		label.textContent = title;
+		
+		const count = document.createElement('span');
+		count.className = 'profiler-count';
+		
+		const clear = document.createElement('button');
+		clear.className = 'profiler-clear';
+		clear.type = 'button';
+		clear.textContent = 'Clear';
+		clear.addEventListener('click', () =>
 		{
-			const head = event.target.closest('.profiler-request-head');
-			if(head)
+			this.clearScope(scope);
+		});
+		
+		head.append(label, count, clear);
+		
+		const list = document.createElement('div');
+		list.className = 'profiler-list';
+		// self-contained card collapse — the /profiler/ page needs no collapse.js
+		list.addEventListener('click', (event) =>
+		{
+			const cardHead = event.target.closest('.profiler-request-head');
+			if(cardHead)
 			{
-				head.parentElement.classList.toggle('collapsed');
+				cardHead.parentElement.classList.toggle('collapsed');
 			}
 		});
 		
-		this.replaceChildren(toolbar, this.list);
+		pane.append(head, list);
+		
+		return {pane, list, count};
 	}
 	
 	// new cards are prepended (newest first) so existing cards — and their
@@ -170,8 +221,13 @@ class OvosProfiler extends HTMLElement
 		{
 			card.hidden = this.matchesFilter(card.dataset.filter) === false;
 		}
+		for(const card of this.panes.cli.list.children)
+		{
+			card.hidden = this.matchesFilter(card.dataset.filter) === false;
+		}
 		
 		this.updateCount();
+		this.updateCliCount();
 	}
 	
 	matchesFilter(haystack)
@@ -187,15 +243,26 @@ class OvosProfiler extends HTMLElement
 		this.count.textContent = `${visible} / ${total} requests`;
 	}
 	
-	// clears the current session's stream server-side, then empties the list;
-	// the SSE tail keeps running, so new requests stream back in
-	async clearAll()
+	updateCliCount()
+	{
+		const list = this.panes.cli.list;
+		const total = list.children.length;
+		const visible = [...list.children].filter((card) => card.hidden === false).length;
+		
+		this.panes.cli.count.textContent = `${visible} / ${total} runs`;
+	}
+	
+	// clears the scope's stream server-side, then empties its pane; the SSE
+	// tails keep running, so new entries stream back in. The CLI stream is
+	// shared — clearing it clears it for every watcher.
+	async clearScope(scope)
 	{
 		if(this.clearUrl)
 		{
 			try
 			{
-				const response = await fetch(this.clearUrl, {method: 'POST'});
+				const url = scope === 'cli' ? `${this.clearUrl}?scope=cli` : this.clearUrl;
+				const response = await fetch(url, {method: 'POST'});
 				if(response.ok === false)
 				{
 					return;
@@ -205,6 +272,15 @@ class OvosProfiler extends HTMLElement
 			{
 				return;
 			}
+		}
+		
+		if(scope === 'cli')
+		{
+			this.runs.clear();
+			this.panes.cli.list.replaceChildren();
+			this.updateCliCount();
+			
+			return;
 		}
 		
 		this.requests = [];
@@ -324,6 +400,203 @@ class OvosProfiler extends HTMLElement
 		});
 		
 		return table;
+	}
+	
+	/* CLI pane: start → live messages → finish, correlated by run_id */
+	
+	handleCli(data)
+	{
+		let entry;
+		try
+		{
+			entry = JSON.parse(data);
+		}
+		catch(error)
+		{
+			return;
+		}
+		
+		if(entry.kind === 'start')
+		{
+			this.startRun(entry);
+		}
+		else if(entry.kind === 'message')
+		{
+			this.appendRunMessage(entry);
+		}
+		else if(entry.kind === 'finish')
+		{
+			this.finishRun(entry);
+		}
+	}
+	
+	startRun(entry)
+	{
+		const card = document.createElement('div');
+		card.className = 'profiler-request profiler-run running';
+		card.dataset.runId = entry.run_id;
+		card.dataset.filter = `${entry.command} ${entry.source}`.toLowerCase();
+		
+		const head = document.createElement('header');
+		head.className = 'profiler-request-head';
+		
+		const source = document.createElement('span');
+		source.className = `profiler-run-source profiler-run-source-${entry.source}`;
+		source.textContent = entry.source;
+		
+		const summary = document.createElement('span');
+		summary.className = 'profiler-run-summary';
+		summary.textContent = `${entry.command} | running…`;
+		
+		head.append(source, summary);
+		
+		const body = document.createElement('div');
+		body.className = 'profiler-request-body';
+		
+		const output = document.createElement('pre');
+		output.className = 'profiler-run-output';
+		body.append(output);
+		
+		card.append(head, body);
+		card.hidden = this.matchesFilter(card.dataset.filter) === false;
+		
+		this.panes.cli.list.prepend(card);
+		this.trimRuns();
+		
+		this.runs.set(entry.run_id, {card, summary, output, command: entry.command});
+		this.updateCliCount();
+	}
+	
+	appendRunMessage(entry)
+	{
+		const run = this.runs.get(entry.run_id) || this.orphanRun(entry);
+		
+		// keep tailing only while the reader is already at the bottom — a
+		// scrolled-up reader must not be yanked down by new output
+		const atBottom = run.output.scrollTop + run.output.clientHeight
+			>= run.output.scrollHeight - 24;
+		
+		this.appendColorized(run.output, `${entry.message}`, entry.markup === true);
+		
+		// messages compose like the terminal (no implicit newline), but
+		// line-wise output reads better — close any unterminated line
+		if(entry.message.endsWith('\n') === false)
+		{
+			run.output.append(document.createTextNode('\n'));
+		}
+		
+		// a chatty run must not grow the DOM unbounded
+		while(run.output.childNodes.length > 2000)
+		{
+			run.output.firstChild.remove();
+		}
+		
+		if(atBottom)
+		{
+			run.output.scrollTop = run.output.scrollHeight;
+		}
+	}
+	
+	// message/finish for a run whose start entry was trimmed from the
+	// stream (or predates the replay depth) — a card marked as partial
+	orphanRun(entry)
+	{
+		this.startRun({
+			run_id: entry.run_id,
+			command: '(run already in progress)',
+			source: 'cli',
+		});
+		
+		const run = this.runs.get(entry.run_id);
+		run.card.classList.add('partial');
+		
+		return run;
+	}
+	
+	finishRun(entry)
+	{
+		const run = this.runs.get(entry.run_id) || this.orphanRun(entry);
+		
+		run.card.classList.remove('running');
+		if(entry.errors?.length)
+		{
+			run.card.classList.add('has-errors');
+		}
+		
+		const parts = [run.command, `${entry.duration}s`, this.formatBytes(entry.memory)];
+		if(entry.queries)
+		{
+			parts.push(`Q:${entry.queries.length}`, `R:${entry.redis.length}`);
+		}
+		if(entry.errors?.length)
+		{
+			parts.push(`E:${entry.errors.length}`);
+		}
+		run.summary.textContent = parts.join(' | ');
+		
+		// the profile below the live output — same renderers as requests
+		run.output.parentElement.append(...this.renderTables({
+			queries: entry.queries || [],
+			redis: entry.redis || [],
+			console: entry.console || [],
+			errors: entry.errors || [],
+		}));
+	}
+	
+	// Terminal <color> markup → spans; markup=false mirrors the terminal
+	// and strips the tags instead
+	appendColorized(container, message, markup)
+	{
+		const parts = message.split(OvosProfiler.TERMINAL_TAGS);
+		
+		let color = '';
+		parts.forEach((part, index) =>
+		{
+			if(index % 2 === 1)
+			{
+				color = part;
+				
+				return;
+			}
+			
+			if(part === '')
+			{
+				return;
+			}
+			
+			if(markup && color !== '' && color !== 'reset')
+			{
+				const span = document.createElement('span');
+				span.className = `term-${color}`;
+				span.textContent = part;
+				container.append(span);
+			}
+			else
+			{
+				container.append(document.createTextNode(part));
+			}
+		});
+	}
+	
+	trimRuns()
+	{
+		const list = this.panes.cli.list;
+		
+		while(list.children.length > this.limit)
+		{
+			this.runs.delete(list.lastElementChild.dataset.runId);
+			list.lastElementChild.remove();
+		}
+	}
+	
+	formatBytes(bytes)
+	{
+		if(typeof bytes !== 'number')
+		{
+			return '';
+		}
+		
+		return `${(bytes / 1048576).toFixed(1)} MB`;
 	}
 	
 	renderTable(title, columns, rows)

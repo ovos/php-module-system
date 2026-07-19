@@ -4,34 +4,45 @@ declare(strict_types=1);
 namespace Controllers;
 
 use Ovos\ArrayObject;
+use Ovos\Client;
 use Ovos\Connection\RedisCommon;
 use Ovos\Connections;
 use Ovos\Controller;
 use Ovos\Exception\NotFoundException;
 use Ovos\Response\Json;
+use Ovos\Service\Profiler as ProfilerService;
 use Ovos\View;
 use Redis as RedisClient;
 
+use function array_filter;
+use function array_map;
 use function array_reverse;
 use function connection_aborted;
+use function explode;
 use function flush;
 use function ignore_user_abort;
+use function in_array;
 use function is_file;
 use function is_string;
 use function json_encode;
+use function method_exists;
 use function microtime;
 use function preg_match;
 use function readfile;
 use function set_time_limit;
+use function trim;
 
 /**
  * Profiler
  *
  * The /profiler/ surface: an HTML page (index) and a server-sent events
- * endpoint (stream) that tails the current session's profiler stream, written
- * by Ovos\Service\Profiler. Feeds the live profiler panel and the full page.
+ * endpoint (stream) that tails a profiler stream written by
+ * Ovos\Service\Profiler — the current session's requests by default, the
+ * shared CLI stream with ?scope=cli. Feeds the live panel and the full page.
  *
- * Dev-only: 404 unless profilers.stream is enabled.
+ * 404 unless profilers.stream is enabled; behind an admin gate where the
+ * project's auth plugin can answer isAdmin(), an optional IP allowlist
+ * otherwise (see gate()).
  *
  * @author Marcin Gil <mg@ovos.at>
  */
@@ -58,13 +69,67 @@ class Profiler extends Controller
 		
 		$this->stream = $profilers->stream;
 		
-		// the panel loads its script and tails the stream on every page -
-		// including the login page itself - so these actions must reach
-		// unauthorized users too (mirrors System\Events)
-		if($auth = $this->auth())
+		$this->gate();
+	}
+	
+	/**
+	 * Access gate. A project whose auth plugin can answer isAdmin() (bo2go
+	 * convention) gets an admin-only profiler — in development the console's
+	 * auth service is disabled and reports every visitor as admin, so the
+	 * panel keeps working everywhere, login page included. Projects without
+	 * such a plugin fall back to an optional IP allowlist
+	 * (profilers.stream.ips — comma-separated, env-driven); an empty list
+	 * keeps the surface open. 404 either way — the profiler does not
+	 * advertise itself.
+	 */
+	protected function gate(): void
+	{
+		$auth = $this->auth();
+		
+		if($auth !== null && method_exists($auth, 'isAdmin'))
 		{
-			$auth->authorizeActions(['index', 'stream', 'clear', 'asset']);
+			if($auth->isAdmin() === false)
+			{
+				throw new NotFoundException('Profiler requires an administrator.');
+			}
 		}
+		else
+		{
+			$allowed = array_filter(array_map(
+				trim(...),
+				explode(',', (string)($this->stream->ips ?? '')),
+			));
+			
+			if($allowed !== []
+				&& in_array(Client::getIp(), $allowed, true) === false)
+			{
+				throw new NotFoundException('Profiler is not open to this address.');
+			}
+		}
+		
+		// passed: the panel loads its script and tails the stream on every
+		// page - including the login page itself - so these actions must
+		// skip the auth plugin's own pre-dispatch (mirrors System\Events)
+		$auth?->authorizeActions(['index', 'stream', 'clear', 'asset']);
+	}
+	
+	/**
+	 * The stream key for the requested scope: the caller's session stream,
+	 * or — with ?scope=cli — the shared CLI stream every run lands on
+	 */
+	protected function getStreamKey(): string
+	{
+		if($this->isCliScope())
+		{
+			return (string)$this->stream->key_prefix . ProfilerService::CLI_KEY;
+		}
+
+		return (string)$this->stream->key_prefix . $this->getSessionId();
+	}
+
+	protected function isCliScope(): bool
+	{
+		return ($_GET['scope'] ?? null) === 'cli';
 	}
 	
 	/**
@@ -108,9 +173,7 @@ class Profiler extends Controller
 			return $response->failure('Profiler connection unavailable.', true);
 		}
 		
-		$response->cleared = (int)$client->del(
-			(string)$this->stream->key_prefix . $this->getSessionId(),
-		);
+		$response->cleared = (int)$client->del($this->getStreamKey());
 		
 		return $response;
 	}
@@ -136,11 +199,11 @@ class Profiler extends Controller
 	}
 	
 	/**
-	 * SSE stream of the current session's profiler entries
+	 * SSE stream of the requested scope's profiler entries
 	 */
 	public function stream(): void
 	{
-		$sessionId = $this->getSessionId();
+		$key = $this->getStreamKey();
 		
 		$blockMs = (int)$this->stream->block_ms;
 		$maxLifetimeMs = (int)$this->stream->max_lifetime_ms;
@@ -172,7 +235,6 @@ class Profiler extends Controller
 		
 		$this->startStream();
 		
-		$key = (string)$this->stream->key_prefix . $sessionId;
 		$lastId = $this->getLastId();
 		// a fresh connect (no resume id) replays recent history first and
 		// yields a concrete anchor — never '$', which XREAD re-anchors to
@@ -242,7 +304,11 @@ class Profiler extends Controller
 		string $key,
 	): string
 	{
-		$count = (int)$this->stream->backfill;
+		// the CLI stream is message-grained — the same replay depth would
+		// cover barely a run or two, so it gets its own (deeper) setting
+		$count = $this->isCliScope()
+			? (int)($this->stream->cli_backfill ?? $this->stream->backfill)
+			: (int)$this->stream->backfill;
 		if($count <= 0)
 		{
 			// replay disabled: tail from the current end of the stream
