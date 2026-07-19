@@ -286,11 +286,44 @@ class OvosProfiler extends HTMLElement
 		
 		if(request.errors.length)
 		{
-			tables.push(this.renderTable(`Errors (${request.errors.length})`, ['Message', 'Location'],
-				request.errors.map((error) => [error.type, error.message, `${error.file}:${error.line}`])));
+			tables.push(this.renderErrors(request.errors));
 		}
 		
 		return tables;
+	}
+	
+	// errors table with expandable stack traces — clicking an error row
+	// toggles the full-width trace row beneath it
+	renderErrors(errors)
+	{
+		const table = this.renderTable(`Errors (${errors.length})`, ['Message', 'Location'], []);
+		
+		errors.forEach((error) =>
+		{
+			const row = this.renderRow('cell', [error.type, error.message, `${error.file}:${error.line}`]);
+			table.append(row);
+			
+			if(error.trace)
+			{
+				const trace = document.createElement('div');
+				trace.className = 'row profiler-trace';
+				
+				const cell = document.createElement('pre');
+				cell.className = 'cell profiler-trace-cell';
+				cell.textContent = error.trace;
+				trace.append(cell);
+				table.append(trace);
+				
+				row.classList.add('profiler-has-trace');
+				row.addEventListener('click', () =>
+				{
+					const open = trace.classList.toggle('open');
+					row.classList.toggle('open', open);
+				});
+			}
+		});
+		
+		return table;
 	}
 	
 	renderTable(title, columns, rows)
