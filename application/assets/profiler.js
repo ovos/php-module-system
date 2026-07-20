@@ -14,6 +14,17 @@ class OvosProfiler extends HTMLElement
 	// Terminal <color> markup vocabulary (Ovos\Terminal\Formatter::$colors)
 	static TERMINAL_TAGS = /<(reset|black|gray|darkgray|blue|darkblue|green|darkgreen|cyan|darkcyan|red|darkred|purple|darkpurple|brown|yellow|white)>/;
 	
+	// the reverse of Formatter::$colors: raw ANSI SGR params → the tag name we
+	// render. Terminal\Table bakes <color> tags to ANSI (terminal-ready output),
+	// so a captured table arrives as ANSI, not tags — fold it back.
+	static ANSI_TAGS = {
+		'0': 'reset', '0;30': 'black', '38;5;246': 'gray', '1;30': 'darkgray',
+		'1;34': 'blue', '0;34': 'darkblue', '1;32': 'green', '0;32': 'darkgreen',
+		'1;36': 'cyan', '0;36': 'darkcyan', '1;31': 'red', '0;31': 'darkred',
+		'1;35': 'purple', '0;35': 'darkpurple', '0;33': 'brown', '1;33': 'yellow',
+		'1;37': 'white',
+	};
+	
 	connectedCallback()
 	{
 		this.mode = this.getAttribute('mode') || 'compact';
@@ -572,10 +583,31 @@ class OvosProfiler extends HTMLElement
 		}));
 	}
 	
+	// raw ANSI SGR escapes → the <color> tags appendColorized renders; an
+	// unknown code falls back to <reset> so stray escapes never print literally
+	static ansiToTags(message)
+	{
+		return message.replace(/\x1b\[([0-9;]*)m/g, (whole, code) =>
+		{
+			const tag = OvosProfiler.ANSI_TAGS[code];
+			
+			return `<${tag ?? 'reset'}>`;
+		});
+	}
+	
 	// Terminal <color> markup → spans; markup=false mirrors the terminal
 	// and strips the tags instead
 	appendColorized(container, message, markup)
 	{
+		// a captured Terminal\Table (and any raw-ANSI output) arrives with ANSI
+		// escapes, not <color> tags — fold them into the same tags and colorize
+		// regardless of the markup flag, since ANSI is itself an explicit colour
+		if(message.includes('\x1b['))
+		{
+			message = OvosProfiler.ansiToTags(message);
+			markup = true;
+		}
+		
 		const parts = message.split(OvosProfiler.TERMINAL_TAGS);
 		
 		let color = '';
