@@ -8,7 +8,16 @@
 		
 		<link rel="icon" type="image/svg+xml" href="favicon.svg">
 		<link rel="alternate icon" href="favicon.ico">
-		
+
+		<?php /* optional project-supplied head extras (webfonts, meta …):
+			a project ships application/views/layouts/partials/profiler-head.phtml
+			and this standalone page picks it up through the module include path —
+			absent = no-op. Rendered before theme.css, mirroring the font-then-theme
+			order of a project's own layout. */ ?>
+		<?php $profilerHead = stream_resolve_include_path('layouts/partials/profiler-head.phtml'); ?>
+		<?php if($profilerHead !== false): ?>
+		<?= $this->render($profilerHead); ?>
+		<?php endif; ?>
 		<link href="<?= $this->asset('themes/' . $this->config->vendor . '/theme.css'); ?>" rel="stylesheet" />
 	</head>
 	<body class="profiler-page">
