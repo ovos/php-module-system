@@ -13,7 +13,7 @@ class OvosProfiler extends HTMLElement
 {
 	// Terminal <color> markup vocabulary (Ovos\Terminal\Formatter::$colors)
 	static TERMINAL_TAGS = /<(reset|black|gray|darkgray|blue|darkblue|green|darkgreen|cyan|darkcyan|red|darkred|purple|darkpurple|brown|yellow|white)>/;
-
+	
 	// box-drawing from Terminal\Table's unicode style — the marker that a
 	// message is a table and must not be wrapped (its ascii style is opt-in and
 	// indistinguishable from prose punctuation, so it wraps like prose)
@@ -281,10 +281,10 @@ class OvosProfiler extends HTMLElement
 		const span = document.createElement('span');
 		span.className = 'profiler-count-noun';
 		span.textContent = noun;
-
+		
 		return span;
 	}
-
+	
 	// clears the scope's stream server-side, then empties its pane; the SSE
 	// tails keep running, so new entries stream back in. The CLI stream is
 	// shared — clearing it clears it for every watcher.
@@ -333,7 +333,12 @@ class OvosProfiler extends HTMLElement
 		
 		const head = document.createElement('header');
 		head.className = 'profiler-request-head';
-		head.textContent = this.formatSummary(request);
+		// what the row IS (method + path) stays bright; the measurements trail it
+		// dimmed, and drop to their own line where the width cannot take both
+		head.append(
+			this.identity(`${request.method} ${request.uri}`),
+			this.metrics(this.formatMetrics(request)),
+		);
 		
 		const body = document.createElement('div');
 		body.className = 'profiler-request-body';
@@ -346,10 +351,17 @@ class OvosProfiler extends HTMLElement
 	
 	/* shared rendering */
 	
+	// the inline panel's one-line header
 	formatSummary(request)
 	{
+		return [`${request.method} ${request.uri}`,
+			...this.formatMetrics(request)].join(' | ');
+	}
+	
+	/** the measurements that trail a card's identity */
+	formatMetrics(request)
+	{
 		const parts = [
-			`${request.method} ${request.uri}`,
 			`Q:${request.queries.length}`,
 			`R:${request.redis.length}`,
 		];
@@ -371,8 +383,8 @@ class OvosProfiler extends HTMLElement
 		{
 			parts.push(total.time, total.memory);
 		}
-		
-		return parts.join(' | ');
+
+		return parts;
 	}
 	
 	renderTables(request)
@@ -479,7 +491,7 @@ class OvosProfiler extends HTMLElement
 		
 		const summary = document.createElement('span');
 		summary.className = 'profiler-run-summary';
-		summary.textContent = `${entry.command} | running…`;
+		summary.append(this.identity(entry.command), this.metrics(['running…']));
 		
 		head.append(source, summary);
 		
@@ -528,7 +540,7 @@ class OvosProfiler extends HTMLElement
 			target.className = 'profiler-run-table';
 			run.output.append(target);
 		}
-
+		
 		this.appendColorized(target, `${entry.message}`, entry.markup === true);
 		
 		// output content joins the card's search haystack (color-tag names
@@ -594,7 +606,7 @@ class OvosProfiler extends HTMLElement
 			run.card.classList.add('has-errors');
 		}
 		
-		const parts = [run.command, `${entry.duration}s`, this.formatBytes(entry.memory)];
+		const parts = [`${entry.duration}s`, this.formatBytes(entry.memory)];
 		if(entry.queries)
 		{
 			parts.push(`Q:${entry.queries.length}`, `R:${entry.redis.length}`);
@@ -603,7 +615,7 @@ class OvosProfiler extends HTMLElement
 		{
 			parts.push(`E:${entry.errors.length}`);
 		}
-		run.summary.textContent = parts.join(' | ');
+		run.summary.replaceChildren(this.identity(run.command), this.metrics(parts));
 		
 		// the profile below the live output — same renderers as requests
 		run.output.parentElement.append(...this.renderTables({
@@ -709,7 +721,7 @@ class OvosProfiler extends HTMLElement
 	{
 		const row = document.createElement('div');
 		row.className = 'row';
-
+		
 		cells.forEach((value) =>
 		{
 			const cell = document.createElement('div');
@@ -721,8 +733,28 @@ class OvosProfiler extends HTMLElement
 			this.appendColorized(cell, `${value ?? ''}`, true);
 			row.append(cell);
 		});
-
+		
 		return row;
+	}
+	
+	/** the part of a card head that names the row */
+	identity(text)
+	{
+		const span = document.createElement('span');
+		span.className = 'profiler-identity';
+		span.textContent = text;
+		
+		return span;
+	}
+	
+	/** the measurements that trail it, styled as context rather than identity */
+	metrics(parts)
+	{
+		const span = document.createElement('span');
+		span.className = 'profiler-metrics';
+		span.textContent = parts.join(' | ');
+		
+		return span;
 	}
 	
 	stringify(value)
