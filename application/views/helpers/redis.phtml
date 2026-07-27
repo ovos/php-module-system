@@ -1,4 +1,5 @@
 <?php use Ovos\Application; ?>
+<?php use Ovos\Terminal\Formatter; ?>
 <?php use Ovos\Terminal\Highlighter; ?>
 <?php use Ovos\Terminal\Table; ?>
 
@@ -14,10 +15,17 @@
 		
 		<?php foreach($this->commands as $command): ?>
 			<div class="row">
-				<?php // command args can carry user input (e.g. FT.SEARCH terms) — escape ?>
-				<div class="cell"><?= $this->escape((string)$command->call); ?></div>
-				<div class="cell"><?= $command->time; ?></div>
-				<div class="cell"><?= $command->memory; ?></div>
+				<?php // command args can carry user input (e.g. FT.SEARCH terms) —
+					// handleMarkupHtml escapes every segment between the tags ?>
+				<div class="cell"><?= Formatter::handleMarkupHtml(
+					Highlighter::redis((string)$command->call),
+				); ?></div>
+				<div class="cell"><?= Formatter::handleMarkupHtml(
+					Highlighter::time((string)$command->time),
+				); ?></div>
+				<div class="cell"><?= Formatter::handleMarkupHtml(
+					Highlighter::memory((string)$command->memory),
+				); ?></div>
 			</div>
 		<?php endforeach; ?>
 	</div>

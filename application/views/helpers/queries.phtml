@@ -1,4 +1,5 @@
 <?php use Ovos\Application; ?>
+<?php use Ovos\Terminal\Formatter; ?>
 <?php use Ovos\Terminal\Highlighter; ?>
 <?php use Ovos\Terminal\Table; ?>
 
@@ -18,10 +19,17 @@
 		
 		<?php foreach($this->queries as $query): ?>
 			<div class="row">
-				<?php // bound values can carry user input — escape ?>
-				<div class="cell"><?= $this->escape((string)$query->sql); ?></div>
-				<div class="cell"><?= $query->time; ?></div>
-				<div class="cell"><?= $query->memory; ?></div>
+				<?php // bound values can carry user input — handleMarkupHtml escapes
+					// every segment between the highlighter's tags ?>
+				<div class="cell"><?= Formatter::handleMarkupHtml(
+					Highlighter::sql((string)$query->sql),
+				); ?></div>
+				<div class="cell"><?= Formatter::handleMarkupHtml(
+					Highlighter::time((string)$query->time),
+				); ?></div>
+				<div class="cell"><?= Formatter::handleMarkupHtml(
+					Highlighter::memory((string)$query->memory),
+				); ?></div>
 			</div>
 		<?php endforeach; ?>
 	</div>

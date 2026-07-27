@@ -678,15 +678,19 @@ class OvosProfiler extends HTMLElement
 	{
 		const row = document.createElement('div');
 		row.className = 'row';
-		
+
 		cells.forEach((value) =>
 		{
 			const cell = document.createElement('div');
 			cell.className = cellClass;
-			cell.textContent = value ?? '';
+			// the payload's query and redis rows carry <color> markup from
+			// Terminal\Highlighter — the same tags the CLI pane renders. A cell
+			// without tags comes back out as a plain text node, so every column
+			// can take this path
+			this.appendColorized(cell, `${value ?? ''}`, true);
 			row.append(cell);
 		});
-		
+
 		return row;
 	}
 	
