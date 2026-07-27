@@ -11,13 +11,14 @@ use Ovos\Terminal;
 use Ovos\Test\Result;
 use Ovos\Test\Runner;
 use Ovos\Dir;
-use Ovos\Terminal\Formatter;
+use Ovos\Terminal\Highlighter;
 use Ovos\Terminal\Table;
 use Ovos\View;
 use SplFileInfo;
 use ReflectionClass;
 use Throwable;
 
+use function count;
 use function implode;
 use function is_dir;
 use function str_contains;
@@ -120,13 +121,17 @@ class Tests extends Controller\Cli
 		Terminal::clearLine();
 		
 		$table = new Table;
-		$table->hasMarkup(true);
+		$table->hasMarkup($response->getColoredOutput());
 		$table->setHeaders([
-			$this->header . ' (' . count($runners) . ')',
-			'Time (s)',
-			'Memory',
-			'Result',
-			'Reason',
+			Highlighter::header($this->header . ' (' . count($runners) . ')'),
+			Highlighter::header('Time (s)'),
+			Highlighter::header('Memory'),
+			Highlighter::header('Result'),
+			Highlighter::header('Reason'),
+		]);
+		$table->setAlignments([
+			1 => Table::ALIGN_RIGHT,
+			2 => Table::ALIGN_RIGHT,
 		]);
 		
 		foreach($results as $result)
@@ -134,12 +139,19 @@ class Tests extends Controller\Cli
 			/**
 			 * @var Runner $runner
 			 */
-			$row = [$result->__toString()];
-			$row[] = $result->measurement?->getTotalTime();
-			$row[] = $result->measurement?->getTotalMemory();
+			$row = [Highlighter::className($result->__toString())];
+			$row[] = Highlighter::time($result->measurement?->getTotalTime());
+			$row[] = Highlighter::memory($result->measurement?->getTotalMemory());
 			
 			$row[] = $this->formatResult($result->getResult());
-			$row[] = $result->reason ?? ($result->throwable?->getMessage()); // most likely failed on __construct
+			// most likely failed on __construct. A failure's reason is the
+			// message to read; a skip's is only bookkeeping, so it stays dim
+			$row[] = Highlighter::color(
+				$result->reason ?? $result->throwable?->getMessage(),
+				$result->getResult() === Result::RESULT_FAILED
+					? 'red'
+					: 'gray',
+			);
 			
 			$table->addRow($row);
 		}
@@ -147,19 +159,20 @@ class Tests extends Controller\Cli
 		$response->append(PHP_EOL . $table->getTable());
 		
 		$table = new Table;
-		$table->hasMarkup(true);
-		$table->setHeaders(['Total',
+		$table->hasMarkup($response->getColoredOutput());
+		$table->setHeaders([
+			Highlighter::header('Total'),
 			$this->formatResult(Result::RESULT_PASSED),
 			$this->formatResult(Result::RESULT_FAILED),
 			$this->formatResult(Result::RESULT_COMPLETED),
 			$this->formatResult(Result::RESULT_SKIPPED),
 		]);
 		$table->addRow([
-			count($results),
-			count($resultsGrouped[Result::RESULT_PASSED]),
-			count($resultsGrouped[Result::RESULT_FAILED]),
-			count($resultsGrouped[Result::RESULT_COMPLETED]),
-			count($resultsGrouped[Result::RESULT_SKIPPED]),
+			Highlighter::color((string)count($results), 'white'),
+			$this->formatCount($resultsGrouped[Result::RESULT_PASSED], Result::RESULT_PASSED),
+			$this->formatCount($resultsGrouped[Result::RESULT_FAILED], Result::RESULT_FAILED),
+			$this->formatCount($resultsGrouped[Result::RESULT_COMPLETED], Result::RESULT_COMPLETED),
+			$this->formatCount($resultsGrouped[Result::RESULT_SKIPPED], Result::RESULT_SKIPPED),
 		]);
 		$response->append(PHP_EOL . $table->getTable()
 			. PHP_EOL . PHP_EOL);
@@ -168,9 +181,9 @@ class Tests extends Controller\Cli
 		foreach($resultsGrouped[Result::RESULT_FAILED] as $result)
 		{
 			Terminal::output(sprintf(
-				'%s <white>%s<reset> has <red>failed<reset>...',
+				'%s %s has <red>failed<reset>...',
 				$this->header,
-				$result->__toString()) . PHP_EOL
+				Highlighter::className($result->__toString())) . PHP_EOL
 			, true);
 			
 			if($result->throwable === null)
@@ -252,19 +265,39 @@ class Tests extends Controller\Cli
 		return $runners;
 	}
 	
+	/**
+	 * Returns the label as markup, left for Terminal\Table to resolve or strip
+	 * — resolving it here would put raw ANSI into a redirected run's log
+	 */
 	protected function formatResult(
 		string $result,
 	): string
 	{
-		$markup = match($result)
+		return match($result)
 		{
 			Result::RESULT_PASSED		=> '<green>Passed<reset>',
 			Result::RESULT_FAILED		=> '<red>Failed<reset>',
 			Result::RESULT_COMPLETED	=> '<blue>Completed<reset>',
 			Result::RESULT_SKIPPED		=> '<gray>Skipped<reset>',
 		};
-		
-		return Formatter::handleMarkup($markup);
+	}
+	
+	/**
+	 * Colorizes a tally in its result's color, but only once it counts: a red
+	 * "0" under Failed reads as an alarm where there is none
+	 */
+	protected function formatCount(
+		array $results,
+		string $result,
+	): string
+	{
+		return Highlighter::tally((string)count($results), match($result)
+		{
+			Result::RESULT_PASSED => 'green',
+			Result::RESULT_FAILED => 'red',
+			Result::RESULT_COMPLETED => 'blue',
+			default => 'gray',
+		});
 	}
 	
 	public function displayThrowable(

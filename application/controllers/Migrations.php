@@ -5,6 +5,7 @@ namespace Controllers;
 
 use Ovos\Controller;
 use Ovos\ArrayObject;
+use Ovos\Terminal\Highlighter;
 use Ovos\Terminal\Table;
 use Ovos\Dir;
 use Ovos\Exception\MissingException\MissingConfigException;
@@ -110,8 +111,8 @@ class Migrations extends Controller\Cli
 			}
 			
 			Terminal::output(sprintf(
-				'<green>Migrating <white>%s<reset>... ',
-				$migration->__toString())
+				'<green>Migrating <reset>%s... ',
+				Highlighter::className($migration->__toString()))
 			, true);
 			
 			/**
@@ -172,8 +173,8 @@ class Migrations extends Controller\Cli
 			}
 			
 			Terminal::output(sprintf(
-				'<red>Rolling back <white>%s<reset>... ',
-				$migration->__toString())
+				'<red>Rolling back <reset>%s... ',
+				Highlighter::className($migration->__toString()))
 			, true);
 			
 			/**
@@ -205,12 +206,16 @@ class Migrations extends Controller\Cli
 	): void
 	{
 		$table = new Table;
-		$table->hasMarkup(true);
+		$table->hasMarkup($response->getColoredOutput());
 		$table->setHeaders([
-			'Migrations affected (' . count($migrated) . ')',
-			'Name',
-			'Time',
-			'Memory',
+			Highlighter::header('Migrations affected (' . count($migrated) . ')'),
+			Highlighter::header('Name'),
+			Highlighter::header('Time'),
+			Highlighter::header('Memory'),
+		]);
+		$table->setAlignments([
+			2 => Table::ALIGN_RIGHT,
+			3 => Table::ALIGN_RIGHT,
 		]);
 		
 		foreach($migrated as $id => $migratedRunner)
@@ -219,10 +224,11 @@ class Migrations extends Controller\Cli
 			 * @var Runner $migratedRunner
 			 */
 			$table->addRow([
-				$id,
-				$migratedRunner->__toString(),
-				$migratedRunner->measurement->getTotalTime(),
-				$migratedRunner->measurement->getTotalMemory(),
+				Highlighter::color((string)$id, 'gray'),
+				Highlighter::className($migratedRunner->__toString()),
+				// schema changes take their time, so seconds are the scale
+				Highlighter::time($migratedRunner->measurement->getTotalTime(), 1.0, 5.0),
+				Highlighter::memory($migratedRunner->measurement->getTotalMemory(), 8388608, 33554432),
 			]);
 		}
 		
@@ -240,11 +246,12 @@ class Migrations extends Controller\Cli
 		]);
 		
 		$table = new Table;
-		$table->hasMarkup(true);
-		$table->setHeaders(['Migrations (last ' . count($records) . ')',
-			'Name',
-			'Migrated at',
-			'Rolled back at',
+		$table->hasMarkup($response->getColoredOutput());
+		$table->setHeaders([
+			Highlighter::header('Migrations (last ' . count($records) . ')'),
+			Highlighter::header('Name'),
+			Highlighter::header('Migrated at'),
+			Highlighter::header('Rolled back at'),
 		]);
 		
 		foreach($records as $id => $record)
@@ -253,10 +260,11 @@ class Migrations extends Controller\Cli
 			 * @var Model $record
 			 */
 			$table->addRow([
-				$record->id,
-				$record->name,
-				$record->migrated_at,
-				$record->rolled_back_at,
+				Highlighter::color((string)$record->id, 'gray'),
+				Highlighter::className((string)$record->name),
+				// applied vs. rolled back: the state is the column worth reading
+				Highlighter::color((string)$record->migrated_at, 'darkgreen'),
+				Highlighter::color((string)$record->rolled_back_at, 'brown'),
 			]);
 		}
 		

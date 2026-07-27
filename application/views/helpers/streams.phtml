@@ -1,4 +1,5 @@
 <?php use Ovos\Application; ?>
+<?php use Ovos\Terminal\Highlighter; ?>
 <?php use Ovos\Terminal\Table; ?>
 <?php use Ovos\Stream\Request; ?>
 
@@ -27,17 +28,28 @@
 	</div>
 	
 <?php else: ?>
-	<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
+<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
-		$table->setHeaders(['Requests ('. count($this->requests) .')', 'Time', 'Memory']);
+		$table->hasMarkup((bool)$this->markup)
+			->setHeaders([
+				Highlighter::header('Requests ('. count($this->requests) .')'),
+				Highlighter::header('Time'),
+				Highlighter::header('Memory'),
+			])
+			->setAlignments([
+				1 => Table::ALIGN_RIGHT,
+				2 => Table::ALIGN_RIGHT,
+			]);
 		
 		foreach($this->requests as $request)
 		{
 			/** @var Request $request */
 			$table->addRow([
-				$request->getMethod() . ' '. wordwrap($request->getUrl(), 150, PHP_EOL),
-				$request->getMeasurement()->getTotalTime(),
-				$request->getMeasurement()->getTotalMemory(),
+				'<cyan>' . $request->getMethod() . '<reset> '
+					. wordwrap($request->getUrl(), 150, PHP_EOL),
+				// a whole request, so the per-query scale would flag everything
+				Highlighter::time($request->getMeasurement()->getTotalTime(), 0.5, 2.0),
+				Highlighter::memory($request->getMeasurement()->getTotalMemory(), 8388608, 33554432),
 			]);
 			$table->addRow([PHP_EOL]);
 		}

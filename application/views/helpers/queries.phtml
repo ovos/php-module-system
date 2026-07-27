@@ -1,4 +1,5 @@
 <?php use Ovos\Application; ?>
+<?php use Ovos\Terminal\Highlighter; ?>
 <?php use Ovos\Terminal\Table; ?>
 
 <?php if($this->interface === Application::INT_HTTP): ?>
@@ -26,20 +27,31 @@
 	</div>
 	
 <?php else: ?>
-	<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
+<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
-		$table->setHeaders(['Queries (last ' . count($this->queries) . ')', 'Time', 'Memory']);
-		
+		$table->hasMarkup((bool)$this->markup)
+			->setHeaders([
+				Highlighter::header('Queries (last ' . count($this->queries) . ')'),
+				Highlighter::header('Time'),
+				Highlighter::header('Memory'),
+			])
+			->setAlignments([
+				1 => Table::ALIGN_RIGHT,
+				2 => Table::ALIGN_RIGHT,
+			]);
+
 		foreach($this->queries as $query)
 		{
 			$table->addRow([
-				wordwrap($query->sql, 150, PHP_EOL),
-				$query->time,
-				$query->memory
+				// wrap first: the markup tokens are invisible in the terminal
+				// but would count toward wordwrap()'s column budget
+				Highlighter::sql(wordwrap($query->sql, 150, PHP_EOL)),
+				Highlighter::time($query->time),
+				Highlighter::memory($query->memory),
 			]);
 			$table->addRow([PHP_EOL]);
 		}
-		
+
 		echo PHP_EOL . $table->getTable();
 	?>
 <?php endif; ?>

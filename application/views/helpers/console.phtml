@@ -1,4 +1,5 @@
 <?php use Ovos\Application; ?>
+<?php use Ovos\Terminal\Highlighter; ?>
 <?php use Ovos\Terminal\Table; ?>
 
 <?php if($this->interface === Application::INT_HTTP): ?>
@@ -21,20 +22,26 @@
 	</div>
 	
 <?php else: ?>
-	<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
+<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
-		$table->setHeaders([
-			'Messages (last ' . count($this->messages) . ')',
-			'Time',
-			'Memory',
-		]);
+		$table->hasMarkup((bool)$this->markup)
+			->setHeaders([
+				Highlighter::header('Messages (last ' . count($this->messages) . ')'),
+				Highlighter::header('Time'),
+				Highlighter::header('Memory'),
+			])
+			->setAlignments([
+				1 => Table::ALIGN_RIGHT,
+				2 => Table::ALIGN_RIGHT,
+			]);
 		
 		foreach($this->messages as $message)
 		{
 			$table->addRow([
 				wordwrap($message->message, 150, PHP_EOL),
-				$message->time,
-				$message->memory
+				// a call over the network, so seconds are the scale
+				Highlighter::time($message->time, 0.25, 1.0),
+				Highlighter::memory($message->memory),
 			]);
 			$table->addRow([PHP_EOL]);
 		}

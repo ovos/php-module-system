@@ -1,4 +1,5 @@
 <?php use Ovos\Application; ?>
+<?php use Ovos\Terminal\Highlighter; ?>
 <?php use Ovos\Terminal\Table; ?>
 <?php use Ovos\Measurement; ?>
 
@@ -31,21 +32,27 @@
 	</div>
 	
 <?php else: ?>
-	<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
+<?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
-		$table->setHeaders([
-			'Requests (' . count($this->measurements) . ')',
-			'Time',
-			'Memory',
-		]);
+		$table->hasMarkup((bool)$this->markup)
+			->setHeaders([
+				Highlighter::header('Requests (' . count($this->measurements) . ')'),
+				Highlighter::header('Time'),
+				Highlighter::header('Memory'),
+			])
+			->setAlignments([
+				1 => Table::ALIGN_RIGHT,
+				2 => Table::ALIGN_RIGHT,
+			]);
 		
 		foreach($this->measurements as $marker => $measurement)
 		{
 			/** @var Measurement $measurement */
 			$table->addRow([
-				wordwrap($marker, 150, PHP_EOL),
-				$measurement->getTotalTime(),
-				$measurement->getTotalMemory(),
+				'<cyan>' . wordwrap($marker, 150, PHP_EOL) . '<reset>',
+				// a whole run, so the per-query scale would flag everything
+				Highlighter::time($measurement->getTotalTime(), 1.0, 5.0),
+				Highlighter::memory($measurement->getTotalMemory(), 8388608, 33554432),
 			]);
 			$table->addRow([PHP_EOL]);
 		}
