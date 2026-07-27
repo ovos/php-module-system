@@ -12,7 +12,9 @@
 	<div class="profiler-table profiler-queries">
 		
 		<div class="row">
-			<div class="cell header">Queries (<?= count($this->queries); ?>)</div>
+			<div class="cell header"><?= Formatter::handleMarkupHtml(
+				Highlighter::heading('Queries', count($this->queries), (int)$this->total),
+			); ?></div>
 			<div class="cell header">Time</div>
 			<div class="cell header">Memory</div>
 		</div>
@@ -39,7 +41,7 @@
 		$table = new Table;
 		$table->hasMarkup((bool)$this->markup)
 			->setHeaders([
-				Highlighter::header('Queries (last ' . count($this->queries) . ')'),
+				Highlighter::heading('Queries', count($this->queries), (int)$this->total),
 				Highlighter::header('Time'),
 				Highlighter::header('Memory'),
 			])

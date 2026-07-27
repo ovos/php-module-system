@@ -361,9 +361,11 @@ class OvosProfiler extends HTMLElement
 	/** the measurements that trail a card's identity */
 	formatMetrics(request)
 	{
+		// the totals, not the retained rows: Q: is how many queries the request
+		// ran, and a capped table would under-report it
 		const parts = [
-			`Q:${request.queries.length}`,
-			`R:${request.redis.length}`,
+			`Q:${request.queries_total ?? request.queries.length}`,
+			`R:${request.redis_total ?? request.redis.length}`,
 		];
 		if(request.streams?.length)
 		{
@@ -383,16 +385,18 @@ class OvosProfiler extends HTMLElement
 		{
 			parts.push(total.time, total.memory);
 		}
-
+		
 		return parts;
 	}
 	
 	renderTables(request)
 	{
 		const tables = [
-			this.renderTable(`Queries (${request.queries.length})`, ['Time', 'Memory'],
+			this.renderTable(this.heading('Queries', request.queries, request.queries_total),
+				['Time', 'Memory'],
 				request.queries.map((query) => [query.sql, query.time, query.memory])),
-			this.renderTable(`Redis (${request.redis.length})`, ['Time', 'Memory'],
+			this.renderTable(this.heading('Redis', request.redis, request.redis_total),
+				['Time', 'Memory'],
 				request.redis.map((command) => [command.call, command.time, command.memory])),
 		];
 		
@@ -735,6 +739,18 @@ class OvosProfiler extends HTMLElement
 		});
 		
 		return row;
+	}
+	
+	/**
+	 * A table's header: the count, and what the count leaves out. Mirrors
+	 * Ovos\Terminal\Highlighter::heading() — a cap that dropped nothing is not
+	 * worth mentioning, one that did is, or 20 reads as the whole request.
+	 */
+	heading(label, rows, total)
+	{
+		return total > rows.length
+			? `${label} (last ${rows.length} of ${total})`
+			: `${label} (${rows.length})`;
 	}
 	
 	/** the part of a card head that names the row */

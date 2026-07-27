@@ -8,7 +8,9 @@
 	<div class="profiler-table profiler-redis">
 		
 		<div class="row">
-			<div class="cell header">Redis (<?= count($this->commands); ?>)</div>
+			<div class="cell header"><?= Formatter::handleMarkupHtml(
+				Highlighter::heading('Redis', count($this->commands), (int)$this->total),
+			); ?></div>
 			<div class="cell header">Time</div>
 			<div class="cell header">Memory</div>
 		</div>
@@ -35,7 +37,7 @@
 		$table = new Table;
 		$table->hasMarkup((bool)$this->markup)
 			->setHeaders([
-				Highlighter::header('Redis (last ' . count($this->commands) . ')'),
+				Highlighter::heading('Redis', count($this->commands), (int)$this->total),
 				Highlighter::header('Time'),
 				Highlighter::header('Memory'),
 			])
