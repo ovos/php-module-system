@@ -13,6 +13,11 @@ class OvosProfiler extends HTMLElement
 {
 	// Terminal <color> markup vocabulary (Ovos\Terminal\Formatter::$colors)
 	static TERMINAL_TAGS = /<(reset|black|gray|darkgray|blue|darkblue|green|darkgreen|cyan|darkcyan|red|darkred|purple|darkpurple|brown|yellow|white)>/;
+
+	// box-drawing from Terminal\Table's unicode style — the marker that a
+	// message is a table and must not be wrapped (its ascii style is opt-in and
+	// indistinguishable from prose punctuation, so it wraps like prose)
+	static TABLE_CHARS = /[┌┬┐└┴┘├┼┤│─]/;
 	
 	// the reverse of Formatter::$colors: raw ANSI SGR params → the tag name we
 	// render. Terminal\Table bakes <color> tags to ANSI (terminal-ready output),
@@ -255,7 +260,10 @@ class OvosProfiler extends HTMLElement
 		const total = this.list.children.length;
 		const visible = [...this.list.children].filter((card) => card.hidden === false).length;
 		
-		this.count.textContent = `${visible} / ${total} requests`;
+		// the noun repeats the pane title, so the phone rules hide it rather than
+		// let "8 / 8 requests" wrap the head onto a third row
+		this.count.textContent = `${visible} / ${total} `;
+		this.count.append(this.countNoun('requests'));
 	}
 	
 	updateCliCount()
@@ -264,9 +272,19 @@ class OvosProfiler extends HTMLElement
 		const total = list.children.length;
 		const visible = [...list.children].filter((card) => card.hidden === false).length;
 		
-		this.panes.cli.count.textContent = `${visible} / ${total} runs`;
+		this.panes.cli.count.textContent = `${visible} / ${total} `;
+		this.panes.cli.count.append(this.countNoun('runs'));
 	}
 	
+	countNoun(noun)
+	{
+		const span = document.createElement('span');
+		span.className = 'profiler-count-noun';
+		span.textContent = noun;
+
+		return span;
+	}
+
 	// clears the scope's stream server-side, then empties its pane; the SSE
 	// tails keep running, so new entries stream back in. The CLI stream is
 	// shared — clearing it clears it for every watcher.
@@ -498,7 +516,20 @@ class OvosProfiler extends HTMLElement
 		const atBottom = run.output.scrollTop + run.output.clientHeight
 			>= run.output.scrollHeight - 24;
 		
-		this.appendColorized(run.output, `${entry.message}`, entry.markup === true);
+		// a captured Terminal\Table only lines up at its own width, and the
+		// pane wraps (prose messages should) — which turned a table into noise
+		// on a phone. Box-drawing means table: give that block its own
+		// non-wrapping, horizontally scrollable box.
+		const boxed = OvosProfiler.TABLE_CHARS.test(`${entry.message}`);
+		let target = run.output;
+		if(boxed)
+		{
+			target = document.createElement('span');
+			target.className = 'profiler-run-table';
+			run.output.append(target);
+		}
+
+		this.appendColorized(target, `${entry.message}`, entry.markup === true);
 		
 		// output content joins the card's search haystack (color-tag names
 		// excluded, capped so a chatty run cannot grow the attribute
