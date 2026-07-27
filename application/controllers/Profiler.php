@@ -126,10 +126,10 @@ class Profiler extends Controller
 		{
 			return (string)$this->stream->key_prefix . ProfilerService::CLI_KEY;
 		}
-
+		
 		return (string)$this->stream->key_prefix . $this->getSessionId();
 	}
-
+	
 	protected function isCliScope(): bool
 	{
 		return ($_GET['scope'] ?? null) === 'cli';
