@@ -5,7 +5,6 @@ namespace Controllers\System;
 
 use Ovos\Controller;
 use Ovos\Functions;
-use Ovos\Password;
 use Ovos\Response;
 use Ovos\Stream;
 use Ovos\Service\Cache as Service;
@@ -17,7 +16,10 @@ use function base64_decode;
 use function base64_encode;
 use function date;
 use function function_exists;
+use function hash_equals;
+use function hash_hmac;
 use function http_build_query;
+use function in_array;
 use function md5;
 use function method_exists;
 use function opcache_reset;
@@ -283,32 +285,47 @@ class Cache extends Controller\Cli
 	}
 	
 	/**
+	 * The only methods the HTTP self-call may invoke
+	 */
+	protected const array HTTP_METHODS = [
+		'clearPerishableHttp',
+		'clearOpCacheHttp',
+	];
+	
+	/**
+	 * Domain separation for the handshake HMAC
+	 */
+	protected const string HMAC_CONTEXT = 'ovos/system-cache/http-call';
+	
+	/**
 	 * Consumes HTTP method call
 	 */
 	public function consumeHttpCall(): void
 	{
 		$response = new Response\Html;
 		
-		// verify token
-		$accessTokenHash = isset($_GET['access_token_hash'])
-			? base64_decode($_GET['access_token_hash'])
-			: null;
-		if($accessTokenHash === null)
-		{
-			$response->setHttpCode(403);
-			exit;
-		}
-		$accessToken = $this->getAccessToken();
+		// Verify the token. The caller sends an HMAC, not a password hash:
+		// password_verify() honours the cost embedded in the hash the CALLER
+		// supplies, so a request could ask for argon2id at 128 MB (or bcrypt at
+		// cost 31 — hours of CPU) and no execution limit interrupts it. An HMAC
+		// is constant work and hash_equals is constant time.
+		$given = isset($_GET['access_token_hash'])
+			? (string)base64_decode((string)$_GET['access_token_hash'], true)
+			: '';
 		
-		if(password_verify($accessToken, $accessTokenHash) === false)
+		if($given === '' || hash_equals($this->getAccessTokenHash(), $given) === false)
 		{
 			$response->setHttpCode(403);
 			exit;
 		}
 		
-		// get method
-		$method = $_GET['method'] ?? null;
-		if(method_exists($this, $method) === false)
+		// Only the two methods this endpoint exists for. method_exists() is
+		// true for PROTECTED methods as well, and $this->{$method}() runs in
+		// class scope, so the gate used to open every zero-argument method on
+		// this controller — including getAccessToken(), which answers with the
+		// token itself.
+		$method = (string)($_GET['method'] ?? '');
+		if(in_array($method, self::HTTP_METHODS, true) === false)
 		{
 			$response->setHttpCode(403);
 			exit;
@@ -319,15 +336,28 @@ class Cache extends Controller\Cli
 			->send();
 	}
 	
+	/**
+	 * The shared secret behind the self-call. Host, date and the file's path
+	 * are all PUBLIC — the path is fixed by the image layout — so on their own
+	 * they are obscurity, not a secret. The instance's configured encryption
+	 * key is mixed in: both SAPIs read the same config, so caller and callee
+	 * still agree without any new setup.
+	 */
 	public function getAccessToken(): string
 	{
+		$key = (string)($this->app->getConfig()
+			->getPath(['encryption', 'key']) ?? '');
+		
 		return SYSTEM_HOST
 			. date('Y-m-d')
-			. md5(__FILE__);
+			. md5(__FILE__)
+			. $key;
 	}
 	
 	public function getAccessTokenHash(): string
 	{
-		return Password::hash($this->getAccessToken());
+		// keyed hash, not a password hash: see consumeHttpCall() — a verifier
+		// that honours a caller-chosen KDF cost is a CPU/memory oracle
+		return hash_hmac('sha256', $this->getAccessToken(), self::HMAC_CONTEXT);
 	}
 }
