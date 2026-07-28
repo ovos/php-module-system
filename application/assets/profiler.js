@@ -660,6 +660,14 @@ class OvosProfiler extends HTMLElement
 			message = OvosProfiler.ansiToTags(message);
 			markup = true;
 		}
+		// a <color> tag is an explicit colour intent too, exactly like ANSI. A
+		// table logged by a cron run arrives with its tags intact — the terminal
+		// side stripped them for the log file, not for us — so colour it here
+		// rather than mirroring a decision that was about a different medium
+		else if(OvosProfiler.TERMINAL_TAGS.test(message))
+		{
+			markup = true;
+		}
 		
 		const parts = message.split(OvosProfiler.TERMINAL_TAGS);
 		
