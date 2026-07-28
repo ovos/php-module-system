@@ -121,7 +121,6 @@ class Tests extends Controller\Cli
 		Terminal::clearLine();
 		
 		$table = new Table;
-		$table->hasMarkup($response->getColoredOutput());
 		$table->setHeaders([
 			Highlighter::header($this->header . ' (' . count($runners) . ')'),
 			Highlighter::header('Time (s)'),
@@ -156,10 +155,12 @@ class Tests extends Controller\Cli
 			$table->addRow($row);
 		}
 		
-		$response->append(PHP_EOL . $table->getTable());
+		$response->append(PHP_EOL . Terminal::getMessage(
+			$table->getTable(),
+			$response->getColoredOutput(),
+		));
 		
 		$table = new Table;
-		$table->hasMarkup($response->getColoredOutput());
 		$table->setHeaders([
 			Highlighter::header('Total'),
 			$this->formatResult(Result::RESULT_PASSED),
@@ -174,8 +175,10 @@ class Tests extends Controller\Cli
 			$this->formatCount($resultsGrouped[Result::RESULT_COMPLETED], Result::RESULT_COMPLETED),
 			$this->formatCount($resultsGrouped[Result::RESULT_SKIPPED], Result::RESULT_SKIPPED),
 		]);
-		$response->append(PHP_EOL . $table->getTable()
-			. PHP_EOL . PHP_EOL);
+		$response->append(PHP_EOL . Terminal::getMessage(
+			$table->getTable(),
+			$response->getColoredOutput(),
+		) . PHP_EOL . PHP_EOL);
 		$response->send(); // flush before we display errors
 		
 		foreach($resultsGrouped[Result::RESULT_FAILED] as $result)

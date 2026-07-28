@@ -207,7 +207,6 @@ class Migrations extends Controller\Cli
 	): void
 	{
 		$table = new Table;
-		$table->hasMarkup($response->getColoredOutput());
 		$table->setHeaders([
 			Highlighter::header('Migrations affected (' . count($migrated) . ')'),
 			Highlighter::header('Name'),
@@ -233,7 +232,10 @@ class Migrations extends Controller\Cli
 			]);
 		}
 		
-		$response->append(PHP_EOL . $table->getTable());
+		$response->append(PHP_EOL . Terminal::getMessage(
+			$table->getTable(),
+			$response->getColoredOutput(),
+		));
 	}
 	
 	protected function summary(
@@ -247,7 +249,6 @@ class Migrations extends Controller\Cli
 		]);
 		
 		$table = new Table;
-		$table->hasMarkup($response->getColoredOutput());
 		$table->setHeaders([
 			Highlighter::header('Migrations (last ' . count($records) . ')'),
 			Highlighter::header('Name'),
@@ -269,7 +270,10 @@ class Migrations extends Controller\Cli
 			]);
 		}
 		
-		$response->append(PHP_EOL . $table->getTable());
+		$response->append(PHP_EOL . Terminal::getMessage(
+			$table->getTable(),
+			$response->getColoredOutput(),
+		));
 	}
 	
 	public function getMigrations(

@@ -1,4 +1,5 @@
 <?php use Ovos\Terminal\Highlighter; ?>
+<?php use Ovos\Terminal; ?>
 <?php use Ovos\Terminal\Table; ?>
 <?php use Ovos\View\Helper\Messages\Message; ?>
 
@@ -43,11 +44,10 @@
 <?php else: ?>
 <?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
-		$table->hasMarkup((bool)$this->markup)
-			->setHeaders([
-				Highlighter::header('Messages (' . count($iterator->getInnerIterator()) . ')'),
-				Highlighter::header('Type'),
-			]);
+		$table->setHeaders([
+			Highlighter::header('Messages (' . count($iterator->getInnerIterator()) . ')'),
+			Highlighter::header('Type'),
+		]);
 		
 		foreach($iterator as $message)
 		{
@@ -67,6 +67,6 @@
 			}
 		}
 		
-		echo PHP_EOL . $table->getTable();
+		echo PHP_EOL . Terminal::getMessage($table->getTable(), (bool)$this->markup);
 	?>
 <?php endif; ?>

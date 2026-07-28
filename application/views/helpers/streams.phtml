@@ -1,5 +1,6 @@
 <?php use Ovos\Application; ?>
 <?php use Ovos\Terminal\Highlighter; ?>
+<?php use Ovos\Terminal; ?>
 <?php use Ovos\Terminal\Table; ?>
 <?php use Ovos\Stream\Request; ?>
 
@@ -30,16 +31,15 @@
 <?php else: ?>
 <?php /* Do not add an indent above as it will be displayed as a leading space before the table */
 		$table = new Table;
-		$table->hasMarkup((bool)$this->markup)
-			->setHeaders([
-				Highlighter::header('Requests ('. count($this->requests) .')'),
-				Highlighter::header('Time'),
-				Highlighter::header('Memory'),
-			])
-			->setAlignments([
-				1 => Table::ALIGN_RIGHT,
-				2 => Table::ALIGN_RIGHT,
-			]);
+		$table->setHeaders([
+			Highlighter::header('Requests ('. count($this->requests) .')'),
+			Highlighter::header('Time'),
+			Highlighter::header('Memory'),
+		]);
+		$table->setAlignments([
+			1 => Table::ALIGN_RIGHT,
+			2 => Table::ALIGN_RIGHT,
+		]);
 		
 		foreach($this->requests as $request)
 		{
@@ -54,6 +54,6 @@
 			$table->addRow([PHP_EOL]);
 		}
 		
-		echo PHP_EOL . $table->getTable();
+		echo PHP_EOL . Terminal::getMessage($table->getTable(), (bool)$this->markup);
 	?>
 <?php endif; ?>
