@@ -114,7 +114,7 @@ class Migrations extends Controller\Cli
 			Terminal::output(sprintf(
 				'<green>Migrating <reset>%s... ',
 				Highlighter::className($migration->__toString()))
-			, true);
+			, $this->usesColor());
 			
 			/**
 			 * @var Runner $migration
@@ -176,7 +176,7 @@ class Migrations extends Controller\Cli
 			Terminal::output(sprintf(
 				'<red>Rolling back <reset>%s... ',
 				Highlighter::className($migration->__toString()))
-			, true);
+			, $this->usesColor());
 			
 			/**
 			 * @var Runner $migration

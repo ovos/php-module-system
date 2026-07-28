@@ -187,7 +187,7 @@ class Tests extends Controller\Cli
 				'%s %s has <red>failed<reset>...',
 				$this->header,
 				Highlighter::className($result->__toString())) . PHP_EOL
-			, true);
+			, $this->usesColor());
 			
 			if($result->throwable === null)
 			{
