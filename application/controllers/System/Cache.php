@@ -190,7 +190,20 @@ class Cache extends Controller\Cli
 	public function clearOpCacheHttp(): bool
 	{
 		// clear opcache, this only has an effect when tool is called via http
-		return opcache_reset();
+		if(opcache_reset() === true)
+		{
+			return true;
+		}
+		
+		// opcache_reset() answers FALSE while a restart is already pending, and
+		// a pending restart is the outcome the caller asked for - the cache is
+		// going to be cold. Reporting "Error clearing OPcache. Try again!" for
+		// that taught everyone to ignore the line, which is worse than the
+		// occasional false positive it was guarding against.
+		$status = opcache_get_status(false);
+		
+		return ($status['restart_pending'] ?? false) === true
+			|| ($status['restart_in_progress'] ?? false) === true;
 	}
 	
 	/**
