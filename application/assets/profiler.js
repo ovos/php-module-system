@@ -206,8 +206,28 @@ class OvosProfiler extends HTMLElement
 			const cardHead = event.target.closest('.profiler-request-head');
 			if(cardHead)
 			{
-				cardHead.parentElement.classList.toggle('collapsed');
+				this.toggleCard(cardHead);
 			}
+		});
+		// ...and no accessibility.js either, so the keyboard half is handled here
+		// rather than borrowed from it. The head is the ONLY way into a request's
+		// tables, so without this a keyboard user could not read one at all.
+		list.addEventListener('keydown', (event) =>
+		{
+			if(event.key !== 'Enter' && event.key !== ' ')
+			{
+				return;
+			}
+
+			const cardHead = event.target.closest('.profiler-request-head');
+			if(cardHead === null)
+			{
+				return;
+			}
+
+			// Space would scroll the pane out from under the card
+			event.preventDefault();
+			this.toggleCard(cardHead);
 		});
 		
 		pane.append(head, list);
@@ -215,6 +235,32 @@ class OvosProfiler extends HTMLElement
 		return {pane, list, count, filter: ''};
 	}
 	
+	/**
+	 * Collapse or expand one request card, keeping aria-expanded in step with
+	 * the class that actually does the hiding
+	 */
+	toggleCard(cardHead)
+	{
+		const collapsed = cardHead.parentElement.classList.toggle('collapsed');
+		cardHead.setAttribute('aria-expanded', (collapsed === false).toString());
+	}
+
+	/**
+	 * Make an element that only a mouse could operate into a real control:
+	 * focusable, announced as a button, and carrying its expanded state. A bare
+	 * <header> or <div> with a click handler is none of those — it is not in the
+	 * tab order, screen readers announce it as a group or as nothing, and
+	 * aria-expanded is not even valid on it.
+	 */
+	asToggle(element, expanded)
+	{
+		element.setAttribute('role', 'button');
+		element.setAttribute('tabindex', '0');
+		element.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+		return element;
+	}
+
 	// new cards are prepended (newest first) so existing cards — and their
 	// expanded/collapsed state — survive incoming requests
 	addCard(request)
@@ -333,6 +379,9 @@ class OvosProfiler extends HTMLElement
 		
 		const head = document.createElement('header');
 		head.className = 'profiler-request-head';
+		// the card renders collapsed (see card.className above), so the head
+		// starts unexpanded
+		this.asToggle(head, false);
 		// what the row IS (method + path) stays bright; the measurements trail it
 		// dimmed, and drop to their own line where the width cannot take both
 		head.append(
@@ -440,10 +489,27 @@ class OvosProfiler extends HTMLElement
 				table.append(trace);
 				
 				row.classList.add('profiler-has-trace');
-				row.addEventListener('click', () =>
+				// a stack trace was mouse-only too, and it is the whole reason
+				// anyone opens this row
+				this.asToggle(row, false);
+
+				const toggle = () =>
 				{
 					const open = trace.classList.toggle('open');
 					row.classList.toggle('open', open);
+					row.setAttribute('aria-expanded', open.toString());
+				};
+
+				row.addEventListener('click', toggle);
+				row.addEventListener('keydown', (event) =>
+				{
+					if(event.key !== 'Enter' && event.key !== ' ')
+					{
+						return;
+					}
+
+					event.preventDefault();
+					toggle();
 				});
 			}
 		});
@@ -488,7 +554,9 @@ class OvosProfiler extends HTMLElement
 		
 		const head = document.createElement('header');
 		head.className = 'profiler-request-head';
-		
+		// a run card renders EXPANDED (no `collapsed` in card.className above)
+		this.asToggle(head, true);
+
 		const source = document.createElement('span');
 		source.className = `profiler-run-source profiler-run-source-${entry.source}`;
 		source.textContent = entry.source;
