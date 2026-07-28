@@ -20,6 +20,7 @@ use Stores\Migrations as Store;
 use Models\Migration as Model;
 
 use function array_shift;
+use function count;
 use function explode;
 use function implode;
 use function is_dir;

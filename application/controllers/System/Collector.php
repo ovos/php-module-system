@@ -29,13 +29,8 @@ class Collector extends Controller\Cli
 		$this->collectors = $this->app->getConfig()->system->collectors;
 	}
 	
-	public function index(
-		bool $coloredOutput = false,
-	): void
+	public function index(): void
 	{
-		$this->app->getResponse()
-			->setColoredOutput($coloredOutput);
-		
 		if($this->collectors !== null)
 		{
 			foreach($this->collectors as $collector)

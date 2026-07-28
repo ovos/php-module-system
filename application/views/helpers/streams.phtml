@@ -45,8 +45,8 @@
 		{
 			/** @var Request $request */
 			$table->addRow([
-				'<cyan>' . $request->getMethod() . '<reset> '
-					. wordwrap($request->getUrl(), 150, PHP_EOL),
+				Highlighter::color($request->getMethod(), 'cyan') . ' '
+					. Highlighter::sanitize(wordwrap($request->getUrl(), 150, PHP_EOL)),
 				// a whole request, so the per-query scale would flag everything
 				Highlighter::time($request->getMeasurement()->getTotalTime(), 0.5, 2.0),
 				Highlighter::memory($request->getMeasurement()->getTotalMemory(), 8388608, 33554432),

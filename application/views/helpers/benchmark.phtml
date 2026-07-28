@@ -49,7 +49,7 @@
 		{
 			/** @var Measurement $measurement */
 			$table->addRow([
-				'<cyan>' . wordwrap($marker, 150, PHP_EOL) . '<reset>',
+				Highlighter::color(wordwrap($marker, 150, PHP_EOL), 'cyan'),
 				// a whole run, so the per-query scale would flag everything
 				Highlighter::time($measurement->getTotalTime(), 1.0, 5.0),
 				Highlighter::memory($measurement->getTotalMemory(), 8388608, 33554432),

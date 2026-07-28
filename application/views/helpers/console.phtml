@@ -38,7 +38,9 @@
 		foreach($this->messages as $message)
 		{
 			$table->addRow([
-				wordwrap($message->message, 150, PHP_EOL),
+				// a console message is arbitrary data — sanitize, or a payload
+				// carrying <red> paints itself now that markup is on
+				Highlighter::sanitize(wordwrap($message->message, 150, PHP_EOL)),
 				// a call over the network, so seconds are the scale
 				Highlighter::time($message->time, 0.25, 1.0),
 				Highlighter::memory($message->memory),

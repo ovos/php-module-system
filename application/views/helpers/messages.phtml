@@ -58,7 +58,7 @@
 				array_unshift($text, $title);
 			}
 			$table->addRow([
-				wordwrap(implode(PHP_EOL . PHP_EOL, $text), 150, PHP_EOL),
+				Highlighter::sanitize(wordwrap(implode(PHP_EOL . PHP_EOL, $text), 150, PHP_EOL)),
 				Highlighter::messageType(ucfirst($message->getType())),
 			]);
 			if($iterator->hasNext())

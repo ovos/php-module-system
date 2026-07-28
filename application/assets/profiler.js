@@ -613,7 +613,9 @@ class OvosProfiler extends HTMLElement
 		const parts = [`${entry.duration}s`, this.formatBytes(entry.memory)];
 		if(entry.queries)
 		{
-			parts.push(`Q:${entry.queries.length}`, `R:${entry.redis.length}`);
+			// the totals, like the request cards: a capped run ran more than it kept
+			parts.push(`Q:${entry.queries_total ?? entry.queries.length}`,
+				`R:${entry.redis_total ?? entry.redis.length}`);
 		}
 		if(entry.errors?.length)
 		{
@@ -624,6 +626,10 @@ class OvosProfiler extends HTMLElement
 		// the profile below the live output — same renderers as requests
 		run.output.parentElement.append(...this.renderTables({
 			queries: entry.queries || [],
+			// forward the totals or heading() sees undefined and reports a
+			// capped tail as the whole run — the lie this all set out to fix
+			queries_total: entry.queries_total,
+			redis_total: entry.redis_total,
 			redis: entry.redis || [],
 			console: entry.console || [],
 			errors: entry.errors || [],

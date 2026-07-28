@@ -45,7 +45,7 @@
 				1 => Table::ALIGN_RIGHT,
 				2 => Table::ALIGN_RIGHT,
 			]);
-
+		
 		foreach($this->commands as $command)
 		{
 			$table->addRow([
@@ -57,7 +57,7 @@
 			]);
 			$table->addRow([PHP_EOL]);
 		}
-
+		
 		echo PHP_EOL . $table->getTable();
 	?>
 <?php endif; ?>
