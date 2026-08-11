@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace Controllers;
 
 use Ovos\Controller;
+use Throwable;
 
 use function dirname;
 use function exec;
 use function file_put_contents;
 use function is_dir;
+use function is_file;
 use function rename;
 use function trim;
 use function unlink;
@@ -56,11 +58,27 @@ class Release extends Controller\Cli
 		$temp = $path . '.tmp';
 		
 		// temp + rename: a crash mid-write leaves the previous stamp intact
-		// rather than a truncated one, and readers never see a partial line
-		if(file_put_contents($temp, $revision . PHP_EOL) === false
-			|| rename($temp, $path) === false)
+		// rather than a truncated one, and readers never see a partial line.
+		// Caught, not @-suppressed: Events::handleError turns warnings into
+		// thrown ErrorExceptions, and the stamp must never fail a deploy —
+		// a full disk or an unwritable directory is a log line here.
+		try
 		{
-			@unlink($temp);
+			$written = file_put_contents($temp, $revision . PHP_EOL) !== false
+				&& rename($temp, $path);
+			
+			if($written === false && is_file($temp))
+			{
+				unlink($temp);
+			}
+		}
+		catch(Throwable)
+		{
+			$written = false;
+		}
+		
+		if($written === false)
+		{
 			$this->log('release: could not write %s', $path);
 			
 			return;
@@ -86,7 +104,20 @@ class Release extends Controller\Cli
 		}
 		
 		$out = [];
-		@exec('git rev-parse --short HEAD 2>&1', $out, $code);
+		$code = 1;
+		
+		// caught, not @-suppressed: an environment where exec cannot run
+		// (unable to fork, or disabled — which raises an Error that @ cannot
+		// silence anyway) is an unstampable checkout, not a failed deploy
+		try
+		{
+			exec('git rev-parse --short HEAD 2>&1', $out, $code);
+		}
+		catch(Throwable)
+		{
+			return '';
+		}
+		
 		if($code !== 0)
 		{
 			return '';
