@@ -199,6 +199,22 @@ The migration controller scans all directories configured in `config.system.migr
 discovers migration files by their `{timestamp}_{Name}.php` naming convention, and
 tracks execution state in a `migrations` database table.
 
+### Release Stamp
+
+```bash
+# Write the checkout's git revision to BASE_DIR/.release
+php cli.php release stamp
+```
+
+The stamp gives error reports a real deploy label: the console groups issues
+by the release they first appeared in, which only works when deployments carry
+one. Run it from the deploy script after the code update (and after caches are
+rebuilt, on the deploy that first ships this controller). The command prints
+what it wrote; a checkout without a git revision logs "nothing written" and
+exits clean — the stamp is deploy metadata and must never fail a deploy. A
+configured `console.release` outranks the file on the consuming side, so the
+stamp is a fallback, never an override.
+
 ### Tests
 
 ```bash
