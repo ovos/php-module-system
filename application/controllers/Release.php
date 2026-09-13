@@ -89,7 +89,7 @@ class Release extends Controller\Cli
 	
 	/**
 	 * The checkout's git revision. git only: every php-library deployment is
-	 * a git checkout, and the SVN consumers (leadersnet, westbahn) do not run
+	 * a git checkout, and the SVN consumers do not run
 	 * php-library — each carries its own stamp tool against its own VCS.
 	 *
 	 * Both probes matter: console keeps .git one level above BASE_DIR, other

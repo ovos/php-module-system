@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="docs/logo.svg" alt="ovos php-module-system" width="940">
+	<img src="docs/header.png" alt="ovos php-module-system — the running app, kept maintainable" width="940">
 </p>
 
 # ovos php-module-system
@@ -10,8 +10,10 @@ tooling that keeps a running app maintainable: cache control, database
 migrations, a test/benchmark runner, session and log housekeeping, error pages,
 encryption utilities and the profiler helpers.
 
+**Licence:** [PolyForm Noncommercial 1.0.0](LICENSE.md) — read it, run it, learn from it; commercial use needs a word with us.
+
 <p align="center">
-	<img src="docs/highlights.svg" alt="System module: cache, migrations, tests, profiler, sessions, toolkit" width="940">
+	<img src="docs/highlights.png" alt="System module: cache, migrations, tests, profiler, sessions, toolkit" width="940">
 </p>
 
 **GitHub:** https://github.com/ovos/php-module-system

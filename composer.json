@@ -1,6 +1,8 @@
 {
   "name": "ovos/php-module-system",
-  "description": "ovos module: system",
+  "description": "The system administration module for ovos/php-library applications: cache control, database migrations, a test and benchmark runner, session and log housekeeping, error pages, encryption utilities and profiler helpers.",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "homepage": "https://github.com/ovos/php-module-system",
   "type": "library",
   "authors": [
     {

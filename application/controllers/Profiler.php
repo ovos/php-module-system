@@ -73,8 +73,8 @@ class Profiler extends Controller
 	}
 	
 	/**
-	 * Access gate. A project whose auth plugin can answer isAdmin() (bo2go
-	 * convention) gets an admin-only profiler — in development the console's
+	 * Access gate. A project whose auth plugin can answer isAdmin() (the
+	 * usual convention) gets an admin-only profiler — in development the console's
 	 * auth service is disabled and reports every visitor as admin, so the
 	 * panel keeps working everywhere, login page included. Projects without
 	 * such a plugin fall back to an optional IP allowlist
