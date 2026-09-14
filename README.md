@@ -68,19 +68,11 @@ Works alongside:
 
 ## Installation
 
-1. Add SSH config for the private repository:
-```
-Host ovos.php-module-system
-    HostName github.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/ovos.php-module-system
-```
-
-2. Add to your project's `composer.json`:
+1. Add to your project's `composer.json`:
 ```json
 {
   "repositories": [
-    { "type": "git", "url": "git@github.com:ovos/php-module-system.git" }
+    { "type": "git", "url": "https://github.com/ovos/php-module-system.git" }
   ],
   "require": {
     "ovos/php-module-system": "dev-release/8.5"
