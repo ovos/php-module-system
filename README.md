@@ -209,6 +209,29 @@ exits clean — the stamp is deploy metadata and must never fail a deploy. A
 configured `console.release` outranks the file on the consuming side, so the
 stamp is a fallback, never an override.
 
+### Console: the untracked pass
+
+```bash
+# Ask the working copy what the repository does not track, report it to the console
+php cli.php console files
+
+# The same, marked as a person's run rather than the interval pass
+php cli.php console files manual
+```
+
+The one detector that sees a dropped file before anything runs it: the git or
+svn working copy at or above `BASE_DIR` is asked, read-only (`git
+--no-optional-locks ls-files --others --exclude-standard`, `svn status`), and
+the answer goes to the console's `POST /api/v1/ingest/files` as an
+integrity-scan report — a PHP file listed by path (urgent under a
+web-reachable directory, `console.files.web`, default `public`), a server
+config file listed by path, everything else counted per directory and never
+named. Meant as a cron line (`*/15 * * * *`); CLI only, never a web request.
+Needs `- Console\Sender` under `system.services.cli`, `console.url` + `key`,
+and `files_enabled` on the console project — the command prints what it found
+and what the console answered, and "cannot know" (nothing sent) when no
+working copy answers.
+
 ### Tests
 
 ```bash
