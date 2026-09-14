@@ -16,10 +16,12 @@ use function sprintf;
  *   php cli.php console files            # the untracked pass, as a cron line
  *   php cli.php console files manual     # the same, marked as a person's run
  *
- * The untracked pass asks the working copy at or above BASE_DIR what the
- * repository does not track (`git ls-files --others --exclude-standard`,
- * `svn status`) and posts the console's integrity-scan report — the one
- * detector that sees a dropped file BEFORE anything runs it. Read-only,
+ * The working-copy pass asks the working copy at or above BASE_DIR what the
+ * repository did not ship — untracked files (`git ls-files --others
+ * --exclude-standard`), tracked files that differ or are gone (`git diff
+ * --name-status HEAD`), `svn status` for both — and posts the console's
+ * integrity-scan report: the one detector that sees a dropped file BEFORE
+ * anything runs it, and the place a payload written INTO a file shows. Read-only,
  * CLI only, and honest about what it cannot know: no working copy, a closed
  * `proc_open`, a non-zero exit (git's safe.directory refusal included) all
  * print as "cannot know" and send nothing. An EMPTY answer is still sent —
@@ -72,8 +74,9 @@ class Console extends Controller\Cli
 		}
 		
 		$counts = $report['scan']['counts'];
-		$this->log('%s', sprintf('console files: %s working copy %s — %d untracked file(s) in %d director%s: %d urgent, %d high, %d info; %d listed',
-			$found['vcs'], $found['root'], $report['scan']['files'], $report['scan']['dirs'],
+		$area = $report['areas'][Untracked::AREA];
+		$this->log('%s', sprintf('console files: %s working copy %s — %d untracked, %d modified, %d missing in %d director%s: %d urgent, %d high, %d info; %d listed',
+			$found['vcs'], $found['root'], $area['foreign'], $area['modified'], $area['missing'], $report['scan']['dirs'],
 			$report['scan']['dirs'] === 1 ? 'y' : 'ies',
 			$counts['urgent'], $counts['high'], $counts['info'], count($report['findings'])));
 		

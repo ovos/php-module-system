@@ -219,14 +219,19 @@ php cli.php console files
 php cli.php console files manual
 ```
 
-The one detector that sees a dropped file before anything runs it: the git or
-svn working copy at or above `BASE_DIR` is asked, read-only (`git
---no-optional-locks ls-files --others --exclude-standard`, `svn status`), and
-the answer goes to the console's `POST /api/v1/ingest/files` as an
-integrity-scan report — a PHP file listed by path (urgent under a
-web-reachable directory, `console.files.web`, default `public`), a server
-config file listed by path, everything else counted per directory and never
-named. Meant as a cron line (`*/15 * * * *`); CLI only, never a web request.
+The one detector that sees a dropped file before anything runs it, and the
+place a payload written into an existing file shows: the git or svn working
+copy at or above `BASE_DIR` is asked, read-only (`git --no-optional-locks
+ls-files --others --exclude-standard` and `git --no-optional-locks diff
+--name-status HEAD`, or `svn status`), and the answer goes to the console's
+`POST /api/v1/ingest/files` as an integrity-scan report — an untracked PHP
+file listed by path (urgent under a web-reachable directory,
+`console.files.web`, default `public`), an untracked server config file
+listed by path, every other untracked file counted per directory and never
+named; a tracked file that differs from the commit listed with the same
+tiers (a browser script under the web directory high — the skimmer's shape),
+a tracked file that is gone listed as info. Meant as a cron line (`*/15 * * *
+*`); CLI only, never a web request.
 Needs `- Console\Sender` under `system.services.cli`, `console.url` + `key`,
 and `files_enabled` on the console project — the command prints what it found
 and what the console answered, and "cannot know" (nothing sent) when no
