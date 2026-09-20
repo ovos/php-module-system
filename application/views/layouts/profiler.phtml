@@ -18,7 +18,21 @@
 		<?php if($profilerHead !== false): ?>
 		<?= $this->render($profilerHead); ?>
 		<?php endif; ?>
-		<link href="<?= $this->asset('themes/' . $this->config->vendor . '/theme.css'); ?>" rel="stylesheet" />
+		<?php /* the theme: the directory under public/themes/ named by the
+			`theme` config key. It used to be the vendor, and for most
+			projects those are the same word — but the vendor names the
+			INSTALLATION, so the two come apart as soon as one instance is
+			called something else (the console's instance is 'ovos', its
+			theme is 'console'). A project without the key keeps the old
+			convention, so nothing has to be touched to keep its theme.
+			Linked only when the file is really there: filemtime() on a
+			missing asset raises a reported error, and a reported error
+			replaces the whole document with the error view. */ ?>
+		<?php $theme = $this->asset('themes/'
+			. ($this->config->theme ?? $this->config->vendor) . '/theme.css'); ?>
+		<?php if(is_file($theme->getFilename())): ?>
+		<link href="<?= $theme; ?>" rel="stylesheet" />
+		<?php endif; ?>
 	</head>
 	<body class="profiler-page">
 		<ovos-profiler mode="full" stream-url="<?= $this->streamUrl; ?>" clear-url="<?= $this->clearUrl; ?>"></ovos-profiler>
