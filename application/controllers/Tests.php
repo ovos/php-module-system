@@ -22,6 +22,7 @@ use function count;
 use function implode;
 use function is_dir;
 use function str_contains;
+use function str_replace;
 use function strlen;
 use function substr;
 
@@ -205,6 +206,17 @@ class Tests extends Controller\Cli
 		return $response;
 	}
 	
+	/**
+	 * Whether a path relative to a tests root lies under a `files` directory —
+	 * helpers and fixtures the runner must include only by an explicit require
+	 */
+	public static function isHelperPath(
+		string $relative,
+	): bool
+	{
+		return str_contains('/' . str_replace('\\', '/', $relative), '/files/');
+	}
+	
 	public function getTestRunners(): array
 	{
 		$runners = [];
@@ -218,7 +230,7 @@ class Tests extends Controller\Cli
 			}
 			
 			$pathLength = strlen($path);
-			$files = Dir::getFiles($path, skipCallback: static function($file)
+			$files = Dir::getFiles($path, skipCallback: static function($file) use ($pathLength)
 			{
 				/**
 				* @var SplFileInfo $file
@@ -235,10 +247,11 @@ class Tests extends Controller\Cli
 					return true;
 				}
 				
-				// filter out directories with files, which are not test files
-				if(str_ends_with($file->getPathname(),
-					DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR
-				))
+				// filter out files under a `files` directory (helpers, fixtures): the
+				// callback sees FILES, never a directory, so the test is whether a
+				// `files` segment sits in the path BELOW the tests root — the root's
+				// own path may contain one; separators normalised for Windows
+				if(self::isHelperPath(substr($file->getPathname(), $pathLength)))
 				{
 					return true;
 				}
