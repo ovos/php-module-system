@@ -18,13 +18,18 @@ use SplFileInfo;
 use ReflectionClass;
 use Throwable;
 
+use function array_pop;
 use function count;
+use function explode;
 use function implode;
+use function in_array;
 use function is_dir;
 use function str_contains;
 use function str_replace;
 use function strlen;
 use function substr;
+
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Tests
@@ -208,13 +213,18 @@ class Tests extends Controller\Cli
 	
 	/**
 	 * Whether a path relative to a tests root lies under a `files` directory —
-	 * helpers and fixtures the runner must include only by an explicit require
+	 * helpers and fixtures the runner must include only by an explicit require.
+	 * A directory SEGMENT named `files`, never a substring (`profiles/`,
+	 * `filesystem/`) and never the file's own name
 	 */
 	public static function isHelperPath(
 		string $relative,
 	): bool
 	{
-		return str_contains('/' . str_replace('\\', '/', $relative), '/files/');
+		$segments = explode(DIRECTORY_SEPARATOR, Dir::normalize($relative, true));
+		array_pop($segments);
+		
+		return in_array('files', $segments, true);
 	}
 	
 	public function getTestRunners(): array
@@ -249,8 +259,8 @@ class Tests extends Controller\Cli
 				
 				// filter out files under a `files` directory (helpers, fixtures): the
 				// callback sees FILES, never a directory, so the test is whether a
-				// `files` segment sits in the path BELOW the tests root — the root's
-				// own path may contain one; separators normalised for Windows
+				// `files` segment sits BELOW the tests root — the root's own path may
+				// contain one
 				if(self::isHelperPath(substr($file->getPathname(), $pathLength)))
 				{
 					return true;
