@@ -200,41 +200,44 @@ tracks execution state in a `migrations` database table.
 php cli.php release stamp
 ```
 
-The stamp gives error reports a real deploy label: the console groups issues
+The stamp gives error reports a real deploy label: codesafe groups issues
 by the release they first appeared in, which only works when deployments carry
 one. Run it from the deploy script after the code update (and after caches are
 rebuilt, on the deploy that first ships this controller). The command prints
 what it wrote; a checkout without a git revision logs "nothing written" and
 exits clean — the stamp is deploy metadata and must never fail a deploy. A
-configured `console.release` outranks the file on the consuming side, so the
+configured `codesafe.release` outranks the file on the consuming side, so the
 stamp is a fallback, never an override.
 
-### Console: the untracked pass
+### Codesafe: the untracked pass
 
 ```bash
-# Ask the working copy what the repository does not track, report it to the console
-php cli.php console files
+# Ask the working copy what the repository does not track, report it to codesafe
+php cli.php codesafe files
 
 # The same, marked as a person's run rather than the interval pass
-php cli.php console files manual
+php cli.php codesafe files manual
 ```
+
+`php cli.php console files` — the name from before the rename — runs the same
+command, so the cron lines already written keep working.
 
 The one detector that sees a dropped file before anything runs it, and the
 place a payload written into an existing file shows: the git or svn working
 copy at or above `BASE_DIR` is asked, read-only (`git --no-optional-locks
 ls-files --others --exclude-standard` and `git --no-optional-locks diff
---name-status HEAD`, or `svn status`), and the answer goes to the console's
+--name-status HEAD`, or `svn status`), and the answer goes to codesafe's
 `POST /api/v1/ingest/files` as an integrity-scan report — an untracked PHP
 file listed by path (urgent under a web-reachable directory,
-`console.files.web`, default `public`), an untracked server config file
+`codesafe.files.web`, default `public`), an untracked server config file
 listed by path, every other untracked file counted per directory and never
 named; a tracked file that differs from the commit listed with the same
 tiers (a browser script under the web directory high — the skimmer's shape),
 a tracked file that is gone listed as info. Meant as a cron line (`*/15 * * *
 *`); CLI only, never a web request.
-Needs `- Console\Sender` under `system.services.cli`, `console.url` + `key`,
-and `files_enabled` on the console project — the command prints what it found
-and what the console answered, and "cannot know" (nothing sent) when no
+Needs `- Codesafe\Sender` under `system.services.cli`, `codesafe.url` + `key`,
+and `files_enabled` on the codesafe project — the command prints what it found
+and what codesafe answered, and "cannot know" (nothing sent) when no
 working copy answers.
 
 ### Tests
