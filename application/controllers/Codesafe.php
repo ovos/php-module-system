@@ -43,7 +43,7 @@ class Codesafe extends Controller\Cli
 		?string $mode = null,
 	): void
 	{
-		$sender = $this->app->getServices()->consoleSender ?? null;
+		$sender = $this->app->getServices()->codesafeSender ?? null;
 		if($sender instanceof Sender === false)
 		{
 			$this->log('%s', 'codesafe files: the sender is not a CLI service — list "- Codesafe\Sender" under system.services.cli');
