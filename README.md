@@ -219,9 +219,6 @@ php cli.php codesafe files
 php cli.php codesafe files manual
 ```
 
-`php cli.php console files` — the name from before the rename — runs the same
-command, so the cron lines already written keep working.
-
 The one detector that sees a dropped file before anything runs it, and the
 place a payload written into an existing file shows: the git or svn working
 copy at or above `BASE_DIR` is asked, read-only (`git --no-optional-locks

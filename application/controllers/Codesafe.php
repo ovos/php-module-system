@@ -16,9 +16,6 @@ use function sprintf;
  *   php cli.php codesafe files           # the untracked pass, as a cron line
  *   php cli.php codesafe files manual    # the same, marked as a person's run
  *
- * `php cli.php console files` is the same command under its name from before
- * the rename (Controllers\Console) — the cron lines already written keep running.
- *
  * The working-copy pass asks the working copy at or above BASE_DIR what the
  * repository did not ship — untracked files (`git ls-files --others
  * --exclude-standard`), tracked files that differ or are gone (`git diff
