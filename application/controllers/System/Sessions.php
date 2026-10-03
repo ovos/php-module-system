@@ -48,8 +48,7 @@ class Sessions extends Controller\Cli
 	{
 		Functions::println('Clearing sessions ...' . PHP_EOL);
 		
-		$session = $this->container
-			->getClass(Session::class);
+		$session = $this->sessionService();
 		if($session->flush())
 		{
 			Functions::println('<green>Sessions cleared.<reset>', true);
@@ -70,8 +69,7 @@ class Sessions extends Controller\Cli
 	{
 		Functions::println('Collecting session garbage ...' . PHP_EOL);
 		
-		$session = $this->container
-			->getClass(Session::class);
+		$session = $this->sessionService();
 		
 		$removed = $session->gc();
 		if($removed === null)
@@ -106,8 +104,7 @@ class Sessions extends Controller\Cli
 		?string $order = null,
 	): ?Json
 	{
-		$session = $this->container
-			->getClass(Session::class);
+		$session = $this->sessionService();
 		$index = $session->index();
 		
 		if($this->request->isCli() === false)
@@ -169,6 +166,21 @@ class Sessions extends Controller\Cli
 		Functions::println($table->getTable());
 		
 		return null;
+	}
+	
+	/**
+	 * The application's own session service - the instance registered under
+	 * Session::SYMBOL, the one its bootstrap services already started. Asked
+	 * by class name the container built a SECOND service, and under the php
+	 * handler its constructor applies the ini block to the live session:
+	 * "Session ini settings cannot be changed when a session is active", a 500
+	 * where search should have answered that the index is off. On the CLI,
+	 * where no service list registers one, it is registered here.
+	 */
+	protected function sessionService(): Session
+	{
+		return $this->container
+			->getClass(Session::SYMBOL, Session::class);
 	}
 	
 	/**
