@@ -13,8 +13,9 @@ use Ovos\Service\Events;
 use Ovos\Service\Memory;
 use Throwable;
 
-use function base64_decode;
+use function abs;
 use function base64_encode;
+use function ctype_digit;
 use function date;
 use function function_exists;
 use function hash_equals;
@@ -26,6 +27,7 @@ use function method_exists;
 use function opcache_reset;
 use function sprintf;
 use function str_replace;
+use function time;
 use function urlencode;
 
 /**
@@ -222,6 +224,16 @@ class Cache extends Controller\Cli
 			return true;
 		}
 		
+		$signingKey = self::signingKey($this->encryptionKey());
+		if($signingKey === null)
+		{
+			Functions::println('<red>HTTP cache call refused: no encryption.key is configured'
+				. ' — set one per instance (ENCRYPTION[KEY] in .env).<reset>', true);
+			
+			return false;
+		}
+		
+		$time = time();
 		$token = base64_encode($this->getAccessTokenHash());
 		try
 		{
@@ -229,9 +241,11 @@ class Cache extends Controller\Cli
 				. 'cache-call-http.php'
 				. '?' . http_build_query([
 					'method' => $method,
-					// still in the query for one release: a web process whose
-					// opcache holds the old consumeHttpCall() reads it only from
-					// there — and this very call is what clears that opcache
+					// the daily token, for one release: a web process whose
+					// opcache holds a consumeHttpCall() from before the
+					// signature reads only this — and this very call is what
+					// clears that opcache. The signature below is what a
+					// current receiver checks; the next release drops this
 					'access_token_hash' => $token,
 				]);
 			
@@ -239,7 +253,8 @@ class Cache extends Controller\Cli
 				'http' => [
 					'timeout' => 10,
 					'header' => [
-						self::TOKEN_HEADER . ': ' . $token,
+						self::TIME_HEADER . ': ' . $time,
+						self::SIGNATURE_HEADER . ': ' . self::signature($signingKey, $method, $time),
 					],
 				],
 				'ssl' => [
@@ -323,10 +338,18 @@ class Cache extends Controller\Cli
 	protected const string HMAC_CONTEXT = 'ovos/system-cache/http-call';
 	
 	/**
-	 * The header the self-call carries its token in — a header never lands in
-	 * an access log or in a failed open's message the way a query string does
+	 * The headers a call is signed in — a header never lands in an access log
+	 * or in a failed open's message the way a query string does
 	 */
-	protected const string TOKEN_HEADER = 'X-Ovos-Cache-Token';
+	protected const string TIME_HEADER = 'X-Ovos-Cache-Time';
+	
+	protected const string SIGNATURE_HEADER = 'X-Ovos-Cache-Signature';
+	
+	/**
+	 * Seconds a signed call stays good either side of the receiver's clock —
+	 * caller and receiver share the host's clock; the slack covers a slow call
+	 */
+	public const int SIGNATURE_WINDOW = 60;
 	
 	/**
 	 * Consumes HTTP method call
@@ -334,23 +357,6 @@ class Cache extends Controller\Cli
 	public function consumeHttpCall(): void
 	{
 		$response = new Response\Html;
-		
-		// Verify the token. The caller sends an HMAC, not a password hash:
-		// password_verify() honours the cost embedded in the hash the CALLER
-		// supplies, so a request could ask for argon2id at 128 MB (or bcrypt at
-		// cost 31 — hours of CPU) and no execution limit interrupts it. An HMAC
-		// is constant work and hash_equals is constant time.
-		// the header first; the query string for a caller from before it
-		$encoded = (string)($_SERVER['HTTP_X_OVOS_CACHE_TOKEN'] ?? $_GET['access_token_hash'] ?? '');
-		$given = $encoded === ''
-			? ''
-			: (string)base64_decode($encoded, true);
-		
-		if($given === '' || hash_equals($this->getAccessTokenHash(), $given) === false)
-		{
-			$response->setHttpCode(403);
-			exit;
-		}
 		
 		// Only the two methods this endpoint exists for. method_exists() is
 		// true for PROTECTED methods as well, and $this->{$method}() runs in
@@ -364,33 +370,108 @@ class Cache extends Controller\Cli
 			exit;
 		}
 		
+		// The call is signed: an HMAC — constant work, compared in constant
+		// time — never a password hash, whose cost the CALLER would choose (a
+		// request could ask for argon2id at 128 MB, or bcrypt at cost 31). The
+		// caller is always this checkout's CLI, current code, so the daily
+		// token it still sends for an older receiver is never accepted here.
+		$signed = self::verifies(
+			self::signingKey($this->encryptionKey()),
+			$method,
+			(string)($_SERVER['HTTP_X_OVOS_CACHE_TIME'] ?? ''),
+			(string)($_SERVER['HTTP_X_OVOS_CACHE_SIGNATURE'] ?? ''),
+			time(),
+		);
+		if($signed === false)
+		{
+			$response->setHttpCode(403);
+			exit;
+		}
+		
 		$response
 			->set((string)$this->{$method}())
 			->send();
 	}
 	
 	/**
-	 * The shared secret behind the self-call. Host, date and the file's path
-	 * are all PUBLIC — the path is fixed by the image layout — so on their own
-	 * they are obscurity, not a secret. The instance's configured encryption
-	 * key is mixed in: both SAPIs read the same config, so caller and callee
-	 * still agree without any new setup.
+	 * The self-call's signing key: an HMAC of the context under the instance's
+	 * encryption key. The secret is the KEY of the MAC — never part of a
+	 * message — and the encryption key itself signs nothing. Null without an
+	 * encryption key: a signature over public facts alone is anyone's to
+	 * compute, so the call is refused on both sides rather than made.
+	 */
+	public static function signingKey(
+		string $encryptionKey,
+	): ?string
+	{
+		return $encryptionKey === ''
+			? null
+			: hash_hmac('sha256', self::HMAC_CONTEXT, $encryptionKey, true);
+	}
+	
+	/**
+	 * One call's signature: the method it may run and the second it was made
+	 * — worthless for the other method, and once SIGNATURE_WINDOW has passed
+	 */
+	public static function signature(
+		string $signingKey,
+		string $method,
+		int $time,
+	): string
+	{
+		return hash_hmac('sha256', $method . '|' . $time, $signingKey);
+	}
+	
+	/**
+	 * Whether a call is signed: under this key, for this method, made within
+	 * SIGNATURE_WINDOW of now
+	 */
+	public static function verifies(
+		?string $signingKey,
+		string $method,
+		string $time,
+		string $signature,
+		int $now,
+	): bool
+	{
+		if($signingKey === null
+			|| ctype_digit($time) === false
+			|| abs($now - (int)$time) > self::SIGNATURE_WINDOW)
+		{
+			return false;
+		}
+		
+		return hash_equals(self::signature($signingKey, $method, (int)$time), $signature);
+	}
+	
+	/**
+	 * The instance's encryption key — config encryption.key, per install
+	 */
+	protected function encryptionKey(): string
+	{
+		return (string)($this->app->getConfig()
+			->getPath(['encryption', 'key']) ?? '');
+	}
+	
+	/**
+	 * @deprecated the daily token a receiver from before the signature checks
+	 * — callHttp() still sends it for one release (see there); remove with it.
+	 * Host, date and the file's path are public: the encryption key is its
+	 * only secret.
 	 */
 	public function getAccessToken(): string
 	{
-		$key = (string)($this->app->getConfig()
-			->getPath(['encryption', 'key']) ?? '');
-		
 		return SYSTEM_HOST
 			. date('Y-m-d')
 			. md5(__FILE__)
-			. $key;
+			. $this->encryptionKey();
 	}
 	
+	/**
+	 * @deprecated see getAccessToken()
+	 */
 	public function getAccessTokenHash(): string
 	{
-		// keyed hash, not a password hash: see consumeHttpCall() — a verifier
-		// that honours a caller-chosen KDF cost is a CPU/memory oracle
 		return hash_hmac('sha256', $this->getAccessToken(), self::HMAC_CONTEXT);
 	}
 }
