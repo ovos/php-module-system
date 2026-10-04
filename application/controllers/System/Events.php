@@ -8,6 +8,7 @@ use Ovos\Exception\ForbiddenException;
 use Ovos\Exception\NotFoundException;
 use Ovos\Exception\NotFoundException\PageNotFoundException;
 use Ovos\Exception\NotFoundException\FileNotFoundException;
+use Ovos\Exception\UnavailableException;
 use Ovos\Response;
 use Ovos\Service\Events as ServiceEvents;
 use Ovos\View;
@@ -81,6 +82,13 @@ class Events extends Controller
 		{
 			$view->title = $this->_('Forbidden.');
 			$response->setHttpCode(403);
+		}
+		else if($event instanceof UnavailableException)
+		{
+			// a dependency the request needs is down — the code did not fail,
+			// and the same request can succeed once it is back
+			$view->title = $this->_('Service unavailable.');
+			$response->setHttpCode(503);
 		}
 		else
 		{

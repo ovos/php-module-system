@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Controllers\System;
 
 use Ovos\Controller;
+use Ovos\Exception\RuntimeException;
 use Ovos\Functions;
 use Ovos\Response;
 use Ovos\Stream;
@@ -24,6 +25,8 @@ use function md5;
 use function method_exists;
 use function opcache_reset;
 use function sprintf;
+use function str_replace;
+use function urlencode;
 
 /**
  * Cache
@@ -219,19 +222,25 @@ class Cache extends Controller\Cli
 			return true;
 		}
 		
+		$token = base64_encode($this->getAccessTokenHash());
 		try
 		{
 			$callUrl = SYSTEM_HOST . SYSTEM_PATH
 				. 'cache-call-http.php'
 				. '?' . http_build_query([
 					'method' => $method,
-					'access_token_hash' => base64_encode($this->getAccessTokenHash()),
+					// still in the query for one release: a web process whose
+					// opcache holds the old consumeHttpCall() reads it only from
+					// there — and this very call is what clears that opcache
+					'access_token_hash' => $token,
 				]);
 			
 			$contextOptions = [
 				'http' => [
 					'timeout' => 10,
-					'header' => [],
+					'header' => [
+						self::TOKEN_HEADER . ': ' . $token,
+					],
 				],
 				'ssl' => [
 					'verify_peer' => false, // for dev certificates
@@ -243,7 +252,7 @@ class Cache extends Controller\Cli
 			if(($httpAuth = $this->app->getConfig()->http_auth)
 				&& $httpAuth->enabled)
 			{
-				$auth = base64_encode(sprintf('{%s}:{%s}',
+				$auth = base64_encode(sprintf('%s:%s',
 					$httpAuth->username,
 					$httpAuth->password,
 				));
@@ -286,11 +295,14 @@ class Cache extends Controller\Cli
 		}
 		catch(Throwable $throwable)
 		{
+			// a failed open names the URL, and the URL carries the token: the
+			// log and the console get the message with the token cut out
+			$reason = str_replace([$token, urlencode($token)], '[token]', $throwable->getMessage());
 			$this->container
 				->get(Events::SYMBOL)
-				->log($throwable);
+				->log(new RuntimeException('HTTP cache call failed: ' . $reason));
 			
-			$message = sprintf("<red>HTTP service not reachable:<reset>\n%s", $throwable->getMessage());
+			$message = sprintf("<red>HTTP service not reachable:<reset>\n%s", $reason);
 			Functions::println($message, true);
 		}
 		
@@ -311,6 +323,12 @@ class Cache extends Controller\Cli
 	protected const string HMAC_CONTEXT = 'ovos/system-cache/http-call';
 	
 	/**
+	 * The header the self-call carries its token in — a header never lands in
+	 * an access log or in a failed open's message the way a query string does
+	 */
+	protected const string TOKEN_HEADER = 'X-Ovos-Cache-Token';
+	
+	/**
 	 * Consumes HTTP method call
 	 */
 	public function consumeHttpCall(): void
@@ -322,9 +340,11 @@ class Cache extends Controller\Cli
 		// supplies, so a request could ask for argon2id at 128 MB (or bcrypt at
 		// cost 31 — hours of CPU) and no execution limit interrupts it. An HMAC
 		// is constant work and hash_equals is constant time.
-		$given = isset($_GET['access_token_hash'])
-			? (string)base64_decode((string)$_GET['access_token_hash'], true)
-			: '';
+		// the header first; the query string for a caller from before it
+		$encoded = (string)($_SERVER['HTTP_X_OVOS_CACHE_TOKEN'] ?? $_GET['access_token_hash'] ?? '');
+		$given = $encoded === ''
+			? ''
+			: (string)base64_decode($encoded, true);
 		
 		if($given === '' || hash_equals($this->getAccessTokenHash(), $given) === false)
 		{
