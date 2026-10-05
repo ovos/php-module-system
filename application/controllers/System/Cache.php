@@ -16,19 +16,15 @@ use Throwable;
 use function abs;
 use function base64_encode;
 use function ctype_digit;
-use function date;
 use function function_exists;
 use function hash_equals;
 use function hash_hmac;
 use function http_build_query;
 use function in_array;
-use function md5;
 use function method_exists;
 use function opcache_reset;
 use function sprintf;
-use function str_replace;
 use function time;
-use function urlencode;
 
 /**
  * Cache
@@ -234,20 +230,14 @@ class Cache extends Controller\Cli
 		}
 		
 		$time = time();
-		$token = base64_encode($this->getAccessTokenHash());
 		try
 		{
+			// the URL names the method and nothing else: the call is signed in
+			// its headers, which no access log and no failed open's message
+			// carries the way they carry a query string
 			$callUrl = SYSTEM_HOST . SYSTEM_PATH
 				. 'cache-call-http.php'
-				. '?' . http_build_query([
-					'method' => $method,
-					// the daily token, for one release: a web process whose
-					// opcache holds a consumeHttpCall() from before the
-					// signature reads only this — and this very call is what
-					// clears that opcache. The signature below is what a
-					// current receiver checks; the next release drops this
-					'access_token_hash' => $token,
-				]);
+				. '?' . http_build_query(['method' => $method]);
 			
 			$contextOptions = [
 				'http' => [
@@ -282,37 +272,11 @@ class Cache extends Controller\Cli
 				$contextOptions,
 			);
 			
-			/*
-			$curl = curl_init();
-			curl_setopt_array($curl, [
-				CURLOPT_TIMEOUT => 10,
-				CURLOPT_CONNECTTIMEOUT => 1,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_SSL_VERIFYHOST => false, // for dev certificates
-				CURLOPT_SSL_VERIFYPEER => false, // for dev certificates
-				CURLOPT_URL => SYSTEM_HOST . SYSTEM_PATH
-					. 'cache-call-http.php'
-					. '?' . http_build_query([
-						'method' => $method,
-						'access_token_hash' => base64_encode($this->getAccessTokenHash()),
-					])
-			]);
-			
-			$response = curl_exec($curl);
-			if(curl_errno($curl))
-			{
-				throw new Exception(curl_error($curl));
-			}
-			curl_close($curl);
-			*/
-			
 			return $request->invoke()->getResponse() === '1';
 		}
 		catch(Throwable $throwable)
 		{
-			// a failed open names the URL, and the URL carries the token: the
-			// log and the console get the message with the token cut out
-			$reason = str_replace([$token, urlencode($token)], '[token]', $throwable->getMessage());
+			$reason = $throwable->getMessage();
 			$this->container
 				->get(Events::SYMBOL)
 				->log(new RuntimeException('HTTP cache call failed: ' . $reason));
@@ -361,8 +325,8 @@ class Cache extends Controller\Cli
 		// Only the two methods this endpoint exists for. method_exists() is
 		// true for PROTECTED methods as well, and $this->{$method}() runs in
 		// class scope, so the gate used to open every zero-argument method on
-		// this controller — including getAccessToken(), which answers with the
-		// token itself.
+		// this controller — the old getAccessToken() among them, which answered
+		// with the token itself.
 		$method = (string)($_GET['method'] ?? '');
 		if(in_array($method, self::HTTP_METHODS, true) === false)
 		{
@@ -372,9 +336,7 @@ class Cache extends Controller\Cli
 		
 		// The call is signed: an HMAC — constant work, compared in constant
 		// time — never a password hash, whose cost the CALLER would choose (a
-		// request could ask for argon2id at 128 MB, or bcrypt at cost 31). The
-		// caller is always this checkout's CLI, current code, so the daily
-		// token it still sends for an older receiver is never accepted here.
+		// request could ask for argon2id at 128 MB, or bcrypt at cost 31).
 		$signed = self::verifies(
 			self::signingKey($this->encryptionKey()),
 			$method,
@@ -451,27 +413,5 @@ class Cache extends Controller\Cli
 	{
 		return (string)($this->app->getConfig()
 			->getPath(['encryption', 'key']) ?? '');
-	}
-	
-	/**
-	 * @deprecated the daily token a receiver from before the signature checks
-	 * — callHttp() still sends it for one release (see there); remove with it.
-	 * Host, date and the file's path are public: the encryption key is its
-	 * only secret.
-	 */
-	public function getAccessToken(): string
-	{
-		return SYSTEM_HOST
-			. date('Y-m-d')
-			. md5(__FILE__)
-			. $this->encryptionKey();
-	}
-	
-	/**
-	 * @deprecated see getAccessToken()
-	 */
-	public function getAccessTokenHash(): string
-	{
-		return hash_hmac('sha256', $this->getAccessToken(), self::HMAC_CONTEXT);
 	}
 }
