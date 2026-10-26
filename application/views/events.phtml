@@ -12,7 +12,7 @@
 		<div class="events-title">
 			<?php if($this->renderTitle !== false
 				&& $title = $this->title()->get()): ?>
-				<h1><?= $title; ?></h1>
+				<h1><?= $this->escape($title); ?></h1>
 			<?php endif; ?>
 			<div class="events-image"></div>
 		</div>
@@ -25,7 +25,8 @@
 			<?php if($this->events): ?>
 				<?php foreach($this->events as $event): ?>
 					<h2><?php if($event instanceof \Ovos\Error): ?><?= $event->getName(); ?><?php else: ?><?= get_class($event); ?><?php endif; ?></h2>
-					<pre><?= $event->__toString(); ?></pre>
+					<?php // an exception's message often carries request data: text, never markup ?>
+					<pre><?= $this->escape($event->__toString()); ?></pre>
 				<?php endforeach; ?>
 			<?php endif; ?>
 			<?php if($this->content): ?>
