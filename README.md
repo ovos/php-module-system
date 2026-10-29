@@ -213,10 +213,10 @@ stamp is a fallback, never an override.
 
 ```bash
 # Ask the working copy what the repository does not track, report it to codesafe
-php cli.php codesafe files
+php cli.php codesafe integrity
 
 # The same, marked as a person's run rather than the interval pass
-php cli.php codesafe files manual
+php cli.php codesafe integrity manual
 ```
 
 The one detector that sees a dropped file before anything runs it, and the
@@ -233,9 +233,10 @@ tiers (a browser script under the web directory high — the skimmer's shape),
 a tracked file that is gone listed as info. Meant as a cron line (`*/15 * * *
 *`); CLI only, never a web request.
 Needs `- Codesafe\Sender` under `system.services.cli`, `codesafe.url` + `key`,
-and `files_enabled` on the codesafe project — the command prints what it found
-and what codesafe answered, and "cannot know" (nothing sent) when no
-working copy answers.
+and `integrity_enabled` on the codesafe project — the command prints what it
+found and what codesafe answered, and "cannot know" (nothing sent) when no
+working copy answers. `codesafe files`, the command's older name, runs the
+same pass, so a crontab line written for it keeps working.
 
 ### Tests
 
