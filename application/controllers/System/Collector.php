@@ -6,10 +6,24 @@ namespace Controllers\System;
 use FilesystemIterator;
 use Ovos\ArrayObject;
 use Ovos\Controller;
+use Ovos\Service\Cache;
+use Ovos\Service\Events;
 use Ovos\Terminal;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
+use Throwable;
+
+use function class_exists;
+use function method_exists;
+use function printf;
+use function str_starts_with;
+use function time;
+use function unlink;
+
+use const BASE_DIR;
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 /**
  * Collector
@@ -67,6 +81,91 @@ class Collector extends Controller\Cli
 	): void
 	{
 		$this->collectLogs($config);
+		$this->collectCache($config);
+	}
+	
+	/**
+	 * Prunes the persistent cache ahead of its expiry (see KeyValue\Redis::collectGarbage(): the versioned
+	 * stores drop the items their rules made outdated). "cache: no" in the collector's entry skips it, and
+	 * so does a project whose cache is off or has no persistent connection.
+	 */
+	public function collectCache(
+		ArrayObject $config,
+	): void
+	{
+		if($config->cache === false)
+		{
+			$this->log('Collecting <blue>cache<reset> skipped: the entry says <blue>cache: no<reset>.');
+			
+			return;
+		}
+		
+		$cache = $this->cacheService();
+		if($cache === null)
+		{
+			$this->log('Collecting <blue>cache<reset> skipped: the cache is disabled.');
+			
+			return;
+		}
+		
+		// No persistent connection configured: nothing to collect, and the store could not be built
+		$persistent = $cache->getPersistent();
+		if($persistent->getConfig()->persistent?->connection === null)
+		{
+			$this->log('Collecting <blue>cache<reset> skipped: no persistent cache connection is configured.');
+			
+			return;
+		}
+		
+		$this->log('Collecting <blue>cache<reset>...');
+		
+		// the number of entries dropped, true when the store keeps nothing to collect, false on an error;
+		// a store that throws is logged, and the collectors after this one still run
+		try
+		{
+			$collected = $persistent->getStore()
+				->collectGarbage();
+		}
+		catch(Throwable $throwable)
+		{
+			// into the error log too: the collector runs from a cron nobody watches
+			$this->container
+				->resolve(Events::SYMBOL)
+				?->log($throwable);
+			$this->log('<red>Collecting the cache failed: %s', $throwable->getMessage());
+			
+			return;
+		}
+		
+		if($collected === false)
+		{
+			$this->log('<red>Collecting the cache failed (see the error log).');
+			
+			return;
+		}
+		
+		if($collected === true)
+		{
+			$this->log('Nothing to collect.');
+		}
+		else
+		{
+			$this->log('Dropped <blue>%d<reset> cache entries.', $collected);
+		}
+		$this->log('<green>Done.');
+	}
+	
+	/**
+	 * The cache service; null when the cache is disabled, or no cache service is registered
+	 */
+	protected function cacheService(): ?Cache
+	{
+		$cache = $this->container
+			->resolve(Cache::SYMBOL);
+		
+		return $cache instanceof Cache
+			? $cache
+			: null;
 	}
 	
 	public function collectLogs(
