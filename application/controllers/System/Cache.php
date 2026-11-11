@@ -59,6 +59,9 @@ class Cache extends Controller\Cli
 	
 	/**
 	 * php cli.php system cache collect-garbage
+	 *
+	 * The store answers the number of entries it dropped, true when it keeps nothing to collect, false on an
+	 * error - read as System\Collector reads it: a run that dropped nothing (0) is a success, not an error
 	 */
 	public function collectGarbage(
 		bool $coloredOutput = false,
@@ -71,14 +74,17 @@ class Cache extends Controller\Cli
 			return;
 		}
 		
-		if($cache->getPersistent()->getStore()->collectGarbage())
+		$collected = $cache->getPersistent()->getStore()->collectGarbage();
+		if($collected === false)
 		{
-			Functions::println('<green>Successfully collected garbage in persistent cache.<reset>', true);
+			Functions::println('<red>Error collecting garbage in persistent cache (see the error log).<reset>', true);
+			
+			return;
 		}
-		else
-		{
-			Functions::println('<red>Error collecting garbage in persistent cache.<reset>', true);
-		}
+		
+		Functions::println($collected === true
+			? '<green>Collected garbage in persistent cache: nothing to collect.<reset>'
+			: sprintf('<green>Collected garbage in persistent cache: %d entries dropped.<reset>', $collected), true);
 	}
 	
 	/**
