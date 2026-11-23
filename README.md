@@ -108,6 +108,7 @@ php-module-system/
 │   │   ├── Benchmarks.php                      # Benchmark runner (extends Tests)
 │   │   ├── Migrations.php                      # Migration management
 │   │   ├── Tests.php                           # Test runner
+│   │   ├── Translations.php                    # .po/.mo update and check
 │   │   └── System/
 │   │       ├── Cache.php                       # Cache clearing (APCu, Redis, OPcache)
 │   │       ├── Collector.php                   # Garbage collection (logs, etc.)
@@ -254,6 +255,35 @@ php cli.php tests run Router parametersNamedSkipOptional
 The test runner discovers test classes from paths configured in `config.system.tests`.
 Results are grouped into Passed, Failed, Completed, and Skipped categories with
 time and memory measurements. Exits with code 1 if any tests fail.
+
+### Translations
+
+```bash
+# Bring every .po in line with the code, write it and its .mo
+php cli.php translations update
+
+# List what is out of line; exits with code 1 if anything is
+php cli.php translations check
+```
+
+Covers the `*.po` files of every translations path the application registered
+(each module with `translations: true`), except those in a Composer vendor
+directory: a package's catalogs are its own, and both commands say which paths
+they skip. Each file's header says where the code
+is and which calls translate, as for Poedit's "Update from code"
+(`X-Poedit-Basepath`, `X-Poedit-SearchPath-N`, `X-Poedit-KeywordsList`). `update`
+adds new msgids untranslated, makes the ones the code dropped obsolete (`#~`),
+revives an obsolete one the code uses again, refreshes the `#:` references and
+prints each change; it never guesses a translation. `check` reports a msgid the
+`.po` misses, an untranslated or fuzzy entry, a wrong number of plural forms, an
+entry the code no longer uses, and a `.mo` that is missing or not compiled from
+its `.po` (compared by content, not by time). A `.po` that cannot be read
+without loss, or whose search paths are missing or hold no file, is refused:
+`check` reports it, `update` leaves it as it is. Both exit with code 1 when
+anything is out of line, a registered path is missing, or there is no `.po` to
+cover. The files are written as Poedit
+writes them, so Poedit and the command can take turns. The logic lives in
+php-library's `Ovos\Translator\Catalog`.
 
 ### Benchmarks
 
